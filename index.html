@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="cs">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ICONIC Podcast | Buď svá, buď ikonická</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎙️</text></svg>">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              iconic: {
+                pink: '#B7066D',
+                blue: '#0677B4',
+                black: '#050101',
+                white: '#FBFBFB',
+              }
+            },
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              serif: ['Playfair Display', 'serif'],
+            },
+            animation: {
+              'blob': 'blob 7s infinite',
+              'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+              'gradient-slow': 'gradient 15s ease infinite',
+              'wild-gradient': 'wildGradient 3s ease infinite alternate',
+            },
+            keyframes: {
+              blob: {
+                '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                '100%': { transform: 'translate(0px, 0px) scale(1)' },
+              },
+              fadeInUp: {
+                '0%': { opacity: '0', transform: 'translateY(20px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              },
+              gradient: {
+                '0%, 100%': { 'background-position': '0% 50%' },
+                '50%': { 'background-position': '100% 50%' },
+              },
+              wildGradient: {
+                '0%': { 'background-position': '0% 50%' },
+                '100%': { 'background-position': '100% 50%' },
+              }
+            },
+            backgroundSize: {
+              '300%': '300%',
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      /* Reveal on scroll base */
+      .reveal-on-scroll {
+        opacity: 0;
+        transition: opacity 1s ease-out, transform 1s ease-out;
+        will-change: opacity, transform;
+      }
+      
+      /* Directions */
+      .reveal-on-scroll.reveal-up {
+        transform: translateY(50px);
+      }
+      
+      .reveal-on-scroll.reveal-left {
+        transform: translateX(-100px);
+      }
+      
+      /* Visible State */
+      .reveal-on-scroll.is-visible {
+        opacity: 1;
+        transform: translate(0, 0);
+      }
+      
+      /* Custom Scrollbar */
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #ddd;
+        border-radius: 4px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #ccc;
+      }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <script type="importmap">
+{
+  "imports": {
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
+    "react-router-dom": "https://aistudiocdn.com/react-router-dom@^7.9.6",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0"
+  }
+}
+</script>
+</head>
+  <body class="bg-iconic-white text-iconic-black antialiased overflow-x-hidden selection:bg-iconic-pink selection:text-white">
+    <div id="root"></div>
+  </body>
+</html>
