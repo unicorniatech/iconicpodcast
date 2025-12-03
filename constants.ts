@@ -383,5 +383,20 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
       youtube: 'https://youtu.be/jxtFGL8DzWY', 
       apple: LINKS.apple 
     }
+  },
+  {
+    id: '2',
+    title: 'EP 02: Longevity a umění žít naplno | Matouš Vinš',
+    description: 'Jaký je skutečný recept na delší a kvalitnější život? Matouš Vinš – cestovatel, spolumajitel Vitalvibe a autor knižních bestsellerů – sdílí jednoduché denní návyky s největším vlivem na délku života a jak si hlídat hranici mezi výkonem a vyhořením.',
+    duration: '52 min',
+    date: '2024-09-02',
+    imageUrl: '/ep02.jpg',
+    videoUrl: '08CmroVRQc0',
+    tags: ['Lifestyle', 'Business'],
+    platformLinks: { 
+      spotify: 'https://open.spotify.com/episode/2KlhnSiAHQluA0mCmR4vg3', 
+      youtube: 'https://youtu.be/08CmroVRQc0', 
+      apple: LINKS.apple 
+    }
   }
 ];
