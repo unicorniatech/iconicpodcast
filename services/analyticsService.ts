@@ -53,21 +53,12 @@ const getCountryFromTimezone = (): string | null => {
   }
 };
 
-// Check if analytics tables exist (cached)
-let analyticsTablesExist: boolean | null = null;
+// Check if analytics tables exist (cached) - disabled by default since tables don't exist
+let analyticsTablesExist: boolean = false;
 
-const checkAnalyticsTables = async (): Promise<boolean> => {
-  if (analyticsTablesExist !== null) return analyticsTablesExist;
-  
-  try {
-    const { error } = await (supabase as any)
-      .from('page_views')
-      .select('id')
-      .limit(1);
-    analyticsTablesExist = !error || error.code !== '42P01'; // 42P01 = table doesn't exist
-  } catch {
-    analyticsTablesExist = false;
-  }
+const checkAnalyticsTables = (): boolean => {
+  // Analytics tables don't exist in the database - skip all analytics
+  // Set to true once you create the page_views and web_vitals tables
   return analyticsTablesExist;
 };
 
@@ -75,7 +66,7 @@ const checkAnalyticsTables = async (): Promise<boolean> => {
 export const trackPageView = async (path: string): Promise<void> => {
   try {
     // Skip if tables don't exist
-    if (!(await checkAnalyticsTables())) return;
+    if (!checkAnalyticsTables()) return;
     
     const sessionId = getSessionId();
     const startTime = Date.now();
@@ -105,7 +96,7 @@ export const trackPageView = async (path: string): Promise<void> => {
 // Update page view duration when leaving
 export const trackPageLeave = async (): Promise<void> => {
   try {
-    if (!(await checkAnalyticsTables())) return;
+    if (!checkAnalyticsTables()) return;
     
     const startTime = sessionStorage.getItem('iconic_page_start');
     const currentPath = sessionStorage.getItem('iconic_current_path');
@@ -136,7 +127,7 @@ export const trackWebVital = async (metric: {
   rating: string;
 }): Promise<void> => {
   try {
-    if (!(await checkAnalyticsTables())) return;
+    if (!checkAnalyticsTables()) return;
     
     const sessionId = getSessionId();
     
@@ -158,7 +149,7 @@ export const trackEvent = async (
   properties?: Record<string, any>
 ): Promise<void> => {
   try {
-    if (!(await checkAnalyticsTables())) return;
+    if (!checkAnalyticsTables()) return;
     
     const sessionId = getSessionId();
     

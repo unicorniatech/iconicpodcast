@@ -113,13 +113,13 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
             .eq('parent_id', comment.id)
             .order('created_at', { ascending: true });
 
-          // Fetch user profile for comment
+          // Fetch user profile for comment (user_profiles.id = auth.users.id)
           let userProfile = null;
           try {
             const { data: profile } = await db
               .from('user_profiles')
               .select('display_name, avatar_url')
-              .eq('user_id', comment.user_id)
+              .eq('id', comment.user_id)
               .maybeSingle();
             userProfile = profile;
           } catch {
@@ -134,7 +134,7 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
                 const { data: profile } = await db
                   .from('user_profiles')
                   .select('display_name, avatar_url')
-                  .eq('user_id', reply.user_id)
+                  .eq('id', reply.user_id)
                   .maybeSingle();
                 replyProfile = profile;
               } catch {
