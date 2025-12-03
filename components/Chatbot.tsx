@@ -154,22 +154,22 @@ export const Chatbot: React.FC = () => {
         <>
             <button 
                 onClick={() => setIsOpen(!isOpen)}
-                className={`fixed bottom-6 right-6 z-50 p-4 rounded-full shadow-2xl transition-all transform hover:scale-110 ${isOpen ? 'bg-iconic-black text-white' : 'bg-iconic-pink text-white'} border-4 border-white`}
+                className={`fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 p-3 sm:p-4 rounded-full shadow-2xl transition-all transform hover:scale-110 ${isOpen ? 'bg-iconic-black text-white' : 'bg-iconic-pink text-white'} border-4 border-white`}
             >
-                {isOpen ? <X size={28} /> : <MessageCircle size={28} />}
+                {isOpen ? <X size={24} className="sm:w-7 sm:h-7" /> : <MessageCircle size={24} className="sm:w-7 sm:h-7" />}
             </button>
 
             {isOpen && (
-                <div className="fixed bottom-24 right-6 w-[90vw] md:w-[400px] h-[600px] bg-white rounded-2xl shadow-2xl z-50 flex flex-col border border-gray-200 overflow-hidden animate-fade-in-up font-sans">
-                    <div className="bg-gradient-to-r from-iconic-pink to-[#890451] p-4 flex items-center text-white relative overflow-hidden">
+                <div className="fixed inset-4 sm:inset-auto sm:bottom-24 sm:right-6 sm:w-[400px] sm:h-[600px] bg-white rounded-2xl shadow-2xl z-50 flex flex-col border border-gray-200 overflow-hidden animate-fade-in-up font-sans">
+                    <div className="bg-gradient-to-r from-iconic-pink to-[#890451] p-3 sm:p-4 flex items-center text-white relative overflow-hidden">
                         <div className="absolute top-0 right-0 p-4 opacity-10">
                             <Sparkles size={60} />
                         </div>
-                        <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center mr-3 border border-white/30 backdrop-blur-sm shadow-inner">
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/20 flex items-center justify-center mr-3 border border-white/30 backdrop-blur-sm shadow-inner">
                             <span className="font-serif font-bold italic text-xl">I</span>
                         </div>
                         <div>
-                            <h3 className="font-bold text-lg leading-tight">ICONIC Assistant</h3>
+                            <h3 className="font-bold text-base sm:text-lg leading-tight">ICONIC Assistant</h3>
                             <div className="flex items-center text-xs text-white/80">
                                 <span className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
                                 Online • AI Powered
@@ -183,7 +183,7 @@ export const Chatbot: React.FC = () => {
                         </div>
                     )}
 
-                    <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#F9F9F9]">
+                    <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4 bg-[#F9F9F9]">
                         {messages.map((msg, index) => (
                             <div key={msg.id} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} animate-message-in`}>
                                 <div className={`max-w-[85%] rounded-2xl p-4 shadow-sm relative ${
@@ -264,7 +264,7 @@ export const Chatbot: React.FC = () => {
                         )}
                         <div ref={messagesEndRef} />
                     </div>
-                    <div className="p-4 bg-white border-t border-gray-100 flex gap-2">
+                    <div className="p-3 sm:p-4 bg-white border-t border-gray-100 flex gap-2">
                         <input 
                             type="text" 
                             value={input}

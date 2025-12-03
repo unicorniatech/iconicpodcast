@@ -297,8 +297,8 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
   };
 
   const CommentItem: React.FC<{ comment: Comment; isReply?: boolean }> = ({ comment, isReply = false }) => (
-    <div className={`flex gap-3 ${isReply ? 'ml-12 mt-3' : ''}`}>
-      <div className="w-10 h-10 rounded-full bg-iconic-pink/20 flex items-center justify-center flex-shrink-0 overflow-hidden">
+    <div className={`flex gap-2 sm:gap-3 ${isReply ? 'ml-8 sm:ml-12 mt-3' : ''}`}>
+      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-iconic-pink/20 flex items-center justify-center flex-shrink-0 overflow-hidden">
         {comment.user_profile?.avatar_url ? (
           <img src={comment.user_profile.avatar_url} alt="" className="w-full h-full object-cover" />
         ) : (
@@ -308,7 +308,7 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
         )}
       </div>
       <div className="flex-1">
-        <div className="bg-gray-50 rounded-2xl px-4 py-3">
+        <div className="bg-gray-50 rounded-2xl px-3 py-2 sm:px-4 sm:py-3">
           <div className="flex items-center gap-2 mb-1">
             <span className="font-bold text-sm text-iconic-black">
               {comment.user_profile?.display_name || 'Anonymous'}
@@ -347,7 +347,7 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
           )}
         </div>
 
-        <div className="flex items-center gap-4 mt-2 ml-2">
+        <div className="flex items-center gap-2 sm:gap-4 mt-2 ml-1 sm:ml-2 flex-wrap">
           <button
             onClick={() => handleLikeComment(comment.id, comment.user_liked)}
             className={`flex items-center gap-1 text-xs transition-colors ${
@@ -426,17 +426,17 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
   );
 
   return (
-    <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-      <h3 className="text-xl font-bold text-iconic-black mb-6 flex items-center gap-2">
+    <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-100">
+      <h3 className="text-lg sm:text-xl font-bold text-iconic-black mb-4 sm:mb-6 flex items-center gap-2">
         <MessageCircle size={24} className="text-iconic-pink" />
         {t.comments} ({comments.length})
       </h3>
 
       {/* Comment input */}
       {user ? (
-        <form onSubmit={handleSubmitComment} className="mb-8">
-          <div className="flex gap-3">
-            <div className="w-10 h-10 rounded-full bg-iconic-pink/20 flex items-center justify-center flex-shrink-0">
+        <form onSubmit={handleSubmitComment} className="mb-6 sm:mb-8">
+          <div className="flex gap-2 sm:gap-3">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-iconic-pink/20 flex items-center justify-center flex-shrink-0">
               <span className="text-iconic-pink font-bold text-sm">
                 {user.email?.charAt(0).toUpperCase()}
               </span>
@@ -447,20 +447,20 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
                 placeholder={t.write_comment}
-                className="flex-1 px-5 py-3 bg-gray-50 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-iconic-pink/20 focus:bg-white transition-all"
+                className="flex-1 px-3 sm:px-5 py-2 sm:py-3 bg-gray-50 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-iconic-pink/20 focus:bg-white transition-all"
               />
               <button
                 type="submit"
                 disabled={!newComment.trim() || submitting}
-                className="p-3 bg-iconic-pink text-white rounded-full hover:bg-pink-700 disabled:opacity-50 transition-colors"
+                className="p-2 sm:p-3 bg-iconic-pink text-white rounded-full hover:bg-pink-700 disabled:opacity-50 transition-colors"
               >
-                <Send size={18} />
+                <Send size={16} className="sm:w-[18px] sm:h-[18px]" />
               </button>
             </div>
           </div>
         </form>
       ) : (
-        <div className="mb-8 p-4 bg-gray-50 rounded-xl text-center">
+        <div className="mb-6 sm:mb-8 p-3 sm:p-4 bg-gray-50 rounded-xl text-center">
           <p className="text-gray-500 text-sm mb-3">{t.login_to_comment}</p>
           <a
             href="/login"
