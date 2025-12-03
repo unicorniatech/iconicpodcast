@@ -18,18 +18,36 @@ export interface PodcastEpisode {
   tags?: string[];
 }
 
+// Lead source types - includes campaign-specific sources for tracking
+export type LeadSource = 
+  | 'chatbot' 
+  | 'contact_form' 
+  | 'manual' 
+  | 'newsletter' 
+  | 'guest_popup'
+  | 'youtube_description'
+  | 'instagram_bio'
+  | 'paid_social'
+  | 'landing_youtube'
+  | 'landing_instagram'
+  | 'landing_social';
+
+export type LeadStatus = 'new' | 'contacted' | 'converted' | 'archived';
+
 export interface Lead {
   id: string;
   name: string;
   email: string;
   phone?: string;
   interest: string; // What are they interested in?
-  source: 'chatbot' | 'contact_form' | 'manual' | 'newsletter' | 'guest_popup';
+  source: LeadSource;
   notes?: string; // Internal admin notes
   tags?: string[]; // e.g. "VIP", "High Priority"
   date: string;
   lastUpdated?: string;
-  status: 'new' | 'contacted' | 'converted' | 'archived';
+  status: LeadStatus;
+  campaign?: string; // UTM campaign tracking
+  userId?: string; // Link to authenticated user if converted
 }
 
 export interface ChatMessage {

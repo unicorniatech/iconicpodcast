@@ -4,6 +4,46 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ICONIC Podcast | Buď svá, buď ikonická</title>
+    <meta name="description" content="Podcast pro ženy, které chtějí víc. Business, mindset a lifestyle bez kompromisů. Zuzana Husarová ti ukáže, jak být svá a ikonická." />
+    <meta name="author" content="Zuzana Husarova" />
+    <link rel="canonical" href="https://iconic-podcast.com" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://iconic-podcast.com" />
+    <meta property="og:title" content="ICONIC Podcast | Buď svá, buď ikonická" />
+    <meta property="og:description" content="Podcast pro ženy, které chtějí víc. Business, mindset a lifestyle bez kompromisů." />
+    <meta property="og:image" content="https://iconic-podcast.com/og-image.jpg" />
+    <meta property="og:site_name" content="ICONIC Podcast by Zuzzi Mentor" />
+    <meta property="og:locale" content="cs_CZ" />
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@zuzzimentor" />
+    <meta name="twitter:title" content="ICONIC Podcast | Buď svá, buď ikonická" />
+    <meta name="twitter:description" content="Podcast pro ženy, které chtějí víc. Business, mindset a lifestyle bez kompromisů." />
+    <meta name="twitter:image" content="https://iconic-podcast.com/og-image.jpg" />
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "PodcastSeries",
+      "name": "ICONIC Podcast by Zuzzi Mentor",
+      "description": "Podcast pro ženy, které chtějí víc. Business, mindset a lifestyle bez kompromisů.",
+      "url": "https://iconic-podcast.com",
+      "author": {
+        "@type": "Person",
+        "name": "Zuzana Husarova",
+        "url": "https://www.instagram.com/zuzzimentor/"
+      },
+      "webFeed": [
+        "https://open.spotify.com/show/5TNpvLzycWShFtP0uu39bE",
+        "https://podcasts.apple.com/cz/podcast/iconic-podcast-by-zuzzi-mentor/id1831207868"
+      ]
+    }
+    </script>
+    
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎙️</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -100,20 +140,9 @@
       }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-  <script type="importmap">
-{
-  "imports": {
-    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
-    "react-router-dom": "https://aistudiocdn.com/react-router-dom@^7.9.6",
-    "react/": "https://aistudiocdn.com/react@^19.2.0/",
-    "react": "https://aistudiocdn.com/react@^19.2.0",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
-    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0"
-  }
-}
-</script>
 </head>
   <body class="bg-iconic-white text-iconic-black antialiased overflow-x-hidden selection:bg-iconic-pink selection:text-white">
     <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
   </body>
 </html>

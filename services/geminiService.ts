@@ -1,8 +1,117 @@
+/**
+ * Gemini Service
+ * 
+ * Client-side service that communicates with the backend API for Gemini chat.
+ * The API key is never exposed to the frontend - all calls go through the backend.
+ */
+
+import { logError, createAppError, getErrorMessage, AppError } from './errorService';
+
+// Types for chat functionality
+export interface ChatSession {
+  id: string;
+  language: string;
+}
+
+export interface FunctionCall {
+  name: string;
+  args: Record<string, unknown>;
+}
+
+export interface ChatResponse {
+  text: string;
+  functionCalls?: FunctionCall[];
+  error?: AppError;
+}
+
+// API endpoint - configure based on deployment
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
+
+// Build podcast context from episodes data
+export const buildPodcastContext = (episodes: Array<{ id: string; title: string; description: string }>) => {
+  return episodes.map(p => 
+    `- ID: ${p.id}, Title: "${p.title}", Topic: ${p.description}`
+  ).join('\n');
+};
+
+/**
+ * Create a new chat session
+ * Returns a session object that should be stored in React state
+ */
+export const createChatSession = (language: string): ChatSession => {
+  return {
+    id: `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+    language
+  };
+};
+
+/**
+ * Send a message to the Gemini API through the backend
+ */
+export const sendMessage = async (
+  session: ChatSession,
+  message: string,
+  podcastContext: string
+): Promise<ChatResponse> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/chat`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        sessionId: session.id,
+        message,
+        language: session.language,
+        podcastContext
+      })
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.error || `HTTP ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    if (data.error) {
+      const appError = createAppError(new Error(data.error), 'GEMINI_ERROR');
+      return {
+        text: '',
+        error: appError
+      };
+    }
+
+    return {
+      text: data.text || '',
+      functionCalls: data.functionCalls
+    };
+  } catch (error) {
+    const appError = createAppError(error, 'NETWORK_ERROR', { action: 'sendMessage' });
+    logError(appError);
+    return {
+      text: '',
+      error: appError
+    };
+  }
+};
+
+/**
+ * Get user-friendly error message for chat errors
+ */
+export const getChatErrorMessage = (error: AppError, language: string): string => {
+  return getErrorMessage(error.code, language);
+};
+
+// ============================================================================
+// LEGACY API - For backward compatibility during migration
+// These functions will be deprecated once the backend API is fully deployed
+// ============================================================================
+
 import { GoogleGenAI, FunctionDeclaration, Type, Tool, Chat, GenerateContentResponse } from "@google/genai";
 import { PODCAST_EPISODES } from "../constants";
 
 // --- Tool Definitions ---
-
 const leadFormTool: FunctionDeclaration = {
   name: "show_lead_form",
   description: "Display a form to collect user contact details (name, email, phone) when they express interest in mentorship, newsletters, coaching, or ask to be contacted.",
@@ -38,12 +147,11 @@ const tools: Tool[] = [{
 }];
 
 // --- Knowledge Base Construction ---
-
 const PODCAST_CONTEXT = PODCAST_EPISODES.map(p => 
   `- ID: ${p.id}, Title: "${p.title}", Topic: ${p.description}`
 ).join('\n');
 
-const SYSTEM_INSTRUCTION = `
+const buildSystemInstruction = (language: string) => `
 You are the AI assistant for "ICONIC PODCAST by Zuzzi Mentor" (Zuzana Husarova).
 Your goal is to engage visitors, answer questions, and generate leads for her mentorship programs and podcast.
 
@@ -73,42 +181,95 @@ BEHAVIOR GUIDELINES:
 2. **Lead Generation:** If a user expresses interest in *coaching, mentoring, 1:1 sessions, or business growth*, ALWAYS call the 'show_lead_form' tool.
 3. **Pricing:** If a user asks about *prices, plans, or how to work with Zuzana*, call the 'show_pricing' tool.
 4. **Recommendations:** If a user asks for *listening advice* or mentions topics like "money", "fear", "branding", call 'recommend_podcast' with the most relevant episode ID.
-5. **Language:** Adapt to the user's language (Czech/Slovak, English, Spanish). The content is primarily Czech but Zuzana is international.
+5. **Language:** Respond in ${language === 'cs-CZ' ? 'Czech' : language === 'es-MX' ? 'Spanish' : 'English'}. Adapt to the user's language preference.
 6. **Tone:** Use emojis sparingly but effectively (✨, 🎙️, 💖, 🚀).
-
 `;
 
-let chatSession: Chat | null = null;
-
-export const startChatSession = (language: string) => {
-  // Initialize AI client here to ensure env var is ready
-  // API Key is strictly from process.env.API_KEY as per guidelines
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+/**
+ * Create a new chat session (returns Chat instance)
+ * @deprecated Use createChatSession() and sendMessage() instead
+ */
+export const startChatSession = (language: string): Chat => {
+  // API Key from environment - WARNING: This exposes the key in frontend bundle
+  // In production, use the backend API instead
+  const apiKey = (import.meta.env.VITE_GEMINI_API_KEY as string) || 
+                 (typeof process !== 'undefined' && process.env?.API_KEY) || '';
   
-  chatSession = ai.chats.create({
+  if (!apiKey) {
+    console.warn('Gemini API key not configured. Chat functionality will not work.');
+  }
+  
+  const ai = new GoogleGenAI({ apiKey });
+  
+  const chat = ai.chats.create({
     model: "gemini-2.5-flash", 
     config: {
-      systemInstruction: SYSTEM_INSTRUCTION,
+      systemInstruction: buildSystemInstruction(language),
       tools: tools,
     }
   });
-  return chatSession;
+  
+  return chat;
 };
 
-export const sendMessageToGemini = async (message: string): Promise<GenerateContentResponse> => {
-  if (!chatSession) {
-    startChatSession('cs-CZ');
-  }
+/**
+ * Send message using a Chat instance
+ * @deprecated Use sendMessage() with ChatSession instead
+ */
+export const sendMessageToGemini = async (
+  chatOrMessage: Chat | string,
+  messageText?: string
+): Promise<GenerateContentResponse> => {
+  let chat: Chat;
+  let message: string;
   
-  if (!chatSession) {
-      throw new Error("Failed to initialize chat session");
+  // Handle both old API (just message) and new API (chat + message)
+  if (typeof chatOrMessage === 'string') {
+    // Legacy: create a new session for each message (not recommended)
+    chat = startChatSession('cs-CZ');
+    message = chatOrMessage;
+  } else {
+    chat = chatOrMessage;
+    message = messageText || '';
   }
 
   try {
-    const response = await chatSession.sendMessage({ message });
+    const response = await chat.sendMessage({ message });
     return response;
   } catch (error) {
-    console.error("Gemini Error:", error);
+    const appError = createAppError(error, 'GEMINI_ERROR', { action: 'sendMessageToGemini' });
+    logError(appError);
     throw error;
   }
+};
+
+/**
+ * Parse Gemini response to extract text and function calls
+ */
+export const parseGeminiResponse = (response: GenerateContentResponse): {
+  text: string;
+  functionCalls: FunctionCall[];
+} => {
+  let text = '';
+  const functionCalls: FunctionCall[] = [];
+
+  const candidates = response.candidates;
+  if (candidates && candidates.length > 0) {
+    const content = candidates[0].content;
+    if (content && content.parts) {
+      for (const part of content.parts) {
+        if (part.text) {
+          text += part.text;
+        }
+        if (part.functionCall) {
+          functionCalls.push({
+            name: part.functionCall.name,
+            args: part.functionCall.args as Record<string, unknown>
+          });
+        }
+      }
+    }
+  }
+
+  return { text, functionCalls };
 };

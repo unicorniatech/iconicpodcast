@@ -1,0 +1,152 @@
+/**
+ * Authentication Context
+ * 
+ * Provides authentication state and methods throughout the app.
+ * Uses Supabase Auth for user management.
+ */
+
+import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import { User, Session } from '@supabase/supabase-js';
+import { supabase, isSupabaseConfigured, signIn, signUp, signOut } from '../services/supabaseClient';
+import { logError, createAppError } from '../services/errorService';
+
+interface AuthState {
+  user: User | null;
+  session: Session | null;
+  isLoading: boolean;
+  isAdmin: boolean;
+  isAuthenticated: boolean;
+}
+
+interface AuthContextType extends AuthState {
+  login: (email: string, password: string) => Promise<{ error: string | null }>;
+  register: (email: string, password: string) => Promise<{ error: string | null }>;
+  logout: () => Promise<void>;
+  checkAdminStatus: () => Promise<boolean>;
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [state, setState] = useState<AuthState>({
+    user: null,
+    session: null,
+    isLoading: true,
+    isAdmin: false,
+    isAuthenticated: false
+  });
+
+  const checkAdminStatus = useCallback(async (): Promise<boolean> => {
+    if (!state.user || !isSupabaseConfigured()) return false;
+
+    try {
+      const { data, error } = await supabase
+        .from('admin_users')
+        .select('role')
+        .eq('user_id', state.user.id)
+        .single();
+
+      if (error || !data) return false;
+      return true;
+    } catch (error) {
+      logError(createAppError(error, 'SUPABASE_ERROR', { action: 'checkAdminStatus' }));
+      return false;
+    }
+  }, [state.user]);
+
+  useEffect(() => {
+    if (!isSupabaseConfigured()) {
+      setState(prev => ({ ...prev, isLoading: false }));
+      return;
+    }
+
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setState(prev => ({
+        ...prev,
+        session,
+        user: session?.user ?? null,
+        isAuthenticated: !!session?.user,
+        isLoading: false
+      }));
+    });
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        setState(prev => ({
+          ...prev,
+          session,
+          user: session?.user ?? null,
+          isAuthenticated: !!session?.user
+        }));
+
+        // Check admin status on sign in
+        if (event === 'SIGNED_IN' && session?.user) {
+          const isAdmin = await checkAdminStatus();
+          setState(prev => ({ ...prev, isAdmin }));
+        } else if (event === 'SIGNED_OUT') {
+          setState(prev => ({ ...prev, isAdmin: false }));
+        }
+      }
+    );
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [checkAdminStatus]);
+
+  const login = async (email: string, password: string): Promise<{ error: string | null }> => {
+    try {
+      await signIn(email, password);
+      return { error: null };
+    } catch (error) {
+      const appError = createAppError(error, 'AUTH_ERROR', { action: 'login' });
+      logError(appError);
+      return { error: appError.message };
+    }
+  };
+
+  const register = async (email: string, password: string): Promise<{ error: string | null }> => {
+    try {
+      await signUp(email, password);
+      return { error: null };
+    } catch (error) {
+      const appError = createAppError(error, 'AUTH_ERROR', { action: 'register' });
+      logError(appError);
+      return { error: appError.message };
+    }
+  };
+
+  const logout = async (): Promise<void> => {
+    try {
+      await signOut();
+    } catch (error) {
+      logError(createAppError(error, 'AUTH_ERROR', { action: 'logout' }));
+    }
+  };
+
+  return (
+    <AuthContext.Provider
+      value={{
+        ...state,
+        login,
+        register,
+        logout,
+        checkAdminStatus
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+export const useAuth = (): AuthContextType => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};
+
+export default AuthContext;
