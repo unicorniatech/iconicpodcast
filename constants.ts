@@ -185,8 +185,8 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
     description: 'Prodej je služba. V této epizodě se podíváme na to, jak přenastavit svou mysl, abyste prodávaly s lehkostí a elegancí.',
     duration: '42 min',
     date: '2024-06-10',
-    imageUrl: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&q=80&w=1000',
-    videoUrl: 'UfJvyeQorH4',
+    imageUrl: 'https://drive.google.com/file/d/1olohtrry9E26ZY-F0o7Vdqe7XCHvI90I/view',
+    videoUrl: 'sCIGYzgfXNA&t=1582s',
     tags: ['Business', 'Mindset'],
     platformLinks: { spotify: LINKS.spotify, youtube: LINKS.youtube, apple: LINKS.apple }
   },
