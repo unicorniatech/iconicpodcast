@@ -83,7 +83,7 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
 
   useEffect(() => {
     fetchComments();
-  }, [episodeId]);
+  }, [episodeId, user?.id]);
 
   const fetchComments = async () => {
     setLoading(true);
@@ -134,7 +134,43 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
         }
       }
 
-      // Build comments with replies (no additional queries needed)
+      // Fetch like counts and user likes for all comments
+      const commentIds = allComments.map((c: any) => c.id);
+      let likesMap: Record<string, number> = {};
+      let userLikesSet = new Set<string>();
+      
+      if (commentIds.length > 0) {
+        try {
+          // Get like counts
+          const { data: likeCounts } = await db
+            .from('comment_likes')
+            .select('comment_id')
+            .in('comment_id', commentIds);
+          
+          if (likeCounts) {
+            likeCounts.forEach((like: any) => {
+              likesMap[like.comment_id] = (likesMap[like.comment_id] || 0) + 1;
+            });
+          }
+          
+          // Get user's likes if logged in
+          if (user) {
+            const { data: userLikes } = await db
+              .from('comment_likes')
+              .select('comment_id')
+              .in('comment_id', commentIds)
+              .eq('user_id', user.id);
+            
+            if (userLikes) {
+              userLikes.forEach((like: any) => userLikesSet.add(like.comment_id));
+            }
+          }
+        } catch {
+          // Table might not exist - continue without likes
+        }
+      }
+
+      // Build comments with replies
       const commentsWithReplies = parentComments.map((comment: any) => {
         const commentReplies = replies
           .filter((r: any) => r.parent_id === comment.id)
@@ -142,15 +178,15 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
           .map((reply: any) => ({
             ...reply,
             user_profile: profilesMap[reply.user_id] || null,
-            like_count: 0,
-            user_liked: false,
+            like_count: likesMap[reply.id] || 0,
+            user_liked: userLikesSet.has(reply.id),
           }));
 
         return {
           ...comment,
           user_profile: profilesMap[comment.user_id] || null,
-          like_count: 0,
-          user_liked: false,
+          like_count: likesMap[comment.id] || 0,
+          user_liked: userLikesSet.has(comment.id),
           replies: commentReplies,
         };
       });
@@ -250,6 +286,31 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
   const handleLikeComment = async (commentId: string, isLiked: boolean) => {
     if (!user) return;
 
+    // Optimistic UI update
+    setComments(prevComments => 
+      prevComments.map(comment => {
+        if (comment.id === commentId) {
+          return {
+            ...comment,
+            user_liked: !isLiked,
+            like_count: isLiked ? Math.max(0, comment.like_count - 1) : comment.like_count + 1,
+          };
+        }
+        // Also check replies
+        if (comment.replies) {
+          return {
+            ...comment,
+            replies: comment.replies.map(reply => 
+              reply.id === commentId 
+                ? { ...reply, user_liked: !isLiked, like_count: isLiked ? Math.max(0, reply.like_count - 1) : reply.like_count + 1 }
+                : reply
+            ),
+          };
+        }
+        return comment;
+      })
+    );
+
     try {
       if (isLiked) {
         await db
@@ -263,9 +324,10 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
           user_id: user.id,
         });
       }
-      fetchComments();
     } catch (error) {
       console.error('Error toggling like:', error);
+      // Revert on error
+      fetchComments();
     }
   };
 
