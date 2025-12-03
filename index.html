@@ -68,6 +68,9 @@
               'gradient-slow': 'gradient 15s ease infinite',
               'wild-gradient': 'wildGradient 3s ease infinite alternate',
               'message-in': 'messageIn 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards',
+              'float': 'float 8s ease-in-out infinite',
+              'spin-slow': 'spin-slow 30s linear infinite',
+              'shimmer': 'shimmer 2s linear infinite',
             },
             keyframes: {
               blob: {
@@ -91,6 +94,20 @@
               wildGradient: {
                 '0%': { 'background-position': '0% 50%' },
                 '100%': { 'background-position': '100% 50%' },
+              },
+              float: {
+                '0%, 100%': { transform: 'translateY(0) translateX(0)', opacity: '0.3' },
+                '25%': { transform: 'translateY(-20px) translateX(10px)', opacity: '0.6' },
+                '50%': { transform: 'translateY(-10px) translateX(-10px)', opacity: '0.4' },
+                '75%': { transform: 'translateY(-30px) translateX(5px)', opacity: '0.5' },
+              },
+              'spin-slow': {
+                '0%': { transform: 'rotate(0deg)' },
+                '100%': { transform: 'rotate(360deg)' },
+              },
+              shimmer: {
+                '0%': { 'background-position': '-200% 0' },
+                '100%': { 'background-position': '200% 0' },
               }
             },
             backgroundSize: {
