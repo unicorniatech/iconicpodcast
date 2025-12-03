@@ -57,17 +57,12 @@ export const ShareButtons: React.FC<ShareButtonsProps> = ({ episodeId, title, ur
   }, [episodeId]);
 
   const fetchLikeStatus = async () => {
-    // Add timeout to prevent hanging
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 5000);
-    
     try {
-      // Run both queries in parallel with timeout
+      // Run both queries in parallel
       const countPromise = db
         .from('episode_likes')
         .select('*', { count: 'exact', head: true })
-        .eq('episode_id', episodeId)
-        .abortSignal(controller.signal);
+        .eq('episode_id', episodeId);
       
       const userLikedPromise = user 
         ? db
@@ -76,22 +71,19 @@ export const ShareButtons: React.FC<ShareButtonsProps> = ({ episodeId, title, ur
             .eq('episode_id', episodeId)
             .eq('user_id', user.id)
             .maybeSingle()
-            .abortSignal(controller.signal)
         : Promise.resolve({ data: null });
 
       const [countResult, userLikedResult] = await Promise.all([countPromise, userLikedPromise]);
       
-      clearTimeout(timeout);
-      
       if (countResult.error) {
+        console.log('Likes fetch error:', countResult.error.message);
         return;
       }
       
       setLikeCount(countResult.count || 0);
       setLiked(!!userLikedResult.data);
-    } catch {
-      clearTimeout(timeout);
-      // Timeout or error - silently skip
+    } catch (err) {
+      console.error('Like status fetch failed:', err);
     }
   };
 
@@ -104,20 +96,30 @@ export const ShareButtons: React.FC<ShareButtonsProps> = ({ episodeId, title, ur
     setLoading(true);
     try {
       if (liked) {
-        await db
+        const { error } = await db
           .from('episode_likes')
           .delete()
           .eq('episode_id', episodeId)
           .eq('user_id', user.id);
-        setLiked(false);
-        setLikeCount((prev) => prev - 1);
+        
+        if (!error) {
+          setLiked(false);
+          setLikeCount((prev) => Math.max(0, prev - 1));
+        }
       } else {
-        await db.from('episode_likes').insert({
+        // Use upsert to handle 409 conflict (already liked)
+        const { error } = await db.from('episode_likes').upsert({
           episode_id: episodeId,
           user_id: user.id,
-        });
-        setLiked(true);
-        setLikeCount((prev) => prev + 1);
+        }, { onConflict: 'episode_id,user_id' });
+        
+        if (!error) {
+          setLiked(true);
+          setLikeCount((prev) => prev + 1);
+        } else if (error.code === '23505') {
+          // Already liked - just update UI state
+          setLiked(true);
+        }
       }
     } catch (error) {
       console.error('Error toggling like:', error);
