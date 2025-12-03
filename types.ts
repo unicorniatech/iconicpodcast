@@ -109,4 +109,8 @@ export interface Translation {
   guest_modal_desc: string;
   guest_modal_btn: string;
   guest_modal_success: string;
+  menu_profile: string;
+  menu_sign_in: string;
+  menu_sign_out: string;
+  menu_language: string;
 }

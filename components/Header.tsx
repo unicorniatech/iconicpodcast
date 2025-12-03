@@ -112,7 +112,7 @@ export const Header: React.FC<HeaderProps> = ({ isBannerOpen }) => {
       />
 
       {/* Mobile Menu Drawer */}
-      <div className={`fixed top-0 right-0 h-full w-[280px] bg-white z-50 md:hidden transform transition-transform duration-300 ease-out shadow-2xl ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+      <div className={`fixed top-0 right-0 h-full w-[300px] bg-white z-50 md:hidden transform transition-transform duration-300 ease-out shadow-2xl ${isOpen ? 'translate-x-0' : 'translate-x-full'}`} style={{ backgroundColor: '#ffffff' }}>
         <div className="flex flex-col h-full">
           {/* Close button */}
           <div className="flex justify-between items-center p-4 border-b border-gray-100">
@@ -140,14 +140,14 @@ export const Header: React.FC<HeaderProps> = ({ isBannerOpen }) => {
                 <div className="border-t border-gray-100 my-4"></div>
                 <Link to="/profile" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-4 py-4 text-iconic-black hover:text-iconic-pink hover:bg-gray-50 rounded-xl text-lg font-bold transition-colors">
                   <User size={20} />
-                  Profile
+                  {t.menu_profile}
                 </Link>
                 <button 
                   onClick={() => { logout(); setIsOpen(false); }} 
                   className="flex items-center gap-3 w-full px-4 py-4 text-gray-500 hover:text-red-500 hover:bg-red-50 rounded-xl text-lg font-medium transition-colors"
                 >
                   <LogOut size={20} />
-                  Sign Out
+                  {t.menu_sign_out}
                 </button>
               </>
             ) : (
@@ -155,7 +155,7 @@ export const Header: React.FC<HeaderProps> = ({ isBannerOpen }) => {
                 <div className="border-t border-gray-100 my-4"></div>
                 <Link to="/login" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-4 py-4 text-iconic-pink hover:bg-pink-50 rounded-xl text-lg font-bold transition-colors">
                   <User size={20} />
-                  Sign In
+                  {t.menu_sign_in}
                 </Link>
               </>
             )}
@@ -163,7 +163,7 @@ export const Header: React.FC<HeaderProps> = ({ isBannerOpen }) => {
 
           {/* Language Switcher */}
           <div className="border-t border-gray-100 p-4">
-            <p className="text-xs text-gray-400 uppercase tracking-wider mb-3 px-2">Language</p>
+            <p className="text-xs text-gray-400 uppercase tracking-wider mb-3 px-2">{t.menu_language}</p>
             <div className="grid grid-cols-3 gap-2">
               <button 
                 onClick={() => {setLang('cs-CZ'); setIsOpen(false)}} 

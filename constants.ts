@@ -54,7 +54,11 @@ export const TRANSLATIONS: Record<Language, Translation> = {
     guest_modal_title: 'Chceš být vidět?',
     guest_modal_desc: 'Staň se hostem našeho podcastu a ukaž světu svou vizi a podnikatelský přesah.',
     guest_modal_btn: 'Mám zájem být hostem',
-    guest_modal_success: 'Skvělé! Brzy se ti ozveme.'
+    guest_modal_success: 'Skvělé! Brzy se ti ozveme.',
+    menu_profile: 'Profil',
+    menu_sign_in: 'Přihlásit se',
+    menu_sign_out: 'Odhlásit se',
+    menu_language: 'Jazyk'
   },
   'en-US': {
     nav_home: 'Home',
@@ -106,7 +110,11 @@ export const TRANSLATIONS: Record<Language, Translation> = {
     guest_modal_title: 'Want to be seen?',
     guest_modal_desc: 'Become a guest on our podcast and show the world your vision and entrepreneurial reach.',
     guest_modal_btn: 'I want to be a guest',
-    guest_modal_success: 'Great! We will contact you soon.'
+    guest_modal_success: 'Great! We will contact you soon.',
+    menu_profile: 'Profile',
+    menu_sign_in: 'Sign In',
+    menu_sign_out: 'Sign Out',
+    menu_language: 'Language'
   },
   'es-MX': {
     nav_home: 'Inicio',
@@ -158,7 +166,11 @@ export const TRANSLATIONS: Record<Language, Translation> = {
     guest_modal_title: '¿Quieres ser vista?',
     guest_modal_desc: 'Sé una invitada en nuestro podcast y muestra al mundo tu visión y alcance empresarial.',
     guest_modal_btn: 'Quiero ser invitada',
-    guest_modal_success: '¡Genial! Te contactaremos pronto.'
+    guest_modal_success: '¡Genial! Te contactaremos pronto.',
+    menu_profile: 'Perfil',
+    menu_sign_in: 'Iniciar sesión',
+    menu_sign_out: 'Cerrar sesión',
+    menu_language: 'Idioma'
   }
 };
 
