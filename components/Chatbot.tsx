@@ -7,10 +7,7 @@ import {
   sendMessage, 
   buildPodcastContext, 
   getChatErrorMessage,
-  ChatSession,
-  startChatSession,
-  sendMessageToGemini,
-  parseGeminiResponse
+  ChatSession
 } from '../services/geminiService';
 import { saveLead, storageService } from '../services/storageService';
 import { PODCAST_EPISODES, PRICING_PLANS } from '../constants';
@@ -26,9 +23,8 @@ export const Chatbot: React.FC = () => {
     const [notification, setNotification] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     
-    // Chat session stored in React state (Comment 3)
+    // Chat session stored in React state
     const [chatSession, setChatSession] = useState<ChatSession | null>(null);
-    const chatInstanceRef = useRef<ReturnType<typeof startChatSession> | null>(null);
     
     const messagesEndRef = useRef<null | HTMLDivElement>(null);
     const podcastContext = buildPodcastContext(PODCAST_EPISODES);
@@ -39,10 +35,9 @@ export const Chatbot: React.FC = () => {
 
     useEffect(() => {
         if (isOpen && messages.length === 0) {
-            // Create new session per user (Comment 3)
+            // Create new session per user
             const session = createChatSession(lang);
             setChatSession(session);
-            chatInstanceRef.current = startChatSession(lang);
             setMessages([{ id: '0', role: 'model', text: t.chatbot_welcome }]);
         }
     }, [isOpen, lang, t]);
@@ -61,46 +56,49 @@ export const Chatbot: React.FC = () => {
         setIsThinking(true);
 
         try {
-            // Use the chat instance for this session
-            if (chatInstanceRef.current) {
-                const response = await sendMessageToGemini(chatInstanceRef.current, textToSend);
-                const { text: modelText, functionCalls } = parseGeminiResponse(response);
-                
-                if (modelText) {
-                    setMessages(prev => [...prev, { id: Date.now().toString(), role: 'model', text: modelText }]);
-                }
-                
-                if (functionCalls && functionCalls.length > 0) {
-                    for (const call of functionCalls) {
-                        if (call.name === 'show_lead_form') {
-                            setMessages(prev => [...prev, { 
-                                id: (Date.now() + 1).toString(), 
-                                role: 'model', 
-                                text: lang === 'cs-CZ' ? "Ráda tě propojím se Zuzanou a jejím týmem. Vyplň prosím kontaktní údaje:" : "I'd love to connect you with Zuzana and her team. Please fill in your contact details:", 
-                                type: 'ui-form' 
-                            }]);
-                        } else if (call.name === 'show_pricing') {
-                            setMessages(prev => [...prev, { 
-                                id: (Date.now() + 2).toString(), 
-                                role: 'model', 
-                                text: lang === 'cs-CZ' ? "Zde jsou možnosti spolupráce a mentoringu:" : "Here are the mentoring options:", 
-                                type: 'ui-pricing' 
-                            }]);
-                        } else if (call.name === 'recommend_podcast') {
-                            const episodeId = call.args.episodeId as string;
-                            const reason = (call.args.reason as string) || (lang === 'cs-CZ' ? "Myslím, že tato epizoda se ti bude líbit!" : "I think you'll love this episode!");
-                            setMessages(prev => [...prev, {
-                                 id: (Date.now() + 3).toString(),
-                                 role: 'model',
-                                 text: reason,
-                                 type: 'ui-card',
-                                 data: { episodeId }
-                            }]);
-                        }
+            // Use the backend API for chat
+            const response = await sendMessage(chatSession, textToSend, podcastContext);
+            
+            if (response.error) {
+                const errorMsg = getChatErrorMessage(response.error, lang);
+                setMessages(prev => [...prev, { id: Date.now().toString(), role: 'model', text: errorMsg }]);
+                return;
+            }
+            
+            if (response.text) {
+                setMessages(prev => [...prev, { id: Date.now().toString(), role: 'model', text: response.text }]);
+            }
+            
+            if (response.functionCalls && response.functionCalls.length > 0) {
+                for (const call of response.functionCalls) {
+                    if (call.name === 'show_lead_form') {
+                        setMessages(prev => [...prev, { 
+                            id: (Date.now() + 1).toString(), 
+                            role: 'model', 
+                            text: lang === 'cs-CZ' ? "Ráda tě propojím se Zuzanou a jejím týmem. Vyplň prosím kontaktní údaje:" : "I'd love to connect you with Zuzana and her team. Please fill in your contact details:", 
+                            type: 'ui-form' 
+                        }]);
+                    } else if (call.name === 'show_pricing') {
+                        setMessages(prev => [...prev, { 
+                            id: (Date.now() + 2).toString(), 
+                            role: 'model', 
+                            text: lang === 'cs-CZ' ? "Zde jsou možnosti spolupráce a mentoringu:" : "Here are the mentoring options:", 
+                            type: 'ui-pricing' 
+                        }]);
+                    } else if (call.name === 'recommend_podcast') {
+                        const episodeId = call.args.episodeId as string;
+                        const reason = (call.args.reason as string) || (lang === 'cs-CZ' ? "Myslím, že tato epizoda se ti bude líbit!" : "I think you'll love this episode!");
+                        setMessages(prev => [...prev, {
+                             id: (Date.now() + 3).toString(),
+                             role: 'model',
+                             text: reason,
+                             type: 'ui-card',
+                             data: { episodeId }
+                        }]);
                     }
-                } else if (!modelText) {
-                     setMessages(prev => [...prev, { id: Date.now().toString(), role: 'model', text: lang === 'cs-CZ' ? "Rozumím." : "I understand." }]);
                 }
+            } else if (!response.text) {
+                 setMessages(prev => [...prev, { id: Date.now().toString(), role: 'model', text: lang === 'cs-CZ' ? "Rozumím." : "I understand." }]);
             }
         } catch (error) {
             const appError = createAppError(error, 'GEMINI_ERROR', { action: 'chatSend' });

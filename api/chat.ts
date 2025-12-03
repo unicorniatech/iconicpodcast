@@ -4,6 +4,7 @@
  * The API key is read from server-side environment variables only
  */
 
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { GoogleGenAI, FunctionDeclaration, Type, Tool, Chat } from "@google/genai";
 
 // --- Tool Definitions ---
@@ -177,27 +178,27 @@ export function clearChatSession(sessionId: string): void {
   chatSessions.delete(sessionId);
 }
 
-// For Vercel/Netlify serverless deployment
-export default async function handler(req: Request): Promise<Response> {
+// For Vercel serverless deployment
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  // Set CORS headers
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   if (req.method !== 'POST') {
-    return new Response(JSON.stringify({ error: 'Method not allowed' }), {
-      status: 405,
-      headers: { 'Content-Type': 'application/json' }
-    });
+    return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
-    const body = await req.json() as ChatRequest;
+    const body = req.body as ChatRequest;
     const result = await handleChatRequest(body);
     
-    return new Response(JSON.stringify(result), {
-      status: result.error ? 500 : 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
+    return res.status(result.error ? 500 : 200).json(result);
   } catch (error) {
-    return new Response(JSON.stringify({ error: 'Invalid request' }), {
-      status: 400,
-      headers: { 'Content-Type': 'application/json' }
-    });
+    return res.status(400).json({ error: 'Invalid request' });
   }
 }
