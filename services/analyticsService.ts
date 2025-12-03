@@ -53,20 +53,34 @@ const getCountryFromTimezone = (): string | null => {
   }
 };
 
-// Check if analytics tables exist (cached) - disabled by default since tables don't exist
-let analyticsTablesExist: boolean = false;
+// Check if analytics tables exist (cached)
+let analyticsTablesExist: boolean | null = null;
 
-const checkAnalyticsTables = (): boolean => {
-  // Analytics tables don't exist in the database - skip all analytics
-  // Set to true once you create the page_views and web_vitals tables
-  return analyticsTablesExist;
+const checkAnalyticsTables = async (): Promise<boolean> => {
+  // Return cached result if we've already checked
+  if (analyticsTablesExist !== null) return analyticsTablesExist;
+  
+  try {
+    // Try a simple query to check if table exists
+    const { error } = await (supabase as any)
+      .from('page_views')
+      .select('id')
+      .limit(1);
+    
+    // If no error or error is not "table doesn't exist", tables exist
+    analyticsTablesExist = !error || error.code !== '42P01';
+    return analyticsTablesExist;
+  } catch {
+    analyticsTablesExist = false;
+    return false;
+  }
 };
 
 // Track page view
 export const trackPageView = async (path: string): Promise<void> => {
   try {
     // Skip if tables don't exist
-    if (!checkAnalyticsTables()) return;
+    if (!(await checkAnalyticsTables())) return;
     
     const sessionId = getSessionId();
     const startTime = Date.now();
@@ -96,7 +110,7 @@ export const trackPageView = async (path: string): Promise<void> => {
 // Update page view duration when leaving
 export const trackPageLeave = async (): Promise<void> => {
   try {
-    if (!checkAnalyticsTables()) return;
+    if (!(await checkAnalyticsTables())) return;
     
     const startTime = sessionStorage.getItem('iconic_page_start');
     const currentPath = sessionStorage.getItem('iconic_current_path');
@@ -127,7 +141,7 @@ export const trackWebVital = async (metric: {
   rating: string;
 }): Promise<void> => {
   try {
-    if (!checkAnalyticsTables()) return;
+    if (!(await checkAnalyticsTables())) return;
     
     const sessionId = getSessionId();
     
@@ -149,7 +163,7 @@ export const trackEvent = async (
   properties?: Record<string, any>
 ): Promise<void> => {
   try {
-    if (!checkAnalyticsTables()) return;
+    if (!(await checkAnalyticsTables())) return;
     
     const sessionId = getSessionId();
     
