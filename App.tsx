@@ -278,19 +278,21 @@ const EpisodeList: React.FC = () => {
 
   return (
     <div className="pt-24 sm:pt-32 pb-16 sm:pb-24 relative z-10 overflow-hidden">
-      {/* Aurora Background Effect */}
+      {/* Aurora Background Effect - Colorful Pastel Animated */}
       <div className="absolute inset-0 -z-10">
-        {/* Base gradient */}
-        <div className="absolute inset-0 bg-gradient-to-b from-white via-gray-50/50 to-white"></div>
+        {/* Animated gradient base that shifts colors */}
+        <div className="absolute inset-0 bg-gradient-to-br from-pink-100/80 via-blue-50/60 to-rose-100/70 animate-gradient-slow bg-[length:400%_400%]"></div>
         
-        {/* Animated aurora blobs */}
-        <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-iconic-pink/20 rounded-full blur-[150px] animate-blob"></div>
-        <div className="absolute top-1/3 right-1/4 w-[500px] h-[500px] bg-iconic-blue/15 rounded-full blur-[130px] animate-blob animation-delay-2000"></div>
-        <div className="absolute bottom-1/4 left-1/3 w-[400px] h-[400px] bg-iconic-blue/10 rounded-full blur-[120px] animate-blob animation-delay-4000"></div>
-        <div className="absolute bottom-0 right-1/3 w-[550px] h-[550px] bg-iconic-pink/15 rounded-full blur-[140px] animate-blob" style={{animationDelay: '3s'}}></div>
+        {/* Animated pastel aurora blobs */}
+        <div className="absolute top-0 left-0 w-[700px] h-[700px] bg-gradient-to-br from-pink-300/40 to-rose-200/30 rounded-full blur-[120px] animate-blob"></div>
+        <div className="absolute top-1/4 right-0 w-[600px] h-[600px] bg-gradient-to-bl from-sky-300/35 to-cyan-200/25 rounded-full blur-[100px] animate-blob animation-delay-2000"></div>
+        <div className="absolute top-1/2 left-1/4 w-[500px] h-[500px] bg-gradient-to-tr from-fuchsia-300/30 to-pink-200/25 rounded-full blur-[110px] animate-blob animation-delay-4000"></div>
+        <div className="absolute bottom-0 right-1/4 w-[650px] h-[650px] bg-gradient-to-tl from-violet-300/35 to-indigo-200/25 rounded-full blur-[130px] animate-blob" style={{animationDelay: '1s'}}></div>
+        <div className="absolute bottom-1/4 left-0 w-[550px] h-[550px] bg-gradient-to-r from-rose-300/30 to-orange-200/20 rounded-full blur-[100px] animate-blob" style={{animationDelay: '5s'}}></div>
+        <div className="absolute top-1/3 left-1/2 w-[400px] h-[400px] bg-gradient-to-b from-teal-200/25 to-emerald-100/20 rounded-full blur-[90px] animate-blob" style={{animationDelay: '3.5s'}}></div>
         
-        {/* Smoky overlay for depth */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-transparent via-white/30 to-white/60"></div>
+        {/* Soft white overlay for readability */}
+        <div className="absolute inset-0 bg-white/20"></div>
       </div>
       
       <SEOHead title={t.latest_episodes} description="Všechny epizody ICONIC Podcast - business, mindset, lifestyle." />
