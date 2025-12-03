@@ -504,27 +504,31 @@ export const AnalyticsDashboard: React.FC = () => {
             {/* Key Metrics */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
               <MetricCard
-                icon={<Eye className="text-blue-500" />}
+                icon={<Eye className="text-white" />}
                 label="Page Views"
                 value={analytics.totalPageViews.toLocaleString()}
                 trend={+12.5}
+                color="blue"
               />
               <MetricCard
-                icon={<Users className="text-green-500" />}
+                icon={<Users className="text-white" />}
                 label="Unique Visitors"
                 value={analytics.uniqueVisitors.toLocaleString()}
                 trend={+8.3}
+                color="green"
               />
               <MetricCard
-                icon={<Clock className="text-purple-500" />}
+                icon={<Clock className="text-white" />}
                 label="Avg. Session"
                 value={formatDuration(analytics.avgSessionDuration)}
                 trend={+5.2}
+                color="purple"
               />
               <MetricCard
-                icon={<MousePointerClick className="text-orange-500" />}
+                icon={<MousePointerClick className="text-white" />}
                 label="Bounce Rate"
                 value={`${analytics.bounceRate.toFixed(1)}%`}
+                color="orange"
                 trend={-3.1}
                 invertTrend
               />
@@ -721,31 +725,40 @@ export const AnalyticsDashboard: React.FC = () => {
   );
 };
 
-// Metric Card Component
+// Metric Card Component with colorful backgrounds
 const MetricCard: React.FC<{
   icon: React.ReactNode;
   label: string;
   value: string;
   trend?: number;
   invertTrend?: boolean;
-}> = ({ icon, label, value, trend, invertTrend }) => {
+  color?: 'blue' | 'green' | 'purple' | 'orange' | 'pink';
+}> = ({ icon, label, value, trend, invertTrend, color = 'blue' }) => {
   const isPositive = invertTrend ? (trend || 0) < 0 : (trend || 0) > 0;
   
+  const colorClasses = {
+    blue: 'bg-gradient-to-br from-blue-500 to-blue-600',
+    green: 'bg-gradient-to-br from-emerald-500 to-emerald-600',
+    purple: 'bg-gradient-to-br from-purple-500 to-purple-600',
+    orange: 'bg-gradient-to-br from-orange-500 to-orange-600',
+    pink: 'bg-gradient-to-br from-iconic-pink to-pink-600',
+  };
+  
   return (
-    <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
+    <div className={`${colorClasses[color]} rounded-2xl p-5 shadow-lg text-white`}>
       <div className="flex items-center justify-between mb-3">
-        <div className="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center">
+        <div className="w-10 h-10 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center text-white">
           {icon}
         </div>
         {trend !== undefined && (
-          <span className={`flex items-center gap-1 text-xs font-bold ${isPositive ? 'text-green-500' : 'text-red-500'}`}>
+          <span className={`flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-full ${isPositive ? 'bg-green-400/30 text-green-100' : 'bg-red-400/30 text-red-100'}`}>
             {isPositive ? <TrendingUp size={14} /> : <TrendingDown size={14} />}
             {Math.abs(trend)}%
           </span>
         )}
       </div>
-      <p className="text-2xl font-bold text-iconic-black">{value}</p>
-      <p className="text-sm text-gray-500">{label}</p>
+      <p className="text-3xl font-bold text-white">{value}</p>
+      <p className="text-sm text-white/80">{label}</p>
     </div>
   );
 };

@@ -190,12 +190,12 @@ export const PRICING_PLANS = [
 
 export const PODCAST_EPISODES: PodcastEpisode[] = [
   {
-    id: '16',
-    title: 'EP 16: Jak vybudovat impérium na 0% chemie | Jiří Černota (BEWIT)',
+    id: '11',
+    title: 'EP 11: Jak vybudovat impérium na 0% chemie | Jiří Černota (BEWIT)',
     description: 'Může být majitel firmy tím nejdůležitějším "motorem", který nelze nahradit? Jiří Černota, vizionář a zakladatel BEWIT, opustil byznys ve stavebnictví, aby následoval svůj koníček a vytvořil jednu z největších evropských značek esenciálních olejů a superpotravin.',
     duration: '47 min',
     date: '2024-11-04',
-    imageUrl: '/ep16.jpg',
+    imageUrl: '/ep11.jpg',
     videoUrl: 'q56HTl3R1n4',
     tags: ['Business', 'Lifestyle'],
     platformLinks: { 
