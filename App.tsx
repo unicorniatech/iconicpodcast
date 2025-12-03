@@ -514,6 +514,16 @@ const ContactPage: React.FC = () => {
 
     return (
         <div className="pt-32 pb-24 min-h-screen relative overflow-hidden">
+             {/* Aurora Background Effect */}
+             <div className="fixed inset-0 -z-10">
+                 <div className="absolute inset-0 bg-gradient-to-br from-pink-100/70 via-sky-50/50 to-violet-100/60 animate-gradient-slow bg-[length:400%_400%]"></div>
+                 <div className="absolute top-0 left-0 w-[700px] h-[700px] bg-gradient-to-br from-pink-300/40 to-rose-200/30 rounded-full blur-[120px] animate-blob"></div>
+                 <div className="absolute top-1/4 right-0 w-[600px] h-[600px] bg-gradient-to-bl from-sky-300/35 to-cyan-200/25 rounded-full blur-[100px] animate-blob animation-delay-2000"></div>
+                 <div className="absolute bottom-0 left-1/3 w-[500px] h-[500px] bg-gradient-to-tr from-violet-300/35 to-purple-200/25 rounded-full blur-[110px] animate-blob animation-delay-4000"></div>
+                 <div className="absolute bottom-1/4 right-1/4 w-[450px] h-[450px] bg-gradient-to-tl from-fuchsia-300/30 to-pink-200/20 rounded-full blur-[100px] animate-blob" style={{animationDelay: '3s'}}></div>
+                 <div className="absolute inset-0 bg-white/15"></div>
+             </div>
+             
              <SEOHead title={t.contact_title} description={t.contact_subtitle} />
              <div className="max-w-4xl mx-auto px-4 relative z-10">
                  <div className="text-center mb-16">
