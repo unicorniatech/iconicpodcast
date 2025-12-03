@@ -296,14 +296,18 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
   },
   {
     id: '8',
-    title: 'EP 08: Marketingové strategie pro rok 2024',
-    description: 'Co funguje na sociálních sítích dnes? Změny algoritmů, trendy a jak být vidět bez placené reklamy.',
-    duration: '48 min',
-    date: '2024-03-22',
-    imageUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1000',
-    videoUrl: 'UfJvyeQorH4',
-    tags: ['Business', 'Marketing'],
-    platformLinks: { spotify: LINKS.spotify, youtube: LINKS.youtube, apple: LINKS.apple }
+    title: 'EP 08: Vědomé sociální sítě a budoucnost digitálu | Ladislav Kocián',
+    description: 'Jak fungují algoritmy sociálních sítí a proč nás nutí scrollovat dál? Ladislav Kocián, CEO a zakladatel sociální sítě Mait.me, sdílí svou vizi etičtějších a vědomějších sítí, kde má člověk opět kontrolu nad svým obsahem i časem.',
+    duration: '42 min',
+    date: '2024-10-14',
+    imageUrl: '/ep08.jpg',
+    videoUrl: '6D8j2PTK9Ls',
+    tags: ['Business', 'Lifestyle'],
+    platformLinks: { 
+      spotify: 'https://open.spotify.com/episode/3Xi2n6fqtM0sos6mmOBCsR', 
+      youtube: 'https://youtu.be/6D8j2PTK9Ls', 
+      apple: LINKS.apple 
+    }
   },
   {
     id: '7',
