@@ -311,13 +311,17 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
   },
   {
     id: '7',
-    title: 'EP 07: Příběh mé cesty',
-    description: 'Jak jsem začínala já? Otevřená zpověď o mých začátcích, chybách a lekcích, které mě formovaly.',
-    duration: '55 min',
-    date: '2024-03-10',
-    imageUrl: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=1000',
-    videoUrl: 'UfJvyeQorH4',
-    tags: ['Lifestyle', 'Mindset'],
-    platformLinks: { spotify: LINKS.spotify, youtube: LINKS.youtube, apple: LINKS.apple }
+    title: 'EP 07: Od závislostí ke světovým rekordům | Josef Joska Šálek',
+    description: 'Nikdy nesportoval, měl špatnou životosprávu a propadl závislostem. Dnes má tři světové rekordy a učí lidi, jak nastavit vlastní mysl na úspěch. Rekordman Josef Joska Šálek sdílí, jak překonal výkony Wima Hofa a jak se rodily Guinessovy rekordy v planku.',
+    duration: '48 min',
+    date: '2024-10-07',
+    imageUrl: '/ep07.jpg',
+    videoUrl: '6mq80ttk-80',
+    tags: ['Mindset', 'Lifestyle'],
+    platformLinks: { 
+      spotify: 'https://open.spotify.com/episode/5a5ntm9JTwXQAVJrhrIDVw', 
+      youtube: 'https://youtu.be/6mq80ttk-80', 
+      apple: LINKS.apple 
+    }
   }
 ];
