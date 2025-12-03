@@ -227,28 +227,31 @@ const GuestInvitationModal: React.FC<GuestInvitationModalProps> = ({ onClose }) 
 };
 
 // ============================================================================
-// PODCAST CARD
+// PODCAST CARD - Glassmorphism Style
 // ============================================================================
 const PodcastCard: React.FC<{ episode: PodcastEpisode }> = ({ episode }) => {
   return (
-    <div className="group bg-white rounded-xl sm:rounded-2xl shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden border border-gray-100 flex flex-col h-full z-20 relative">
+    <div className="group relative bg-white/70 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden border border-white/50 flex flex-col h-full z-20">
+      {/* Subtle gradient glow on hover */}
+      <div className="absolute inset-0 bg-gradient-to-br from-iconic-pink/5 via-transparent to-iconic-blue/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl sm:rounded-3xl"></div>
+      
       <div className="relative overflow-hidden aspect-video">
         <img src={episode.imageUrl} alt={episode.title} className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" />
-        <div className="absolute inset-0 bg-gradient-to-t from-iconic-black/80 to-transparent opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity flex items-end p-4 sm:p-6">
-           <Link to={`/episodes/${episode.id}`} className="bg-white text-iconic-black p-2.5 sm:p-3 rounded-full hover:bg-iconic-pink hover:text-white transition-colors transform sm:translate-y-4 sm:group-hover:translate-y-0 transition-transform">
+        <div className="absolute inset-0 bg-gradient-to-t from-iconic-black/80 via-iconic-black/20 to-transparent opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity flex items-end p-4 sm:p-6">
+           <Link to={`/episodes/${episode.id}`} className="bg-white/90 backdrop-blur-sm text-iconic-black p-2.5 sm:p-3 rounded-full hover:bg-iconic-pink hover:text-white transition-all transform sm:translate-y-4 sm:group-hover:translate-y-0 hover:scale-110">
               <Play size={20} className="sm:w-6 sm:h-6" fill="currentColor" />
            </Link>
         </div>
       </div>
-      <div className="p-4 sm:p-6 flex-1 flex flex-col">
+      <div className="p-4 sm:p-6 flex-1 flex flex-col relative">
         <div className="text-xs font-bold text-iconic-blue uppercase tracking-wider mb-2">{episode.date} • {episode.duration}</div>
         <h3 className="text-lg sm:text-xl font-serif font-bold text-iconic-black mb-2 sm:mb-3 group-hover:text-iconic-pink transition-colors line-clamp-2">
             <Link to={`/episodes/${episode.id}`}>{episode.title}</Link>
         </h3>
-        <p className="text-gray-500 text-sm line-clamp-2 sm:line-clamp-3 mb-4 flex-1">{episode.description}</p>
-        <div className="flex gap-4 pt-3 sm:pt-4 border-t border-gray-100">
-             <a href={episode.platformLinks.youtube} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-red-600 transition-colors p-1"><Youtube size={22} /></a>
-             <a href={episode.platformLinks.spotify} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-green-500 transition-colors p-1"><Mic size={22} /></a>
+        <p className="text-gray-600 text-sm line-clamp-2 sm:line-clamp-3 mb-4 flex-1">{episode.description}</p>
+        <div className="flex gap-4 pt-3 sm:pt-4 border-t border-gray-200/50">
+             <a href={episode.platformLinks.youtube} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-red-600 hover:scale-125 transition-all p-1"><Youtube size={22} /></a>
+             <a href={episode.platformLinks.spotify} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-green-500 hover:scale-125 transition-all p-1"><Mic size={22} /></a>
         </div>
       </div>
     </div>
@@ -274,9 +277,24 @@ const EpisodeList: React.FC = () => {
   });
 
   return (
-    <div className="pt-24 sm:pt-32 pb-16 sm:pb-24 relative z-10">
+    <div className="pt-24 sm:pt-32 pb-16 sm:pb-24 relative z-10 overflow-hidden">
+      {/* Aurora Background Effect */}
+      <div className="absolute inset-0 -z-10">
+        {/* Base gradient */}
+        <div className="absolute inset-0 bg-gradient-to-b from-white via-gray-50/50 to-white"></div>
+        
+        {/* Animated aurora blobs */}
+        <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-iconic-pink/20 rounded-full blur-[150px] animate-blob"></div>
+        <div className="absolute top-1/3 right-1/4 w-[500px] h-[500px] bg-iconic-blue/15 rounded-full blur-[130px] animate-blob animation-delay-2000"></div>
+        <div className="absolute bottom-1/4 left-1/3 w-[400px] h-[400px] bg-iconic-blue/10 rounded-full blur-[120px] animate-blob animation-delay-4000"></div>
+        <div className="absolute bottom-0 right-1/3 w-[550px] h-[550px] bg-iconic-pink/15 rounded-full blur-[140px] animate-blob" style={{animationDelay: '3s'}}></div>
+        
+        {/* Smoky overlay for depth */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-transparent via-white/30 to-white/60"></div>
+      </div>
+      
       <SEOHead title={t.latest_episodes} description="Všechny epizody ICONIC Podcast - business, mindset, lifestyle." />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div className="text-center mb-10 sm:mb-16">
           <ScrollReveal>
              <h2 className="text-2xl sm:text-3xl md:text-5xl font-serif font-black text-iconic-black mb-3 sm:mb-4">{t.latest_episodes}</h2>
@@ -285,13 +303,15 @@ const EpisodeList: React.FC = () => {
           
           <ScrollReveal delay={200}>
             <div className="max-w-2xl mx-auto space-y-4 sm:space-y-6">
+               {/* Glassmorphism search input */}
                <input 
                   type="text" 
                   placeholder={t.search_placeholder}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full px-5 sm:px-6 py-3 sm:py-4 rounded-full border-2 border-gray-100 shadow-sm focus:outline-none focus:ring-0 focus:border-iconic-black text-base sm:text-lg transition-all"
+                  className="w-full px-5 sm:px-6 py-3 sm:py-4 rounded-full bg-white/70 backdrop-blur-lg border border-white/50 shadow-lg focus:outline-none focus:ring-2 focus:ring-iconic-pink/30 focus:border-iconic-pink/50 text-base sm:text-lg transition-all placeholder:text-gray-400"
                />
+               {/* Glassmorphism filter buttons */}
                <div className="flex flex-wrap justify-center gap-2">
                    {tags.map(tag => {
                        const displayTag = tag === "All" ? t.filter_all : tag;
@@ -299,10 +319,10 @@ const EpisodeList: React.FC = () => {
                        <button 
                           key={tag}
                           onClick={() => setActiveTag(tag === "All" ? t.filter_all : tag)}
-                          className={`px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-bold transition-all transform hover:scale-105 uppercase tracking-wide ${
+                          className={`px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-bold transition-all transform hover:scale-105 uppercase tracking-wide backdrop-blur-sm ${
                               (activeTag === tag || (tag === "All" && activeTag === t.filter_all))
                               ? 'bg-iconic-black text-white shadow-lg' 
-                              : 'bg-white border-2 border-gray-100 text-gray-400 hover:border-iconic-black hover:text-iconic-black'
+                              : 'bg-white/60 border border-white/50 text-gray-500 hover:bg-white/80 hover:text-iconic-black shadow-sm'
                           }`}
                        >
                            {displayTag}
@@ -321,7 +341,7 @@ const EpisodeList: React.FC = () => {
                 </ScrollReveal>
             ))
           ) : (
-             <div className="col-span-full text-center py-12 text-gray-500">{t.no_episodes_found}</div>
+             <div className="col-span-full text-center py-12 text-gray-500 bg-white/50 backdrop-blur-sm rounded-2xl">{t.no_episodes_found}</div>
           )}
         </div>
       </div>
