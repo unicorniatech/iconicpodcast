@@ -174,47 +174,53 @@ const GuestInvitationModal: React.FC<GuestInvitationModalProps> = ({ onClose }) 
   };
 
   return (
-    <div className="fixed inset-0 z-[70] flex items-center justify-center p-4">
-       <div className="absolute inset-0 bg-gradient-to-r from-iconic-pink via-purple-900 to-iconic-black bg-[length:300%_300%] animate-wild-gradient opacity-95"></div>
-       <div className="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
-       <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-iconic-pink rounded-full blur-[100px] animate-pulse opacity-60"></div>
-       <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-purple-800 rounded-full blur-[100px] animate-pulse opacity-60 delay-1000"></div>
+    <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 sm:p-6">
+       {/* Animated gradient background */}
+       <div className="absolute inset-0 bg-gradient-to-br from-iconic-pink via-iconic-blue/80 to-iconic-black bg-[length:300%_300%] animate-gradient-slow opacity-95"></div>
+       <div className="absolute inset-0 bg-black/30 backdrop-blur-sm"></div>
+       
+       {/* Floating orbs */}
+       <div className="absolute top-1/4 left-1/4 w-48 sm:w-64 h-48 sm:h-64 bg-iconic-pink rounded-full blur-[80px] sm:blur-[100px] animate-blob opacity-50"></div>
+       <div className="absolute bottom-1/4 right-1/4 w-48 sm:w-64 h-48 sm:h-64 bg-iconic-blue rounded-full blur-[80px] sm:blur-[100px] animate-blob animation-delay-2000 opacity-50"></div>
 
-       <div className="relative bg-white/10 backdrop-blur-2xl rounded-3xl shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-white/20 w-full max-w-md overflow-hidden animate-fade-in-up">
-           <button onClick={handleDismiss} className="absolute top-4 right-4 text-white/60 hover:text-white transition-colors z-20">
-               <X size={24} />
+       {/* Modal container - full screen on mobile */}
+       <div className="relative bg-white/10 backdrop-blur-2xl sm:rounded-3xl shadow-[0_0_50px_rgba(0,0,0,0.5)] border-0 sm:border border-white/20 w-full h-full sm:h-auto sm:max-w-md overflow-y-auto sm:overflow-hidden animate-fade-in-up flex flex-col">
+           {/* Close button */}
+           <button onClick={handleDismiss} className="absolute top-4 right-4 sm:top-4 sm:right-4 w-10 h-10 flex items-center justify-center bg-white/10 hover:bg-white/20 rounded-full text-white/80 hover:text-white transition-all z-20">
+               <X size={20} />
            </button>
            
-           <div className="p-8 text-center relative z-10 text-white">
+           {/* Content */}
+           <div className="p-6 sm:p-8 text-center relative z-10 text-white flex-1 flex flex-col justify-center">
                {isSubmitted ? (
-                   <div className="py-12 flex flex-col items-center animate-fade-in-up">
-                       <div className="w-20 h-20 rounded-full bg-green-500/20 flex items-center justify-center mb-6 border border-green-500/50 shadow-[0_0_20px_rgba(34,197,94,0.4)]">
-                          <CheckCircle size={40} className="text-green-400" />
+                   <div className="py-8 sm:py-12 flex flex-col items-center animate-fade-in-up">
+                       <div className="w-16 sm:w-20 h-16 sm:h-20 rounded-full bg-green-500/20 flex items-center justify-center mb-4 sm:mb-6 border border-green-500/50 shadow-[0_0_20px_rgba(34,197,94,0.4)]">
+                          <CheckCircle size={32} className="sm:w-10 sm:h-10 text-green-400" />
                        </div>
-                       <h3 className="text-2xl font-bold mb-2">{t.guest_modal_success}</h3>
+                       <h3 className="text-xl sm:text-2xl font-bold mb-2">{t.guest_modal_success}</h3>
                    </div>
                ) : (
                    <>
-                       <div className="w-20 h-20 bg-gradient-to-br from-iconic-pink to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg border border-white/20">
-                            <Mic size={36} className="text-white drop-shadow-md" />
+                       <div className="w-16 sm:w-20 h-16 sm:h-20 bg-gradient-to-br from-iconic-pink to-iconic-blue rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-lg border border-white/20">
+                            <Mic size={28} className="sm:w-9 sm:h-9 text-white drop-shadow-md" />
                        </div>
-                       <h2 className="text-3xl font-serif font-black mb-4 leading-tight drop-shadow-sm">{t.guest_modal_title}</h2>
-                       <p className="text-white/80 mb-8 leading-relaxed text-sm font-light">{t.guest_modal_desc}</p>
+                       <h2 className="text-2xl sm:text-3xl font-serif font-black mb-3 sm:mb-4 leading-tight drop-shadow-sm">{t.guest_modal_title}</h2>
+                       <p className="text-white/80 mb-6 sm:mb-8 leading-relaxed text-sm font-light max-w-sm mx-auto">{t.guest_modal_desc}</p>
                        
-                       <form onSubmit={handleSubmit} className="space-y-4 text-left">
+                       <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4 text-left">
                            <div className="space-y-1">
                                <label className="text-[10px] font-bold text-white/70 uppercase tracking-widest pl-1">{t.form_name}</label>
-                               <input required name="name" type="text" className="w-full p-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-white/30 focus:outline-none focus:bg-white/10 focus:border-iconic-pink transition-all" />
+                               <input required name="name" type="text" className="w-full p-3 sm:p-3.5 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/40 focus:outline-none focus:bg-white/15 focus:border-iconic-pink transition-all text-base" />
                            </div>
                            <div className="space-y-1">
                                <label className="text-[10px] font-bold text-white/70 uppercase tracking-widest pl-1">{t.form_email}</label>
-                               <input required name="email" type="email" className="w-full p-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-white/30 focus:outline-none focus:bg-white/10 focus:border-iconic-pink transition-all" />
+                               <input required name="email" type="email" className="w-full p-3 sm:p-3.5 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/40 focus:outline-none focus:bg-white/15 focus:border-iconic-pink transition-all text-base" />
                            </div>
                            <div className="space-y-1">
                                <label className="text-[10px] font-bold text-white/70 uppercase tracking-widest pl-1">Tvá Vize</label>
-                               <textarea required name="vision" rows={2} className="w-full p-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-white/30 focus:outline-none focus:bg-white/10 focus:border-iconic-pink transition-all"></textarea>
+                               <textarea required name="vision" rows={2} className="w-full p-3 sm:p-3.5 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/40 focus:outline-none focus:bg-white/15 focus:border-iconic-pink transition-all resize-none text-base"></textarea>
                            </div>
-                           <button type="submit" disabled={isSubmitting} className="w-full bg-gradient-to-r from-iconic-pink to-purple-600 text-white font-bold py-4 rounded-xl hover:shadow-[0_0_20px_rgba(183,6,109,0.6)] hover:scale-[1.02] transition-all transform mt-2 border border-white/20 disabled:opacity-50">
+                           <button type="submit" disabled={isSubmitting} className="w-full bg-gradient-to-r from-iconic-pink to-iconic-blue text-white font-bold py-4 rounded-xl hover:shadow-[0_0_20px_rgba(183,6,109,0.6)] active:scale-[0.98] transition-all transform mt-2 border border-white/20 disabled:opacity-50 text-base">
                                {isSubmitting ? '...' : t.guest_modal_btn}
                            </button>
                        </form>

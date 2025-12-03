@@ -160,8 +160,8 @@ export const Chatbot: React.FC = () => {
             </button>
 
             {isOpen && (
-                <div className="fixed inset-4 sm:inset-auto sm:bottom-24 sm:right-6 sm:w-[400px] sm:h-[600px] bg-white rounded-2xl shadow-2xl z-50 flex flex-col border border-gray-200 overflow-hidden animate-fade-in-up font-sans">
-                    <div className="bg-gradient-to-r from-iconic-pink to-[#890451] p-3 sm:p-4 flex items-center text-white relative overflow-hidden">
+                <div className="fixed inset-0 sm:inset-auto sm:bottom-24 sm:right-6 sm:w-[400px] sm:h-[600px] sm:max-h-[80vh] bg-white sm:rounded-2xl shadow-2xl z-50 flex flex-col border-0 sm:border border-gray-200 overflow-hidden animate-fade-in-up font-sans">
+                    <div className="bg-gradient-to-r from-iconic-pink to-[#890451] p-4 sm:p-4 flex items-center text-white relative overflow-hidden safe-area-top">
                         <div className="absolute top-0 right-0 p-4 opacity-10">
                             <Sparkles size={60} />
                         </div>
@@ -264,7 +264,7 @@ export const Chatbot: React.FC = () => {
                         )}
                         <div ref={messagesEndRef} />
                     </div>
-                    <div className="p-3 sm:p-4 bg-white border-t border-gray-100 flex gap-2">
+                    <div className="p-4 sm:p-4 bg-white border-t border-gray-100 flex gap-2 safe-area-bottom">
                         <input 
                             type="text" 
                             value={input}

@@ -2,7 +2,11 @@
 <html lang="cs">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="theme-color" content="#B7066D" />
     <title>ICONIC Podcast | Buď svá, buď ikonická</title>
     <meta name="description" content="Podcast pro ženy, které chtějí víc. Business, mindset a lifestyle bez kompromisů. Zuzana Husarová ti ukáže, jak být svá a ikonická." />
     <meta name="author" content="Zuzana Husarova" />
@@ -162,6 +166,32 @@
       }
       .custom-scrollbar::-webkit-scrollbar-thumb:hover {
         background: #ccc;
+      }
+      
+      /* Safe area support for iOS notch/home indicator */
+      .safe-area-top {
+        padding-top: max(1rem, env(safe-area-inset-top));
+      }
+      .safe-area-bottom {
+        padding-bottom: max(1rem, env(safe-area-inset-bottom));
+      }
+      
+      /* Prevent text selection on buttons */
+      button {
+        -webkit-tap-highlight-color: transparent;
+        user-select: none;
+      }
+      
+      /* Smooth scrolling */
+      html {
+        scroll-behavior: smooth;
+      }
+      
+      /* Better touch targets */
+      @media (max-width: 640px) {
+        input, textarea, button, select {
+          font-size: 16px !important; /* Prevent iOS zoom on focus */
+        }
       }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
