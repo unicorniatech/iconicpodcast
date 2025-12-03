@@ -87,16 +87,23 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
 
   const fetchComments = async () => {
     setLoading(true);
+    
+    // Add timeout to prevent hanging
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000);
+    
     try {
       // Fetch all comments for this episode in one query
       const { data: allComments, error } = await db
         .from('comments')
         .select('*')
         .eq('episode_id', episodeId)
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .abortSignal(controller.signal);
+
+      clearTimeout(timeout);
 
       if (error) {
-        console.log('Comments table not available:', error.message);
         setComments([]);
         return;
       }
@@ -113,14 +120,20 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
       // Get unique user IDs to batch fetch profiles
       const userIds = [...new Set(allComments.map((c: any) => c.user_id))];
       
-      // Batch fetch all user profiles in one query
+      // Batch fetch all user profiles in one query (with its own timeout)
       let profilesMap: Record<string, any> = {};
       if (userIds.length > 0) {
         try {
+          const profileController = new AbortController();
+          const profileTimeout = setTimeout(() => profileController.abort(), 3000);
+          
           const { data: profiles } = await db
             .from('user_profiles')
             .select('id, display_name, avatar_url')
-            .in('id', userIds);
+            .in('id', userIds)
+            .abortSignal(profileController.signal);
+          
+          clearTimeout(profileTimeout);
           
           if (profiles) {
             profilesMap = profiles.reduce((acc: any, p: any) => {
@@ -129,7 +142,7 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
             }, {});
           }
         } catch {
-          // user_profiles table might not exist
+          // Timeout or table doesn't exist - continue without profiles
         }
       }
 
@@ -155,8 +168,8 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
       });
 
       setComments(commentsWithReplies);
-    } catch (error) {
-      console.error('Error fetching comments:', error);
+    } catch {
+      clearTimeout(timeout);
       setComments([]);
     } finally {
       setLoading(false);

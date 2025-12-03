@@ -57,12 +57,17 @@ export const ShareButtons: React.FC<ShareButtonsProps> = ({ episodeId, title, ur
   }, [episodeId]);
 
   const fetchLikeStatus = async () => {
+    // Add timeout to prevent hanging
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000);
+    
     try {
-      // Run both queries in parallel
+      // Run both queries in parallel with timeout
       const countPromise = db
         .from('episode_likes')
         .select('*', { count: 'exact', head: true })
-        .eq('episode_id', episodeId);
+        .eq('episode_id', episodeId)
+        .abortSignal(controller.signal);
       
       const userLikedPromise = user 
         ? db
@@ -71,19 +76,22 @@ export const ShareButtons: React.FC<ShareButtonsProps> = ({ episodeId, title, ur
             .eq('episode_id', episodeId)
             .eq('user_id', user.id)
             .maybeSingle()
+            .abortSignal(controller.signal)
         : Promise.resolve({ data: null });
 
       const [countResult, userLikedResult] = await Promise.all([countPromise, userLikedPromise]);
       
+      clearTimeout(timeout);
+      
       if (countResult.error) {
-        // Table doesn't exist, skip silently
         return;
       }
       
       setLikeCount(countResult.count || 0);
       setLiked(!!userLikedResult.data);
     } catch {
-      // Table might not exist - silently skip
+      clearTimeout(timeout);
+      // Timeout or error - silently skip
     }
   };
 
