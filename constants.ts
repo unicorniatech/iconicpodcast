@@ -190,6 +190,21 @@ export const PRICING_PLANS = [
 
 export const PODCAST_EPISODES: PodcastEpisode[] = [
   {
+    id: '16',
+    title: 'EP 16: Jak vybudovat impérium na 0% chemie | Jiří Černota (BEWIT)',
+    description: 'Může být majitel firmy tím nejdůležitějším "motorem", který nelze nahradit? Jiří Černota, vizionář a zakladatel BEWIT, opustil byznys ve stavebnictví, aby následoval svůj koníček a vytvořil jednu z největších evropských značek esenciálních olejů a superpotravin.',
+    duration: '47 min',
+    date: '2024-11-04',
+    imageUrl: '/ep16.jpg',
+    videoUrl: 'q56HTl3R1n4',
+    tags: ['Business', 'Lifestyle'],
+    platformLinks: { 
+      spotify: 'https://open.spotify.com/episode/2OVxA0qrR5iWgbbwK1Y9uP', 
+      youtube: 'https://youtu.be/q56HTl3R1n4', 
+      apple: LINKS.apple 
+    }
+  },
+  {
     id: '15',
     title: 'EP 15: O tomhle přístupu k rodičovství potřebuješ slyšet | Tereza Veselá',
     description: 'Jak zvládat emoce a nezbláznit se? Tereza Veselá z Matcastu sdílí, proč je mateřství největší školou seberozvoje a proč dítě nepotřebuje animátora, ale tvou pravdivou přítomnost.',
