@@ -368,5 +368,20 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
       youtube: 'https://youtu.be/cJvSbLb1288', 
       apple: LINKS.apple 
     }
+  },
+  {
+    id: '3',
+    title: 'EP 03: Z toxického vztahu ke kreativní svobodě | Lenka Kellnerová',
+    description: 'Lenka Kellnerová sdílí svůj příběh lásky s cizinci, z nichž jeden se proměnil v násilný vztah, i to, jak se z něj dokázala vymanit. Jak ji Canva a kreativní práce pomohla vrátit radost i sebehodnotu?',
+    duration: '48 min',
+    date: '2024-09-09',
+    imageUrl: '/ep03.jpg',
+    videoUrl: 'jxtFGL8DzWY',
+    tags: ['Lifestyle', 'Mindset'],
+    platformLinks: { 
+      spotify: 'https://open.spotify.com/episode/4baBHSUX7F8wszhHpduM2h', 
+      youtube: 'https://youtu.be/jxtFGL8DzWY', 
+      apple: LINKS.apple 
+    }
   }
 ];
