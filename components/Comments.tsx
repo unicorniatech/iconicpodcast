@@ -335,23 +335,30 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
           )}
         </div>
 
-        <div className="flex items-center gap-2 sm:gap-4 mt-2 ml-1 sm:ml-2 flex-wrap">
+        <div className="flex items-center gap-3 sm:gap-4 mt-2 ml-1 sm:ml-2 flex-wrap">
           <button
             onClick={() => handleLikeComment(comment.id, comment.user_liked)}
-            className={`flex items-center gap-1 text-xs transition-colors ${
-              comment.user_liked ? 'text-iconic-pink' : 'text-gray-400 hover:text-iconic-pink'
+            className={`group flex items-center gap-1.5 text-xs font-medium transition-all duration-200 px-2 py-1 rounded-full ${
+              comment.user_liked 
+                ? 'text-iconic-pink bg-iconic-pink/10' 
+                : 'text-gray-400 hover:text-iconic-pink hover:bg-iconic-pink/10'
             }`}
             disabled={!user}
           >
-            <Heart size={14} fill={comment.user_liked ? 'currentColor' : 'none'} />
+            <Heart 
+              size={14} 
+              fill={comment.user_liked ? 'currentColor' : 'none'} 
+              className={`transition-transform duration-200 ${comment.user_liked ? 'scale-110' : 'group-hover:scale-125 group-active:scale-90'}`}
+            />
             {comment.like_count > 0 && <span>{comment.like_count}</span>}
           </button>
 
           {user && !isReply && (
             <button
               onClick={() => { setReplyingTo(comment.id); setReplyContent(''); }}
-              className="text-xs text-gray-400 hover:text-iconic-black transition-colors"
+              className="group flex items-center gap-1.5 text-xs font-medium text-gray-400 hover:text-iconic-blue hover:bg-iconic-blue/10 px-2 py-1 rounded-full transition-all duration-200"
             >
+              <MessageCircle size={14} className="transition-transform duration-200 group-hover:scale-110 group-active:scale-90" />
               {t.reply}
             </button>
           )}
@@ -360,14 +367,16 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
             <>
               <button
                 onClick={() => { setEditingId(comment.id); setEditContent(comment.content); }}
-                className="text-xs text-gray-400 hover:text-iconic-black transition-colors"
+                className="group flex items-center gap-1.5 text-xs font-medium text-gray-400 hover:text-iconic-black hover:bg-gray-100 px-2 py-1 rounded-full transition-all duration-200"
               >
+                <Edit2 size={14} className="transition-transform duration-200 group-hover:scale-110 group-active:scale-90" />
                 {t.edit}
               </button>
               <button
                 onClick={() => handleDeleteComment(comment.id)}
-                className="text-xs text-gray-400 hover:text-red-500 transition-colors"
+                className="group flex items-center gap-1.5 text-xs font-medium text-gray-400 hover:text-red-500 hover:bg-red-50 px-2 py-1 rounded-full transition-all duration-200"
               >
+                <Trash2 size={14} className="transition-transform duration-200 group-hover:scale-110 group-active:scale-90" />
                 {t.delete}
               </button>
             </>
