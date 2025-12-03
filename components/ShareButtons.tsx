@@ -45,17 +45,30 @@ export const ShareButtons: React.FC<ShareButtonsProps> = ({ episodeId, title, ur
     like: 'Like',
   };
 
+  // Track the last fetched episode to prevent duplicate fetches
+  const lastFetchedEpisodeRef = React.useRef<string | null>(null);
+
   React.useEffect(() => {
-    fetchLikeStatus();
-  }, [episodeId, user]);
+    // Only fetch if this is a new episode we haven't fetched yet
+    if (lastFetchedEpisodeRef.current !== episodeId) {
+      lastFetchedEpisodeRef.current = episodeId;
+      fetchLikeStatus();
+    }
+  }, [episodeId]);
 
   const fetchLikeStatus = async () => {
     try {
       // Get like count
-      const { count } = await db
+      const { count, error } = await db
         .from('episode_likes')
         .select('*', { count: 'exact', head: true })
         .eq('episode_id', episodeId);
+      
+      // If table doesn't exist, just skip
+      if (error) {
+        console.log('Likes table not available');
+        return;
+      }
       
       setLikeCount(count || 0);
 
@@ -66,13 +79,13 @@ export const ShareButtons: React.FC<ShareButtonsProps> = ({ episodeId, title, ur
           .select('id')
           .eq('episode_id', episodeId)
           .eq('user_id', user.id)
-          .single();
+          .maybeSingle();
         
         setLiked(!!data);
       }
     } catch (error) {
-      // Table might not exist yet
-      console.log('Like status fetch skipped');
+      // Table might not exist yet - silently skip
+      console.log('Like status fetch skipped - table may not exist');
     }
   };
 

@@ -53,9 +53,30 @@ const getCountryFromTimezone = (): string | null => {
   }
 };
 
+// Check if analytics tables exist (cached)
+let analyticsTablesExist: boolean | null = null;
+
+const checkAnalyticsTables = async (): Promise<boolean> => {
+  if (analyticsTablesExist !== null) return analyticsTablesExist;
+  
+  try {
+    const { error } = await (supabase as any)
+      .from('page_views')
+      .select('id')
+      .limit(1);
+    analyticsTablesExist = !error || error.code !== '42P01'; // 42P01 = table doesn't exist
+  } catch {
+    analyticsTablesExist = false;
+  }
+  return analyticsTablesExist;
+};
+
 // Track page view
 export const trackPageView = async (path: string): Promise<void> => {
   try {
+    // Skip if tables don't exist
+    if (!(await checkAnalyticsTables())) return;
+    
     const sessionId = getSessionId();
     const startTime = Date.now();
     
@@ -76,15 +97,16 @@ export const trackPageView = async (path: string): Promise<void> => {
     };
 
     await (supabase as any).from('page_views').insert(pageViewData);
-  } catch (error) {
+  } catch {
     // Silently fail - don't break the app for analytics
-    console.debug('Analytics tracking error:', error);
   }
 };
 
 // Update page view duration when leaving
 export const trackPageLeave = async (): Promise<void> => {
   try {
+    if (!(await checkAnalyticsTables())) return;
+    
     const startTime = sessionStorage.getItem('iconic_page_start');
     const currentPath = sessionStorage.getItem('iconic_current_path');
     const sessionId = getSessionId();
@@ -102,8 +124,8 @@ export const trackPageLeave = async (): Promise<void> => {
         .order('created_at', { ascending: false })
         .limit(1);
     }
-  } catch (error) {
-    console.debug('Analytics tracking error:', error);
+  } catch {
+    // Silently fail
   }
 };
 
@@ -114,6 +136,8 @@ export const trackWebVital = async (metric: {
   rating: string;
 }): Promise<void> => {
   try {
+    if (!(await checkAnalyticsTables())) return;
+    
     const sessionId = getSessionId();
     
     await (supabase as any).from('web_vitals').insert({
@@ -123,8 +147,8 @@ export const trackWebVital = async (metric: {
       path: window.location.pathname,
       session_id: sessionId,
     });
-  } catch (error) {
-    console.debug('Web vitals tracking error:', error);
+  } catch {
+    // Silently fail
   }
 };
 
@@ -134,6 +158,8 @@ export const trackEvent = async (
   properties?: Record<string, any>
 ): Promise<void> => {
   try {
+    if (!(await checkAnalyticsTables())) return;
+    
     const sessionId = getSessionId();
     
     await (supabase as any).from('analytics_events').insert({
@@ -142,8 +168,8 @@ export const trackEvent = async (
       path: window.location.pathname,
       session_id: sessionId,
     });
-  } catch (error) {
-    console.debug('Event tracking error:', error);
+  } catch {
+    // Silently fail
   }
 };
 

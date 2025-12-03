@@ -265,17 +265,6 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
     }
   },
   {
-    id: '11',
-    title: 'EP 11: Jak skloubit byznys a rodinu',
-    description: 'Je možné mít úspěšnou kariéru a zároveň být skvělou mámou? Otevřený rozhovor o work-life balance a prioritách.',
-    duration: '50 min',
-    date: '2024-05-01',
-    imageUrl: 'https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&q=80&w=1000',
-    videoUrl: 'UfJvyeQorH4',
-    tags: ['Lifestyle', 'Business'],
-    platformLinks: { spotify: LINKS.spotify, youtube: LINKS.youtube, apple: LINKS.apple }
-  },
-  {
     id: '10',
     title: 'EP 10: Začínáme podnikat: První kroky',
     description: 'Od nápadu k realizaci. Co všechno potřebujete vědět, než se pustíte do vlastního projektu? Průvodce pro začínající podnikatelky.',

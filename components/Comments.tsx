@@ -88,52 +88,91 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
   const fetchComments = async () => {
     setLoading(true);
     try {
+      // Fetch comments without join (user_profiles relationship may not exist)
       const { data, error } = await db
         .from('comments')
-        .select(`
-          *,
-          user_profile:user_profiles(display_name, avatar_url)
-        `)
+        .select('*')
         .eq('episode_id', episodeId)
         .is('parent_id', null)
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        // Table might not exist
+        console.log('Comments table not available:', error.message);
+        setComments([]);
+        return;
+      }
 
-      // Fetch replies for each comment
+      // Fetch replies and user profiles separately
       const commentsWithReplies = await Promise.all(
         (data || []).map(async (comment) => {
+          // Fetch replies
           const { data: replies } = await db
             .from('comments')
-            .select(`
-              *,
-              user_profile:user_profiles(display_name, avatar_url)
-            `)
+            .select('*')
             .eq('parent_id', comment.id)
             .order('created_at', { ascending: true });
 
-          // Get like counts
-          const { count: likeCount } = await db
-            .from('comment_likes')
-            .select('*', { count: 'exact', head: true })
-            .eq('comment_id', comment.id);
+          // Fetch user profile for comment
+          let userProfile = null;
+          try {
+            const { data: profile } = await db
+              .from('user_profiles')
+              .select('display_name, avatar_url')
+              .eq('user_id', comment.user_id)
+              .maybeSingle();
+            userProfile = profile;
+          } catch {
+            // user_profiles table might not exist
+          }
 
+          // Fetch user profiles for replies
+          const repliesWithProfiles = await Promise.all(
+            (replies || []).map(async (reply: any) => {
+              let replyProfile = null;
+              try {
+                const { data: profile } = await db
+                  .from('user_profiles')
+                  .select('display_name, avatar_url')
+                  .eq('user_id', reply.user_id)
+                  .maybeSingle();
+                replyProfile = profile;
+              } catch {
+                // Ignore
+              }
+              return { ...reply, user_profile: replyProfile, like_count: 0, user_liked: false };
+            })
+          );
+
+          // Get like counts (skip if table doesn't exist)
+          let likeCount = 0;
           let userLiked = false;
-          if (user) {
-            const { data: liked } = await db
+          try {
+            const { count } = await db
               .from('comment_likes')
-              .select('id')
-              .eq('comment_id', comment.id)
-              .eq('user_id', user.id)
-              .single();
-            userLiked = !!liked;
+              .select('*', { count: 'exact', head: true })
+              .eq('comment_id', comment.id);
+            likeCount = count || 0;
+
+            if (user) {
+              const { data: liked } = await db
+                .from('comment_likes')
+                .select('id')
+                .eq('comment_id', comment.id)
+                .eq('user_id', user.id)
+                .maybeSingle();
+              userLiked = !!liked;
+            }
+          } catch {
+            // comment_likes table might not exist
           }
 
           return {
             ...comment,
-            like_count: likeCount || 0,
+            user_profile: userProfile,
+            like_count: likeCount,
             user_liked: userLiked,
-            replies: replies || [],
+            replies: repliesWithProfiles,
           };
         })
       );
@@ -141,6 +180,7 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
       setComments(commentsWithReplies);
     } catch (error) {
       console.error('Error fetching comments:', error);
+      setComments([]);
     } finally {
       setLoading(false);
     }
