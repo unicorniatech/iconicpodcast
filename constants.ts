@@ -224,14 +224,18 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
   },
   {
     id: '12',
-    title: 'EP 12: Finanční hojnost a nastavení mysli',
-    description: 'Peníze jsou energie. Zuzana rozebírá bloky, které nám brání vydělávat více, a dává praktické tipy pro finanční svobodu.',
-    duration: '45 min',
-    date: '2024-05-15',
-    imageUrl: 'https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&q=80&w=1000',
-    videoUrl: 'UfJvyeQorH4',
-    tags: ['Finance', 'Mindset'],
-    platformLinks: { spotify: LINKS.spotify, youtube: LINKS.youtube, apple: LINKS.apple }
+    title: 'EP 12: Na plnění snů není nikdy pozdě | Tomáš Adam',
+    description: 'Rapper a režisér Tomáš Adam o tom, jak překonat strach z nedokonalosti a jít si za svým snem. Jak vznikaly filmy Sebepoznání a Všechno je možný, které oslovily statisíce diváků.',
+    duration: '38 min',
+    date: '2024-11-11',
+    imageUrl: '/ep12.jpg',
+    videoUrl: 'uuLGEwd7n9s',
+    tags: ['Mindset', 'Lifestyle'],
+    platformLinks: { 
+      spotify: 'https://open.spotify.com/episode/1Wz4l0bzunXKRFIheyOQtg', 
+      youtube: 'https://www.youtube.com/watch?v=uuLGEwd7n9s', 
+      apple: LINKS.apple 
+    }
   },
   {
     id: '11',

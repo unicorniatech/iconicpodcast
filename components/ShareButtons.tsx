@@ -149,55 +149,57 @@ export const ShareButtons: React.FC<ShareButtonsProps> = ({ episodeId, title, ur
   ];
 
   return (
-    <div className="flex flex-wrap items-center gap-3">
+    <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-4">
       {/* Like button */}
       <button
         onClick={handleLike}
         disabled={loading}
-        className={`flex items-center gap-2 px-4 py-2 rounded-full border transition-all ${
+        className={`flex items-center gap-2 px-5 py-2.5 rounded-full border transition-all ${
           liked
             ? 'bg-iconic-pink text-white border-iconic-pink'
             : 'bg-white text-gray-600 border-gray-200 hover:border-iconic-pink hover:text-iconic-pink'
         }`}
       >
-        <Heart size={18} fill={liked ? 'currentColor' : 'none'} />
+        <Heart size={20} fill={liked ? 'currentColor' : 'none'} />
         <span className="text-sm font-medium">
           {likeCount > 0 ? likeCount : ''} {t.like}
         </span>
       </button>
 
       {/* Share buttons */}
-      <div className="flex items-center gap-2">
-        <span className="text-sm text-gray-400 mr-1">
-          <Share2 size={16} className="inline mr-1" />
+      <div className="flex items-center gap-2 flex-wrap">
+        <span className="text-sm text-gray-400 mr-1 hidden sm:inline-flex items-center">
+          <Share2 size={16} className="mr-1" />
           {t.share}:
         </span>
         
-        {shareLinks.map((link) => (
-          <a
-            key={link.name}
-            href={link.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`p-2 rounded-full border border-gray-200 text-gray-500 transition-all ${link.color}`}
-            title={link.name}
-          >
-            <link.icon size={18} />
-          </a>
-        ))}
+        <div className="flex items-center gap-2">
+          {shareLinks.map((link) => (
+            <a
+              key={link.name}
+              href={link.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`p-2.5 sm:p-2 rounded-full border border-gray-200 text-gray-500 transition-all ${link.color}`}
+              title={link.name}
+            >
+              <link.icon size={20} className="sm:w-[18px] sm:h-[18px]" />
+            </a>
+          ))}
 
-        {/* Copy link button */}
-        <button
-          onClick={handleCopyLink}
-          className={`p-2 rounded-full border transition-all ${
-            copied
-              ? 'bg-green-500 text-white border-green-500'
-              : 'border-gray-200 text-gray-500 hover:bg-gray-100'
-          }`}
-          title={t.copy_link}
-        >
-          {copied ? <Check size={18} /> : <Link2 size={18} />}
-        </button>
+          {/* Copy link button */}
+          <button
+            onClick={handleCopyLink}
+            className={`p-2.5 sm:p-2 rounded-full border transition-all ${
+              copied
+                ? 'bg-green-500 text-white border-green-500'
+                : 'border-gray-200 text-gray-500 hover:bg-gray-100'
+            }`}
+            title={t.copy_link}
+          >
+            {copied ? <Check size={20} className="sm:w-[18px] sm:h-[18px]" /> : <Link2 size={20} className="sm:w-[18px] sm:h-[18px]" />}
+          </button>
+        </div>
       </div>
     </div>
   );

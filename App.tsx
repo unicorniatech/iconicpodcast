@@ -226,24 +226,24 @@ const GuestInvitationModal: React.FC<GuestInvitationModalProps> = ({ onClose }) 
 // ============================================================================
 const PodcastCard: React.FC<{ episode: PodcastEpisode }> = ({ episode }) => {
   return (
-    <div className="group bg-white rounded-xl shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden border border-gray-100 flex flex-col h-full z-20 relative">
+    <div className="group bg-white rounded-xl sm:rounded-2xl shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden border border-gray-100 flex flex-col h-full z-20 relative">
       <div className="relative overflow-hidden aspect-video">
         <img src={episode.imageUrl} alt={episode.title} className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" />
-        <div className="absolute inset-0 bg-gradient-to-t from-iconic-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
-           <Link to={`/episodes/${episode.id}`} className="bg-white text-iconic-black p-3 rounded-full hover:bg-iconic-pink hover:text-white transition-colors transform translate-y-4 group-hover:translate-y-0 transition-transform">
-              <Play size={24} fill="currentColor" />
+        <div className="absolute inset-0 bg-gradient-to-t from-iconic-black/80 to-transparent opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity flex items-end p-4 sm:p-6">
+           <Link to={`/episodes/${episode.id}`} className="bg-white text-iconic-black p-2.5 sm:p-3 rounded-full hover:bg-iconic-pink hover:text-white transition-colors transform sm:translate-y-4 sm:group-hover:translate-y-0 transition-transform">
+              <Play size={20} className="sm:w-6 sm:h-6" fill="currentColor" />
            </Link>
         </div>
       </div>
-      <div className="p-6 flex-1 flex flex-col">
+      <div className="p-4 sm:p-6 flex-1 flex flex-col">
         <div className="text-xs font-bold text-iconic-blue uppercase tracking-wider mb-2">{episode.date} • {episode.duration}</div>
-        <h3 className="text-xl font-serif font-bold text-iconic-black mb-3 group-hover:text-iconic-pink transition-colors">
+        <h3 className="text-lg sm:text-xl font-serif font-bold text-iconic-black mb-2 sm:mb-3 group-hover:text-iconic-pink transition-colors line-clamp-2">
             <Link to={`/episodes/${episode.id}`}>{episode.title}</Link>
         </h3>
-        <p className="text-gray-500 text-sm line-clamp-3 mb-4 flex-1">{episode.description}</p>
-        <div className="flex gap-4 pt-4 border-t border-gray-100">
-             <a href={episode.platformLinks.youtube} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-red-600 transition-colors"><Youtube size={20} /></a>
-             <a href={episode.platformLinks.spotify} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-green-500 transition-colors"><Mic size={20} /></a>
+        <p className="text-gray-500 text-sm line-clamp-2 sm:line-clamp-3 mb-4 flex-1">{episode.description}</p>
+        <div className="flex gap-4 pt-3 sm:pt-4 border-t border-gray-100">
+             <a href={episode.platformLinks.youtube} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-red-600 transition-colors p-1"><Youtube size={22} /></a>
+             <a href={episode.platformLinks.spotify} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-green-500 transition-colors p-1"><Mic size={22} /></a>
         </div>
       </div>
     </div>
@@ -269,23 +269,23 @@ const EpisodeList: React.FC = () => {
   });
 
   return (
-    <div className="pt-32 pb-24 relative z-10">
+    <div className="pt-24 sm:pt-32 pb-16 sm:pb-24 relative z-10">
       <SEOHead title={t.latest_episodes} description="Všechny epizody ICONIC Podcast - business, mindset, lifestyle." />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
+        <div className="text-center mb-10 sm:mb-16">
           <ScrollReveal>
-             <h2 className="text-3xl md:text-5xl font-serif font-black text-iconic-black mb-4">{t.latest_episodes}</h2>
-             <div className="w-24 h-1.5 bg-iconic-pink mx-auto mb-8"></div>
+             <h2 className="text-2xl sm:text-3xl md:text-5xl font-serif font-black text-iconic-black mb-3 sm:mb-4">{t.latest_episodes}</h2>
+             <div className="w-16 sm:w-24 h-1 sm:h-1.5 bg-iconic-pink mx-auto mb-6 sm:mb-8"></div>
           </ScrollReveal>
           
           <ScrollReveal delay={200}>
-            <div className="max-w-2xl mx-auto space-y-6">
+            <div className="max-w-2xl mx-auto space-y-4 sm:space-y-6">
                <input 
                   type="text" 
                   placeholder={t.search_placeholder}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full px-6 py-4 rounded-full border-2 border-gray-100 shadow-sm focus:outline-none focus:ring-0 focus:border-iconic-black text-lg transition-all"
+                  className="w-full px-5 sm:px-6 py-3 sm:py-4 rounded-full border-2 border-gray-100 shadow-sm focus:outline-none focus:ring-0 focus:border-iconic-black text-base sm:text-lg transition-all"
                />
                <div className="flex flex-wrap justify-center gap-2">
                    {tags.map(tag => {
@@ -294,7 +294,7 @@ const EpisodeList: React.FC = () => {
                        <button 
                           key={tag}
                           onClick={() => setActiveTag(tag === "All" ? t.filter_all : tag)}
-                          className={`px-5 py-2 rounded-full text-sm font-bold transition-all transform hover:scale-105 uppercase tracking-wide ${
+                          className={`px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-bold transition-all transform hover:scale-105 uppercase tracking-wide ${
                               (activeTag === tag || (tag === "All" && activeTag === t.filter_all))
                               ? 'bg-iconic-black text-white shadow-lg' 
                               : 'bg-white border-2 border-gray-100 text-gray-400 hover:border-iconic-black hover:text-iconic-black'
@@ -308,7 +308,7 @@ const EpisodeList: React.FC = () => {
           </ScrollReveal>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12">
           {filteredEpisodes.length > 0 ? (
             filteredEpisodes.map((ep, index) => (
                 <ScrollReveal key={ep.id} delay={index * 150} direction="left">
@@ -345,17 +345,17 @@ const EpisodeDetail: React.FC = () => {
               episodeImage={episode.imageUrl}
               publishedTime={episode.date}
             />
-            <div className="bg-iconic-black text-white py-24 relative overflow-hidden z-20">
-                 <div className="absolute top-0 right-0 w-96 h-96 bg-iconic-pink/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2"></div>
-                 <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
+            <div className="bg-iconic-black text-white py-16 sm:py-24 relative overflow-hidden z-20">
+                 <div className="absolute top-0 right-0 w-64 sm:w-96 h-64 sm:h-96 bg-iconic-pink/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2"></div>
+                 <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center relative z-10">
                     <ScrollReveal>
-                        <span className="text-iconic-pink font-bold tracking-widest uppercase text-sm mb-4 block">{episode.date}</span>
-                        <h1 className="text-4xl md:text-6xl font-serif font-black mb-8 leading-tight">{episode.title}</h1>
+                        <span className="text-iconic-pink font-bold tracking-widest uppercase text-xs sm:text-sm mb-3 sm:mb-4 block">{episode.date}</span>
+                        <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-black mb-6 sm:mb-8 leading-tight px-2">{episode.title}</h1>
                     </ScrollReveal>
                  </div>
             </div>
             
-            <div className="max-w-5xl mx-auto px-4 py-12 -mt-16 relative z-30">
+            <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12 -mt-8 sm:-mt-16 relative z-30">
                 {episode.videoUrl && (
                     <ScrollReveal>
                         <LazyYouTubePlayer videoId={episode.videoUrl} title={episode.title} />
@@ -378,10 +378,10 @@ const EpisodeDetail: React.FC = () => {
                     </div>
                 </ScrollReveal>
 
-                <div className="grid md:grid-cols-3 gap-12">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
                     <div className="md:col-span-2">
                         <ScrollReveal delay={200}>
-                            <h3 className="text-3xl font-serif font-bold mb-6 text-iconic-black">{t.episode_about_title}</h3>
+                            <h3 className="text-2xl sm:text-3xl font-serif font-bold mb-4 sm:mb-6 text-iconic-black">{t.episode_about_title}</h3>
                             <div className="prose prose-lg text-gray-600 leading-relaxed mb-6">
                                 <p className="font-medium text-black">{episode.description}</p>
                                 <p>{t.episode_description_suffix}</p>
@@ -400,7 +400,7 @@ const EpisodeDetail: React.FC = () => {
                     </div>
                     <div>
                          <ScrollReveal delay={300}>
-                             <div className="bg-[#F9F9F9] p-6 rounded-xl shadow-sm border border-gray-100 sticky top-32">
+                             <div className="bg-[#F9F9F9] p-4 sm:p-6 rounded-xl shadow-sm border border-gray-100 lg:sticky lg:top-32">
                                 <h4 className="font-bold text-xl mb-6">{t.listen_on}</h4>
                                 <div className="space-y-3">
                                     <a href={episode.platformLinks.spotify} target="_blank" rel="noopener noreferrer" className="w-full flex items-center justify-between p-4 rounded-lg bg-white border border-gray-200 text-iconic-black hover:border-[#1DB954] hover:text-[#1DB954] transition-all font-bold group shadow-sm">
