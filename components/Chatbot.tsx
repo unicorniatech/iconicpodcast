@@ -151,27 +151,28 @@ export const Chatbot: React.FC = () => {
     };
 
     const quickPrompts = [
-        lang === 'cs-CZ' ? '💡 Jak začít?' : '💡 How to start?',
-        lang === 'cs-CZ' ? '🎙️ O podcastu' : '🎙️ About podcast',
-        lang === 'cs-CZ' ? '✨ Tipy pro tebe' : '✨ Tips for you',
+        { text: lang === 'cs-CZ' ? 'Jak začít?' : 'How to start?', icon: '💡', color: 'from-iconic-pink to-rose-400' },
+        { text: lang === 'cs-CZ' ? 'O podcastu' : 'About podcast', icon: '🎙️', color: 'from-iconic-pink/90 to-fuchsia-400' },
+        { text: lang === 'cs-CZ' ? 'Tipy pro tebe' : 'Tips for you', icon: '✨', color: 'from-iconic-pink/80 to-pink-400' },
     ];
 
     return (
         <>
             {/* Floating conversation starters - only show when chat is closed */}
             {!isOpen && (
-                <div className="fixed bottom-20 sm:bottom-24 right-4 sm:right-6 z-40 flex flex-col items-end gap-2 animate-fade-in-up">
+                <div className="fixed bottom-20 sm:bottom-24 right-4 sm:right-6 z-40 flex flex-col items-end gap-2.5 animate-fade-in-up">
                     {quickPrompts.map((prompt, idx) => (
                         <button
                             key={idx}
                             onClick={() => {
                                 setIsOpen(true);
-                                setTimeout(() => handleSend(prompt.replace(/^[^\s]+\s/, '')), 300);
+                                setTimeout(() => handleSend(prompt.text), 300);
                             }}
-                            className="group bg-white/95 backdrop-blur-sm text-iconic-black text-xs sm:text-sm font-medium px-3 sm:px-4 py-2 rounded-full shadow-lg border border-gray-100 hover:bg-iconic-pink hover:text-white hover:border-iconic-pink hover:scale-105 hover:shadow-xl transition-all duration-300 animate-bounce-subtle"
+                            className={`group flex items-center gap-2 bg-gradient-to-r ${prompt.color} text-white text-xs sm:text-sm font-semibold px-4 sm:px-5 py-2.5 rounded-full shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-300 animate-bounce-subtle border border-white/20`}
                             style={{ animationDelay: `${idx * 0.15}s` }}
                         >
-                            {prompt}
+                            <span className="text-base">{prompt.icon}</span>
+                            <span>{prompt.text}</span>
                         </button>
                     ))}
                 </div>
