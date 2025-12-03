@@ -353,5 +353,20 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
       youtube: 'https://youtu.be/erztWsFfKr4', 
       apple: LINKS.apple 
     }
+  },
+  {
+    id: '4',
+    title: 'EP 04: Jak vybudovat firmu, která funguje bez tebe | Tomáš Suchomel',
+    description: 'Tomáš Suchomel, výkonný ředitel Garantovanynajem.cz, sdílí svoji podnikatelskou cestu – od začátků, přes období krize až po budování stabilního týmu a firmy, která funguje i bez jeho každodenní přítomnosti.',
+    duration: '55 min',
+    date: '2024-09-16',
+    imageUrl: '/ep04.jpg',
+    videoUrl: 'cJvSbLb1288',
+    tags: ['Business', 'Finance'],
+    platformLinks: { 
+      spotify: 'https://open.spotify.com/episode/21u0O5RUkKdREN7KI58KVS', 
+      youtube: 'https://youtu.be/cJvSbLb1288', 
+      apple: LINKS.apple 
+    }
   }
 ];
