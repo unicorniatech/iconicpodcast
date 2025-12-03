@@ -29,6 +29,7 @@ import { LoginPage } from './pages/LoginPage';
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { ResetPasswordPage } from './pages/ResetPasswordPage';
 import { ProfilePage } from './pages/ProfilePage';
+import { AnalyticsDashboard } from './pages/AnalyticsDashboard';
 import { YouTubeLandingPage, InstagramLandingPage, SocialLandingPage } from './pages/LandingPage';
 
 // Services & Data
@@ -36,6 +37,7 @@ import { TRANSLATIONS, PODCAST_EPISODES, PRICING_PLANS } from './constants';
 import { Lead, PodcastEpisode } from './types';
 import { saveLead, getLeads, updateLead, deleteLead, storageService } from './services/storageService';
 import { logError, createAppError } from './services/errorService';
+import { initAnalytics, trackPageView } from './services/analyticsService';
 
 // ============================================================================
 // NEWSLETTER TOAST
@@ -663,6 +665,14 @@ const AdminDashboard: React.FC = () => {
                     </div>
                     
                     <div className="flex gap-4 items-center flex-wrap">
+                        {/* Analytics Dashboard Link */}
+                        <Link 
+                            to="/analytics" 
+                            className="bg-gradient-to-r from-iconic-pink to-purple-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 font-medium hover:shadow-lg transition-shadow"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                            Analytics
+                        </Link>
                         {/* Source Filter (Comment 9) */}
                         <div className="relative">
                             <select 
@@ -811,6 +821,16 @@ function AppContent() {
   const [isBannerOpen, setIsBannerOpen] = useState(false);
   const [isGuestModalOpen, setIsGuestModalOpen] = useState(false);
 
+  // Initialize analytics tracking
+  useEffect(() => {
+    initAnalytics();
+  }, []);
+
+  // Track page views on route change
+  useEffect(() => {
+    trackPageView(window.location.pathname);
+  }, []);
+
   useEffect(() => {
     const newsletterStatus = localStorage.getItem('iconic_newsletter_status');
     if (newsletterStatus !== 'dismissed' && newsletterStatus !== 'subscribed') {
@@ -856,6 +876,13 @@ function AppContent() {
           <Route path="/crm" element={
             <AuthGuard requireAdmin fallbackPath="/login">
               <AdminDashboard />
+            </AuthGuard>
+          } />
+          
+          {/* Analytics Dashboard - Admin only */}
+          <Route path="/analytics" element={
+            <AuthGuard requireAdmin fallbackPath="/login">
+              <AnalyticsDashboard />
             </AuthGuard>
           } />
           
