@@ -1,9 +1,7 @@
 
 import { PodcastEpisode, Translation, Language } from './types';
 
-// REVERTED: Restored the previous professional "White Blazer" placeholder image.
-// If you want to use your specific "Gold Dress" photo, please upload it and paste the URL here.
-export const ZUZZI_HERO_IMAGE = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXrw-3NCLrYEeLGHcdC3keQ_TVjIVEhxJCdg&s"; 
+export const ZUZZI_HERO_IMAGE = "/mainhero.jpg"; 
 
 export const TRANSLATIONS: Record<Language, Translation> = {
   'cs-CZ': {
@@ -180,13 +178,28 @@ export const PRICING_PLANS = [
 
 export const PODCAST_EPISODES: PodcastEpisode[] = [
   {
+    id: '15',
+    title: 'EP 15: O tomhle přístupu k rodičovství potřebuješ slyšet | Tereza Veselá',
+    description: 'Jak zvládat emoce a nezbláznit se? Tereza Veselá z Matcastu sdílí, proč je mateřství největší školou seberozvoje a proč dítě nepotřebuje animátora, ale tvou pravdivou přítomnost.',
+    duration: '32 min',
+    date: '2024-12-03',
+    imageUrl: '/ep15.jpg',
+    videoUrl: 'sCIGYzgfXNA',
+    tags: ['Lifestyle', 'Mindset'],
+    platformLinks: { 
+      spotify: 'https://open.spotify.com/episode/5yqjO88j3vITLxv6xOTY1P', 
+      youtube: 'https://www.youtube.com/watch?v=sCIGYzgfXNA', 
+      apple: LINKS.apple 
+    }
+  },
+  {
     id: '14',
     title: 'EP 14: Jak překonat strach z prodeje',
     description: 'Prodej je služba. V této epizodě se podíváme na to, jak přenastavit svou mysl, abyste prodávaly s lehkostí a elegancí.',
     duration: '42 min',
     date: '2024-06-10',
-    imageUrl: 'https://drive.google.com/file/d/1olohtrry9E26ZY-F0o7Vdqe7XCHvI90I/view',
-    videoUrl: 'sCIGYzgfXNA&t=1582s',
+    imageUrl: 'https://drive.google.com/uc?export=view&id=1olohtrry9E26ZY-F0o7Vdqe7XCHvI90I',
+    videoUrl: 'UfJvyeQorH4',
     tags: ['Business', 'Mindset'],
     platformLinks: { spotify: LINKS.spotify, youtube: LINKS.youtube, apple: LINKS.apple }
   },

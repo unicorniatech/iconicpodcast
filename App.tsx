@@ -225,7 +225,7 @@ const GuestInvitationModal: React.FC<GuestInvitationModalProps> = ({ onClose }) 
 const PodcastCard: React.FC<{ episode: PodcastEpisode }> = ({ episode }) => {
   return (
     <div className="group bg-white rounded-xl shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden border border-gray-100 flex flex-col h-full z-20 relative">
-      <div className="relative overflow-hidden aspect-square">
+      <div className="relative overflow-hidden aspect-video">
         <img src={episode.imageUrl} alt={episode.title} className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" />
         <div className="absolute inset-0 bg-gradient-to-t from-iconic-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
            <Link to={`/episodes/${episode.id}`} className="bg-white text-iconic-black p-3 rounded-full hover:bg-iconic-pink hover:text-white transition-colors transform translate-y-4 group-hover:translate-y-0 transition-transform">
@@ -267,7 +267,7 @@ const EpisodeList: React.FC = () => {
   });
 
   return (
-    <div className="py-24 relative z-10">
+    <div className="pt-32 pb-24 relative z-10">
       <SEOHead title={t.latest_episodes} description="Všechny epizody ICONIC Podcast - business, mindset, lifestyle." />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
@@ -306,7 +306,7 @@ const EpisodeList: React.FC = () => {
           </ScrollReveal>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {filteredEpisodes.length > 0 ? (
             filteredEpisodes.map((ep, index) => (
                 <ScrollReveal key={ep.id} delay={index * 150} direction="left">
