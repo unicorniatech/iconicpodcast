@@ -417,13 +417,13 @@ const EpisodeDetail: React.FC = () => {
                     <div className="bg-white p-2 rounded-xl border border-gray-200 shadow-lg mb-12">
                          <iframe 
                             style={{borderRadius: '12px'}} 
-                            src="https://open.spotify.com/embed/show/5TNpvLzycWShFtP0uu39bE?utm_source=generator&theme=0" 
+                            src={`https://open.spotify.com/embed/episode/${episode.platformLinks.spotify.split('/episode/')[1]?.split('?')[0] || '5TNpvLzycWShFtP0uu39bE'}?utm_source=generator&theme=0`}
                             width="100%" 
                             height="152" 
                             frameBorder="0" 
                             allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
                             loading="lazy"
-                            title="Spotify Player"
+                            title={`Spotify Player - ${episode.title}`}
                          ></iframe>
                     </div>
                 </ScrollReveal>
