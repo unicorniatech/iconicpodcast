@@ -194,25 +194,33 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
   },
   {
     id: '14',
-    title: 'EP 14: Jak překonat strach z prodeje',
-    description: 'Prodej je služba. V této epizodě se podíváme na to, jak přenastavit svou mysl, abyste prodávaly s lehkostí a elegancí.',
-    duration: '42 min',
-    date: '2024-06-10',
-    imageUrl: 'https://drive.google.com/uc?export=view&id=1olohtrry9E26ZY-F0o7Vdqe7XCHvI90I',
-    videoUrl: 'UfJvyeQorH4',
-    tags: ['Business', 'Mindset'],
-    platformLinks: { spotify: LINKS.spotify, youtube: LINKS.youtube, apple: LINKS.apple }
+    title: 'EP 14: Longevity a síla mysli | Josef Joska Šálek',
+    description: 'Jak prodloužit aktivní život o 20-30 let? Josef Joska Šálek, držitel 3 Guinnessových rekordů, sdílí jak naše přesvědčení ovlivňují biologii a jak zvládnout chlad i strach ze stárnutí.',
+    duration: '45 min',
+    date: '2024-11-26',
+    imageUrl: '/ep14.jpg',
+    videoUrl: 'aabzcOd88H8',
+    tags: ['Mindset', 'Lifestyle'],
+    platformLinks: { 
+      spotify: 'https://open.spotify.com/episode/0WH1kqEUv4dM5SQbr9d6T7', 
+      youtube: 'https://www.youtube.com/watch?v=aabzcOd88H8', 
+      apple: LINKS.apple 
+    }
   },
   {
     id: '13',
-    title: 'EP 13: Budování osobní značky v roce 2024',
-    description: 'Osobní značka je vaše nejcennější aktivum. Jak být autentická a přitahovat ty správné klienty bez nutnosti se přetvařovat?',
-    duration: '38 min',
-    date: '2024-05-28',
-    imageUrl: 'https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&q=80&w=1000',
-    videoUrl: 'UfJvyeQorH4',
-    tags: ['Business', 'Lifestyle'],
-    platformLinks: { spotify: LINKS.spotify, youtube: LINKS.youtube, apple: LINKS.apple }
+    title: 'EP 13: Máš na míň a je to OK | Nikola Zbytovská',
+    description: 'Herečka a spisovatelka Nikola Zbytovská o strachu z vystupování, toxických vztazích v rodině a odvaze říct si "Mám na míň". Proč klíčem k lehkosti není víc dřít.',
+    duration: '93 min',
+    date: '2024-11-18',
+    imageUrl: '/ep13.jpg',
+    videoUrl: 'GfSEf8PSbno',
+    tags: ['Mindset', 'Lifestyle'],
+    platformLinks: { 
+      spotify: 'https://open.spotify.com/episode/6YlNTa7lIVxBzR4rOA21iW', 
+      youtube: 'https://www.youtube.com/watch?v=GfSEf8PSbno', 
+      apple: LINKS.apple 
+    }
   },
   {
     id: '12',

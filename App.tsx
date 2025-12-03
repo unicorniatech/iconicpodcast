@@ -21,6 +21,8 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 
 // Components
 import { Header, Footer, Hero, Chatbot, AnimatedBackground, CursorSpotlight, ScrollReveal, AuthGuard, SEOHead, LazyYouTubePlayer } from './components';
+import { Comments } from './components/Comments';
+import { ShareButtons } from './components/ShareButtons';
 
 // Pages
 import { LoginPage } from './pages/LoginPage';
@@ -384,6 +386,16 @@ const EpisodeDetail: React.FC = () => {
                                 <p className="font-medium text-black">{episode.description}</p>
                                 <p>{t.episode_description_suffix}</p>
                             </div>
+                            
+                            {/* Share & Like buttons */}
+                            <div className="mb-8">
+                                <ShareButtons episodeId={episode.id} title={episode.title} />
+                            </div>
+                        </ScrollReveal>
+                        
+                        {/* Comments section */}
+                        <ScrollReveal delay={300}>
+                            <Comments episodeId={episode.id} />
                         </ScrollReveal>
                     </div>
                     <div>
