@@ -4,17 +4,21 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, '.', '');
+    
+    // Only enable proxy if VITE_API_URL is explicitly set
+    const proxyConfig = env.VITE_API_URL ? {
+      '/api': {
+        target: env.VITE_API_URL,
+        changeOrigin: true,
+      }
+    } : undefined;
+    
     return {
       server: {
         port: 3000,
         host: '0.0.0.0',
-        // Proxy API requests to backend in development
-        proxy: {
-          '/api': {
-            target: env.VITE_API_URL || 'http://localhost:3001',
-            changeOrigin: true,
-          }
-        }
+        // Proxy API requests to backend in development (only if configured)
+        proxy: proxyConfig
       },
       plugins: [react()],
       // NOTE: API keys are NO LONGER injected into the frontend bundle
