@@ -16,7 +16,7 @@ export const Hero: React.FC = () => {
   return (
     <div className="relative bg-iconic-black min-h-screen flex items-center pt-24 sm:pt-32 pb-12 overflow-hidden z-10">
       {/* Animated gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-iconic-black via-purple-950/50 to-iconic-black"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-iconic-black via-iconic-pink/10 to-iconic-black"></div>
       
       {/* Animated mesh gradient overlay */}
       <div className="absolute inset-0 opacity-30">
@@ -26,7 +26,7 @@ export const Hero: React.FC = () => {
       
       {/* Floating orbs with glow */}
       <div className="absolute top-1/4 right-1/4 w-[500px] h-[500px] bg-iconic-pink/30 rounded-full blur-[150px] animate-blob"></div>
-      <div className="absolute bottom-1/4 left-1/4 w-[400px] h-[400px] bg-purple-600/20 rounded-full blur-[120px] animate-blob animation-delay-2000"></div>
+      <div className="absolute bottom-1/4 left-1/4 w-[400px] h-[400px] bg-iconic-blue/20 rounded-full blur-[120px] animate-blob animation-delay-2000"></div>
       <div className="absolute top-1/2 left-1/2 w-[300px] h-[300px] bg-iconic-blue/20 rounded-full blur-[100px] animate-blob animation-delay-4000"></div>
       
       {/* Animated particles */}
@@ -64,7 +64,7 @@ export const Hero: React.FC = () => {
                 {/* Animated title with gradient */}
                 <h1 className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif font-bold mb-6 leading-[1.1] transition-all duration-700 delay-200 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}>
                     <span className="text-white">{t.hero_title.split(' ').slice(0, -1).join(' ')} </span>
-                    <span className="bg-gradient-to-r from-iconic-pink via-purple-400 to-iconic-blue bg-clip-text text-transparent animate-gradient-slow bg-[length:200%_auto]">
+                    <span className="bg-gradient-to-r from-iconic-pink via-iconic-pink to-iconic-blue bg-clip-text text-transparent animate-gradient-slow bg-[length:200%_auto]">
                         {t.hero_title.split(' ').slice(-1)}
                     </span>
                 </h1>
@@ -77,7 +77,7 @@ export const Hero: React.FC = () => {
                 <div className={`flex flex-col sm:flex-row gap-4 justify-center lg:justify-start transition-all duration-700 delay-400 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}>
                     <Link 
                        to="/episodes"
-                       className="group relative px-8 py-4 bg-gradient-to-r from-iconic-pink to-purple-600 text-white font-bold rounded-full overflow-hidden transition-all hover:shadow-[0_0_40px_rgba(183,6,109,0.6)] hover:scale-105 flex items-center justify-center text-lg"
+                       className="group relative px-8 py-4 bg-gradient-to-r from-iconic-pink to-iconic-blue text-white font-bold rounded-full overflow-hidden transition-all hover:shadow-[0_0_40px_rgba(183,6,109,0.6)] hover:scale-105 flex items-center justify-center text-lg"
                     >
                         <span className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
                         <span className="relative flex items-center">
@@ -118,7 +118,7 @@ export const Hero: React.FC = () => {
                     <div className="absolute -inset-8 rounded-[48px] border border-iconic-pink/20 animate-spin-slow" style={{animationDirection: 'reverse', animationDuration: '20s'}}></div>
                     
                     {/* Glow effect behind image */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-iconic-pink/50 to-purple-600/50 rounded-[32px] blur-2xl scale-110 animate-pulse"></div>
+                    <div className="absolute inset-0 bg-gradient-to-br from-iconic-pink/50 to-iconic-blue/50 rounded-[32px] blur-2xl scale-110 animate-pulse"></div>
                     
                     {/* Main image container */}
                     <div className="relative rounded-[32px] overflow-hidden shadow-2xl aspect-[3/4] z-10 bg-gray-800 group">
