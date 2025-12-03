@@ -88,94 +88,71 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
   const fetchComments = async () => {
     setLoading(true);
     try {
-      // Fetch comments without join (user_profiles relationship may not exist)
-      const { data, error } = await db
+      // Fetch all comments for this episode in one query
+      const { data: allComments, error } = await db
         .from('comments')
         .select('*')
         .eq('episode_id', episodeId)
-        .is('parent_id', null)
         .order('created_at', { ascending: false });
 
       if (error) {
-        // Table might not exist
         console.log('Comments table not available:', error.message);
         setComments([]);
         return;
       }
 
-      // Fetch replies and user profiles separately
-      const commentsWithReplies = await Promise.all(
-        (data || []).map(async (comment) => {
-          // Fetch replies
-          const { data: replies } = await db
-            .from('comments')
-            .select('*')
-            .eq('parent_id', comment.id)
-            .order('created_at', { ascending: true });
+      if (!allComments || allComments.length === 0) {
+        setComments([]);
+        return;
+      }
 
-          // Fetch user profile for comment (user_profiles.id = auth.users.id)
-          let userProfile = null;
-          try {
-            const { data: profile } = await db
-              .from('user_profiles')
-              .select('display_name, avatar_url')
-              .eq('id', comment.user_id)
-              .maybeSingle();
-            userProfile = profile;
-          } catch {
-            // user_profiles table might not exist
+      // Separate parent comments and replies
+      const parentComments = allComments.filter((c: any) => !c.parent_id);
+      const replies = allComments.filter((c: any) => c.parent_id);
+
+      // Get unique user IDs to batch fetch profiles
+      const userIds = [...new Set(allComments.map((c: any) => c.user_id))];
+      
+      // Batch fetch all user profiles in one query
+      let profilesMap: Record<string, any> = {};
+      if (userIds.length > 0) {
+        try {
+          const { data: profiles } = await db
+            .from('user_profiles')
+            .select('id, display_name, avatar_url')
+            .in('id', userIds);
+          
+          if (profiles) {
+            profilesMap = profiles.reduce((acc: any, p: any) => {
+              acc[p.id] = { display_name: p.display_name, avatar_url: p.avatar_url };
+              return acc;
+            }, {});
           }
+        } catch {
+          // user_profiles table might not exist
+        }
+      }
 
-          // Fetch user profiles for replies
-          const repliesWithProfiles = await Promise.all(
-            (replies || []).map(async (reply: any) => {
-              let replyProfile = null;
-              try {
-                const { data: profile } = await db
-                  .from('user_profiles')
-                  .select('display_name, avatar_url')
-                  .eq('id', reply.user_id)
-                  .maybeSingle();
-                replyProfile = profile;
-              } catch {
-                // Ignore
-              }
-              return { ...reply, user_profile: replyProfile, like_count: 0, user_liked: false };
-            })
-          );
+      // Build comments with replies (no additional queries needed)
+      const commentsWithReplies = parentComments.map((comment: any) => {
+        const commentReplies = replies
+          .filter((r: any) => r.parent_id === comment.id)
+          .sort((a: any, b: any) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
+          .map((reply: any) => ({
+            ...reply,
+            user_profile: profilesMap[reply.user_id] || null,
+            like_count: 0,
+            user_liked: false,
+          }));
 
-          // Get like counts (skip if table doesn't exist)
-          let likeCount = 0;
-          let userLiked = false;
-          try {
-            const { count } = await db
-              .from('comment_likes')
-              .select('*', { count: 'exact', head: true })
-              .eq('comment_id', comment.id);
-            likeCount = count || 0;
-
-            if (user) {
-              const { data: liked } = await db
-                .from('comment_likes')
-                .select('id')
-                .eq('comment_id', comment.id)
-                .eq('user_id', user.id)
-                .maybeSingle();
-              userLiked = !!liked;
-            }
-          } catch {
-            // comment_likes table might not exist
-          }
-
-          return {
-            ...comment,
-            user_profile: userProfile,
-            like_count: likeCount,
-            user_liked: userLiked,
-            replies: repliesWithProfiles,
-          };
-        })
-      );
+        return {
+          ...comment,
+          user_profile: profilesMap[comment.user_id] || null,
+          like_count: 0,
+          user_liked: false,
+          replies: commentReplies,
+        };
+      });
 
       setComments(commentsWithReplies);
     } catch (error) {

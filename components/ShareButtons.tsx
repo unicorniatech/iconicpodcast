@@ -58,34 +58,32 @@ export const ShareButtons: React.FC<ShareButtonsProps> = ({ episodeId, title, ur
 
   const fetchLikeStatus = async () => {
     try {
-      // Get like count
-      const { count, error } = await db
+      // Run both queries in parallel
+      const countPromise = db
         .from('episode_likes')
         .select('*', { count: 'exact', head: true })
         .eq('episode_id', episodeId);
       
-      // If table doesn't exist, just skip
-      if (error) {
-        console.log('Likes table not available');
+      const userLikedPromise = user 
+        ? db
+            .from('episode_likes')
+            .select('id')
+            .eq('episode_id', episodeId)
+            .eq('user_id', user.id)
+            .maybeSingle()
+        : Promise.resolve({ data: null });
+
+      const [countResult, userLikedResult] = await Promise.all([countPromise, userLikedPromise]);
+      
+      if (countResult.error) {
+        // Table doesn't exist, skip silently
         return;
       }
       
-      setLikeCount(count || 0);
-
-      // Check if user liked
-      if (user) {
-        const { data } = await db
-          .from('episode_likes')
-          .select('id')
-          .eq('episode_id', episodeId)
-          .eq('user_id', user.id)
-          .maybeSingle();
-        
-        setLiked(!!data);
-      }
-    } catch (error) {
-      // Table might not exist yet - silently skip
-      console.log('Like status fetch skipped - table may not exist');
+      setLikeCount(countResult.count || 0);
+      setLiked(!!userLikedResult.data);
+    } catch {
+      // Table might not exist - silently skip
     }
   };
 
