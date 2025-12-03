@@ -8,6 +8,9 @@ interface HeaderProps {
     isBannerOpen: boolean;
 }
 
+// Admin emails that can see CRM
+const ADMIN_EMAILS = ['zuzzi.husarova@gmail.com', 'ceo@vistadev.mx'];
+
 export const Header: React.FC<HeaderProps> = ({ isBannerOpen }) => {
   const { lang, setLang, t } = useLanguage();
   const { user, logout } = useAuth();
@@ -16,6 +19,9 @@ export const Header: React.FC<HeaderProps> = ({ isBannerOpen }) => {
   const [langMenuOpen, setLangMenuOpen] = useState(false);
   const langMenuRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
+  
+  // Check if current user is admin
+  const isAdmin = user && ADMIN_EMAILS.includes(user.email || '');
 
   // Close mobile menu on route change
   useEffect(() => {
@@ -61,7 +67,9 @@ export const Header: React.FC<HeaderProps> = ({ isBannerOpen }) => {
               <Link to="/" className="hover:text-iconic-pink transition-colors px-3 py-2">{t.nav_home}</Link>
               <Link to="/episodes" className="hover:text-iconic-pink transition-colors px-3 py-2">{t.nav_episodes}</Link>
               <Link to="/contact" className="hover:text-iconic-pink transition-colors px-3 py-2">{t.nav_contact}</Link>
-              <Link to="/crm" className="hover:text-iconic-pink transition-colors px-3 py-2 font-normal text-xs opacity-70">{t.nav_crm}</Link>
+              {isAdmin && (
+                <Link to="/crm" className="hover:text-iconic-pink transition-colors px-3 py-2 font-normal text-xs opacity-70">{t.nav_crm}</Link>
+              )}
             </div>
           </div>
 
