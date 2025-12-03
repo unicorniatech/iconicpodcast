@@ -57,18 +57,18 @@ export const LoginPage: React.FC = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-iconic-black via-gray-900 to-iconic-black py-12 px-4 sm:px-6 lg:px-8">
       {/* Background decoration */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-iconic-pink/20 rounded-full blur-[120px]"></div>
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-iconic-blue/10 rounded-full blur-[100px]"></div>
+      <div className="absolute top-0 right-0 w-64 sm:w-96 h-64 sm:h-96 bg-iconic-pink/20 rounded-full blur-[120px]"></div>
+      <div className="absolute bottom-0 left-0 w-64 sm:w-96 h-64 sm:h-96 bg-iconic-blue/10 rounded-full blur-[100px]"></div>
 
       <div className="max-w-md w-full space-y-8 relative z-10">
         {/* Logo */}
         <div className="text-center">
           <Link to="/" className="inline-block">
-            <span className="text-4xl font-serif font-black text-white tracking-tight">
+            <span className="text-3xl sm:text-4xl font-serif font-black text-white tracking-tight">
               I<span className="text-iconic-pink">|</span>CONIC
             </span>
           </Link>
-          <h2 className="mt-6 text-3xl font-bold text-white">
+          <h2 className="mt-6 text-2xl sm:text-3xl font-bold text-white">
             {mode === 'login' ? 'Welcome back' : 'Create your account'}
           </h2>
           <p className="mt-2 text-sm text-gray-400">
@@ -80,7 +80,7 @@ export const LoginPage: React.FC = () => {
 
         {/* Form */}
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-8 border border-white/20 shadow-2xl">
+          <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-6 sm:p-8 border border-white/20 shadow-2xl">
             {/* Error message */}
             {error && (
               <div className="mb-6 p-4 bg-red-500/20 border border-red-500/50 rounded-lg flex items-start gap-3">
@@ -113,7 +113,7 @@ export const LoginPage: React.FC = () => {
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-white/30 focus:outline-none focus:bg-white/10 focus:border-iconic-pink transition-all"
+                    className="w-full pl-12 pr-4 py-3 sm:py-4 bg-white/5 border border-white/20 rounded-xl text-white placeholder-white/30 focus:outline-none focus:bg-white/10 focus:border-iconic-pink transition-all text-base"
                     placeholder="you@example.com"
                   />
                 </div>
@@ -135,7 +135,7 @@ export const LoginPage: React.FC = () => {
                     minLength={6}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-12 pr-12 py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-white/30 focus:outline-none focus:bg-white/10 focus:border-iconic-pink transition-all"
+                    className="w-full pl-12 pr-12 py-3 sm:py-4 bg-white/5 border border-white/20 rounded-xl text-white placeholder-white/30 focus:outline-none focus:bg-white/10 focus:border-iconic-pink transition-all text-base"
                     placeholder="••••••••"
                   />
                   <button
@@ -149,11 +149,20 @@ export const LoginPage: React.FC = () => {
               </div>
             </div>
 
+            {/* Forgot password link */}
+            {mode === 'login' && (
+              <div className="text-right">
+                <Link to="/forgot-password" className="text-sm text-iconic-pink hover:underline">
+                  Forgot password?
+                </Link>
+              </div>
+            )}
+
             {/* Submit button */}
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full mt-6 bg-gradient-to-r from-iconic-pink to-purple-600 text-white font-bold py-4 rounded-xl hover:shadow-[0_0_20px_rgba(183,6,109,0.6)] hover:scale-[1.02] transition-all transform border border-white/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+              className="w-full mt-4 bg-gradient-to-r from-iconic-pink to-purple-600 text-white font-bold py-3 sm:py-4 rounded-xl hover:shadow-[0_0_20px_rgba(183,6,109,0.6)] hover:scale-[1.02] transition-all transform border border-white/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
             >
               {isLoading ? (
                 <span className="flex items-center justify-center gap-2">

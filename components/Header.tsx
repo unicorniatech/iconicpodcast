@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Globe, Menu, X, Mic, ChevronDown } from 'lucide-react';
+import { Globe, Menu, X, Mic, ChevronDown, User, LogOut } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useAuth } from '../contexts/AuthContext';
 
 interface HeaderProps {
     isBannerOpen: boolean;
@@ -9,6 +10,7 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ isBannerOpen }) => {
   const { lang, setLang, t } = useLanguage();
+  const { user, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [langMenuOpen, setLangMenuOpen] = useState(false);
@@ -131,6 +133,32 @@ export const Header: React.FC<HeaderProps> = ({ isBannerOpen }) => {
             <Link to="/contact" onClick={() => setIsOpen(false)} className="flex items-center px-4 py-4 text-iconic-black hover:text-iconic-pink hover:bg-gray-50 rounded-xl text-lg font-bold transition-colors">
               {t.nav_contact}
             </Link>
+            
+            {/* User section */}
+            {user ? (
+              <>
+                <div className="border-t border-gray-100 my-4"></div>
+                <Link to="/profile" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-4 py-4 text-iconic-black hover:text-iconic-pink hover:bg-gray-50 rounded-xl text-lg font-bold transition-colors">
+                  <User size={20} />
+                  Profile
+                </Link>
+                <button 
+                  onClick={() => { logout(); setIsOpen(false); }} 
+                  className="flex items-center gap-3 w-full px-4 py-4 text-gray-500 hover:text-red-500 hover:bg-red-50 rounded-xl text-lg font-medium transition-colors"
+                >
+                  <LogOut size={20} />
+                  Sign Out
+                </button>
+              </>
+            ) : (
+              <>
+                <div className="border-t border-gray-100 my-4"></div>
+                <Link to="/login" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-4 py-4 text-iconic-pink hover:bg-pink-50 rounded-xl text-lg font-bold transition-colors">
+                  <User size={20} />
+                  Sign In
+                </Link>
+              </>
+            )}
           </nav>
 
           {/* Language Switcher */}

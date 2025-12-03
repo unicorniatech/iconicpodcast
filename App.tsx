@@ -26,6 +26,9 @@ import { ShareButtons } from './components/ShareButtons';
 
 // Pages
 import { LoginPage } from './pages/LoginPage';
+import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
+import { ResetPasswordPage } from './pages/ResetPasswordPage';
+import { ProfilePage } from './pages/ProfilePage';
 import { YouTubeLandingPage, InstagramLandingPage, SocialLandingPage } from './pages/LandingPage';
 
 // Services & Data
@@ -841,6 +844,13 @@ function AppContent() {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/about" element={<ContactPage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/profile" element={
+            <AuthGuard fallbackPath="/login">
+              <ProfilePage />
+            </AuthGuard>
+          } />
           
           {/* Protected CRM route (Comment 2) */}
           <Route path="/crm" element={
