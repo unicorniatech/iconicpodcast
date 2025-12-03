@@ -112,7 +112,7 @@ export const Header: React.FC<HeaderProps> = ({ isBannerOpen }) => {
                </Link>
              )}
              
-             <a href="https://open.spotify.com/show/5TNpvLzycWShFtP0uu39bE" target="_blank" rel="noopener noreferrer" className="bg-iconic-pink text-white px-5 py-2.5 rounded-full font-bold text-sm hover:bg-pink-600 transition-colors shadow-lg shadow-pink-500/30 flex items-center gap-2">
+             <a href="https://www.youtube.com/@ZuzziHusarova" target="_blank" rel="noopener noreferrer" className="bg-iconic-pink text-white px-5 py-2.5 rounded-full font-bold text-sm hover:bg-pink-600 transition-colors shadow-lg shadow-pink-500/30 flex items-center gap-2">
                  <Mic size={16} /> Subscribe
              </a>
           </div>
@@ -218,12 +218,12 @@ export const Header: React.FC<HeaderProps> = ({ isBannerOpen }) => {
           {/* Subscribe Button */}
           <div className="p-4 border-t border-gray-100">
             <a 
-              href="https://open.spotify.com/show/5TNpvLzycWShFtP0uu39bE" 
+              href="https://www.youtube.com/@ZuzziHusarova" 
               target="_blank" 
               rel="noopener noreferrer" 
               className="flex items-center justify-center gap-2 w-full bg-iconic-pink text-white py-4 rounded-xl font-bold hover:bg-pink-600 transition-colors"
             >
-              <Mic size={20} /> Subscribe on Spotify
+              <Mic size={20} /> Subscribe on YouTube
             </a>
           </div>
         </div>
