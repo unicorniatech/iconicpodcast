@@ -266,14 +266,18 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
   },
   {
     id: '10',
-    title: 'EP 10: Začínáme podnikat: První kroky',
-    description: 'Od nápadu k realizaci. Co všechno potřebujete vědět, než se pustíte do vlastního projektu? Průvodce pro začínající podnikatelky.',
-    duration: '35 min',
-    date: '2024-04-18',
-    imageUrl: 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&q=80&w=1000',
-    videoUrl: 'UfJvyeQorH4',
-    tags: ['Business'],
-    platformLinks: { spotify: LINKS.spotify, youtube: LINKS.youtube, apple: LINKS.apple }
+    title: 'EP 10: Jak najít vlastní hlas mezi tlaky showbyznysu | Barbora Seidlová',
+    description: 'Jak najít vlastní hlas mezi tlaky showbyznysu a naučit se být sama sebou, když prožíváš hereckou slávu už od patnácti? Herečka Bára Seidlová otevřeně mluví o své cestě od dětského filmu přes seriálové role až po dospělost plnou hledání skutečné spokojenosti i mimo obrazovku.',
+    duration: '45 min',
+    date: '2024-10-28',
+    imageUrl: '/ep10.jpg',
+    videoUrl: 'N-NK0fPKzE8',
+    tags: ['Mindset', 'Lifestyle'],
+    platformLinks: { 
+      spotify: 'https://open.spotify.com/episode/5WIfKsKQMyhkKnL03LhOfP', 
+      youtube: 'https://youtu.be/N-NK0fPKzE8', 
+      apple: LINKS.apple 
+    }
   },
   {
     id: '9',
