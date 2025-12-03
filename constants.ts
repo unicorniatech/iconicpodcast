@@ -398,5 +398,20 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
       youtube: 'https://youtu.be/08CmroVRQc0', 
       apple: LINKS.apple 
     }
+  },
+  {
+    id: '1',
+    title: 'EP 01: Mateřství a podnikání bez pocitu viny | Jana Jordánová',
+    description: 'Jak skloubit mateřství a podnikání, aniž bychom cítili výčitky? Jana Jordánová, máma dvou dětí a spolumajitelka marketingového studia, sdílí jak najít rovnováhu a jak si dovolit být nejen mámou, ale i ženou s vlastním snem.',
+    duration: '45 min',
+    date: '2024-08-26',
+    imageUrl: '/ep01.jpg',
+    videoUrl: 'flfqIvAVHwA',
+    tags: ['Lifestyle', 'Business'],
+    platformLinks: { 
+      spotify: 'https://open.spotify.com/episode/7csLaS9fjGzWcMfQruafKT', 
+      youtube: 'https://youtu.be/flfqIvAVHwA', 
+      apple: LINKS.apple 
+    }
   }
 ];
