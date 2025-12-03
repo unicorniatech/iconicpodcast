@@ -284,36 +284,36 @@ const EpisodeList: React.FC = () => {
 
   return (
     <div className="pt-24 sm:pt-32 pb-16 sm:pb-24 relative z-10 overflow-hidden">
-      {/* Aurora Background Effect - Colorful Pastel Animated */}
+      {/* Aurora Background Effect - Pink to Purple Pastel */}
       <div className="absolute inset-0 -z-10">
-        {/* Animated gradient base that shifts colors */}
-        <div className="absolute inset-0 bg-gradient-to-br from-pink-100/70 via-sky-50/50 to-violet-100/60 animate-gradient-slow bg-[length:400%_400%]"></div>
+        {/* Animated gradient base - pink to purple only */}
+        <div className="absolute inset-0 bg-gradient-to-br from-pink-100/70 via-fuchsia-50/50 to-purple-100/60 animate-gradient-slow bg-[length:400%_400%]"></div>
         
         {/* Layer 1: Large slow-moving base blobs */}
         <div className="absolute -top-20 -left-20 w-[800px] h-[800px] bg-gradient-to-br from-pink-300/50 to-rose-200/40 rounded-full blur-[150px] animate-blob"></div>
-        <div className="absolute top-0 right-0 w-[700px] h-[700px] bg-gradient-to-bl from-sky-300/45 to-cyan-200/35 rounded-full blur-[140px] animate-blob animation-delay-2000"></div>
+        <div className="absolute top-0 right-0 w-[700px] h-[700px] bg-gradient-to-bl from-fuchsia-300/45 to-pink-200/35 rounded-full blur-[140px] animate-blob animation-delay-2000"></div>
         <div className="absolute bottom-0 -left-20 w-[750px] h-[750px] bg-gradient-to-tr from-violet-300/45 to-purple-200/35 rounded-full blur-[160px] animate-blob animation-delay-4000"></div>
         <div className="absolute -bottom-20 right-0 w-[700px] h-[700px] bg-gradient-to-tl from-rose-300/40 to-pink-200/30 rounded-full blur-[140px] animate-blob" style={{animationDelay: '1s'}}></div>
         
         {/* Layer 2: Medium mixing blobs */}
         <div className="absolute top-1/4 left-1/3 w-[500px] h-[500px] bg-gradient-to-r from-fuchsia-300/40 to-pink-300/30 rounded-full blur-[100px] animate-blob" style={{animationDelay: '0.5s'}}></div>
-        <div className="absolute top-1/3 right-1/4 w-[450px] h-[450px] bg-gradient-to-l from-cyan-300/35 to-teal-200/25 rounded-full blur-[90px] animate-blob" style={{animationDelay: '2.5s'}}></div>
-        <div className="absolute bottom-1/3 left-1/4 w-[480px] h-[480px] bg-gradient-to-t from-indigo-300/35 to-blue-200/25 rounded-full blur-[95px] animate-blob" style={{animationDelay: '4.5s'}}></div>
-        <div className="absolute bottom-1/4 right-1/3 w-[520px] h-[520px] bg-gradient-to-b from-amber-200/30 to-orange-200/20 rounded-full blur-[100px] animate-blob" style={{animationDelay: '1.5s'}}></div>
+        <div className="absolute top-1/3 right-1/4 w-[450px] h-[450px] bg-gradient-to-l from-purple-300/35 to-violet-200/25 rounded-full blur-[90px] animate-blob" style={{animationDelay: '2.5s'}}></div>
+        <div className="absolute bottom-1/3 left-1/4 w-[480px] h-[480px] bg-gradient-to-t from-pink-300/35 to-rose-200/25 rounded-full blur-[95px] animate-blob" style={{animationDelay: '4.5s'}}></div>
+        <div className="absolute bottom-1/4 right-1/3 w-[520px] h-[520px] bg-gradient-to-b from-fuchsia-200/30 to-pink-200/20 rounded-full blur-[100px] animate-blob" style={{animationDelay: '1.5s'}}></div>
         
         {/* Layer 3: Smaller accent blobs for color mixing */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-gradient-to-br from-pink-400/35 to-violet-300/25 rounded-full blur-[80px] animate-blob" style={{animationDelay: '3s'}}></div>
-        <div className="absolute top-1/6 left-1/2 w-[350px] h-[350px] bg-gradient-to-bl from-sky-400/30 to-indigo-300/20 rounded-full blur-[70px] animate-blob" style={{animationDelay: '5.5s'}}></div>
+        <div className="absolute top-1/6 left-1/2 w-[350px] h-[350px] bg-gradient-to-bl from-fuchsia-400/30 to-purple-300/20 rounded-full blur-[70px] animate-blob" style={{animationDelay: '5.5s'}}></div>
         <div className="absolute top-2/3 left-1/6 w-[380px] h-[380px] bg-gradient-to-tr from-rose-400/30 to-fuchsia-300/20 rounded-full blur-[75px] animate-blob" style={{animationDelay: '6s'}}></div>
-        <div className="absolute top-1/2 right-1/6 w-[360px] h-[360px] bg-gradient-to-tl from-teal-300/30 to-cyan-200/20 rounded-full blur-[70px] animate-blob" style={{animationDelay: '3.5s'}}></div>
+        <div className="absolute top-1/2 right-1/6 w-[360px] h-[360px] bg-gradient-to-tl from-purple-300/30 to-violet-200/20 rounded-full blur-[70px] animate-blob" style={{animationDelay: '3.5s'}}></div>
         <div className="absolute bottom-1/6 left-1/2 w-[320px] h-[320px] bg-gradient-to-r from-purple-300/30 to-pink-200/20 rounded-full blur-[65px] animate-blob" style={{animationDelay: '7s'}}></div>
         
         {/* Layer 4: Tiny floating accent dots */}
         <div className="absolute top-1/4 left-1/4 w-[200px] h-[200px] bg-pink-400/40 rounded-full blur-[50px] animate-blob" style={{animationDelay: '2s'}}></div>
-        <div className="absolute top-3/4 right-1/4 w-[180px] h-[180px] bg-cyan-400/35 rounded-full blur-[45px] animate-blob" style={{animationDelay: '4s'}}></div>
+        <div className="absolute top-3/4 right-1/4 w-[180px] h-[180px] bg-fuchsia-400/35 rounded-full blur-[45px] animate-blob" style={{animationDelay: '4s'}}></div>
         <div className="absolute top-1/2 left-3/4 w-[220px] h-[220px] bg-violet-400/35 rounded-full blur-[55px] animate-blob" style={{animationDelay: '6.5s'}}></div>
         <div className="absolute bottom-1/3 left-1/3 w-[190px] h-[190px] bg-rose-400/35 rounded-full blur-[48px] animate-blob" style={{animationDelay: '1.2s'}}></div>
-        <div className="absolute top-1/3 right-1/3 w-[170px] h-[170px] bg-sky-400/30 rounded-full blur-[42px] animate-blob" style={{animationDelay: '5s'}}></div>
+        <div className="absolute top-1/3 right-1/3 w-[170px] h-[170px] bg-purple-400/30 rounded-full blur-[42px] animate-blob" style={{animationDelay: '5s'}}></div>
         
         {/* Soft white overlay for readability */}
         <div className="absolute inset-0 bg-white/15"></div>
@@ -514,11 +514,11 @@ const ContactPage: React.FC = () => {
 
     return (
         <div className="pt-32 pb-24 min-h-screen relative overflow-hidden">
-             {/* Aurora Background Effect */}
+             {/* Aurora Background Effect - Pink to Purple */}
              <div className="fixed inset-0 -z-10">
-                 <div className="absolute inset-0 bg-gradient-to-br from-pink-100/70 via-sky-50/50 to-violet-100/60 animate-gradient-slow bg-[length:400%_400%]"></div>
+                 <div className="absolute inset-0 bg-gradient-to-br from-pink-100/70 via-fuchsia-50/50 to-purple-100/60 animate-gradient-slow bg-[length:400%_400%]"></div>
                  <div className="absolute top-0 left-0 w-[700px] h-[700px] bg-gradient-to-br from-pink-300/40 to-rose-200/30 rounded-full blur-[120px] animate-blob"></div>
-                 <div className="absolute top-1/4 right-0 w-[600px] h-[600px] bg-gradient-to-bl from-sky-300/35 to-cyan-200/25 rounded-full blur-[100px] animate-blob animation-delay-2000"></div>
+                 <div className="absolute top-1/4 right-0 w-[600px] h-[600px] bg-gradient-to-bl from-fuchsia-300/35 to-pink-200/25 rounded-full blur-[100px] animate-blob animation-delay-2000"></div>
                  <div className="absolute bottom-0 left-1/3 w-[500px] h-[500px] bg-gradient-to-tr from-violet-300/35 to-purple-200/25 rounded-full blur-[110px] animate-blob animation-delay-4000"></div>
                  <div className="absolute bottom-1/4 right-1/4 w-[450px] h-[450px] bg-gradient-to-tl from-fuchsia-300/30 to-pink-200/20 rounded-full blur-[100px] animate-blob" style={{animationDelay: '3s'}}></div>
                  <div className="absolute inset-0 bg-white/15"></div>

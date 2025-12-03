@@ -443,13 +443,13 @@ export const AnalyticsDashboard: React.FC = () => {
 
   return (
     <div className="min-h-screen pt-20 pb-12 relative overflow-hidden">
-      {/* Animated Aurora Background */}
+      {/* Animated Aurora Background - Pink to Purple */}
       <div className="fixed inset-0 -z-10">
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-pink-50/30 to-blue-50/40"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-pink-50/30 to-purple-50/40"></div>
         <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-gradient-to-br from-iconic-pink/20 to-rose-200/15 rounded-full blur-[120px] animate-blob"></div>
-        <div className="absolute top-1/3 right-0 w-[500px] h-[500px] bg-gradient-to-bl from-iconic-blue/15 to-cyan-200/10 rounded-full blur-[100px] animate-blob animation-delay-2000"></div>
+        <div className="absolute top-1/3 right-0 w-[500px] h-[500px] bg-gradient-to-bl from-fuchsia-300/15 to-pink-200/10 rounded-full blur-[100px] animate-blob animation-delay-2000"></div>
         <div className="absolute bottom-0 left-1/4 w-[550px] h-[550px] bg-gradient-to-tr from-violet-200/15 to-purple-100/10 rounded-full blur-[110px] animate-blob animation-delay-4000"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-gradient-to-tl from-amber-100/15 to-orange-100/10 rounded-full blur-[90px] animate-blob" style={{animationDelay: '3s'}}></div>
+        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-gradient-to-tl from-fuchsia-100/15 to-pink-100/10 rounded-full blur-[90px] animate-blob" style={{animationDelay: '3s'}}></div>
       </div>
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">

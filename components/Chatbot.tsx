@@ -151,9 +151,9 @@ export const Chatbot: React.FC = () => {
     };
 
     const quickPrompts = [
-        { text: lang === 'cs-CZ' ? 'Jak začít?' : 'How to start?', icon: '💡', color: 'from-iconic-pink to-rose-400' },
-        { text: lang === 'cs-CZ' ? 'O podcastu' : 'About podcast', icon: '🎙️', color: 'from-iconic-pink/90 to-fuchsia-400' },
-        { text: lang === 'cs-CZ' ? 'Tipy pro tebe' : 'Tips for you', icon: '✨', color: 'from-iconic-pink/80 to-pink-400' },
+        { text: lang === 'cs-CZ' ? 'Jak začít?' : 'How to start?', icon: '💡', color: 'from-iconic-pink to-fuchsia-500' },
+        { text: lang === 'cs-CZ' ? 'O podcastu' : 'About podcast', icon: '🎙️', color: 'from-fuchsia-500 to-purple-500' },
+        { text: lang === 'cs-CZ' ? 'Tipy pro tebe' : 'Tips for you', icon: '✨', color: 'from-purple-500 to-violet-500' },
     ];
 
     return (
