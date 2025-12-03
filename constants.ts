@@ -281,14 +281,18 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
   },
   {
     id: '9',
-    title: 'EP 09: Sebedůvěra jako klíč k úspěchu',
-    description: 'Jak si věřit, i když o sobě pochybujete. Techniky pro posílení sebevědomí a překonání imposter syndromu.',
-    duration: '40 min',
-    date: '2024-04-05',
-    imageUrl: 'https://images.unsplash.com/photo-1627483297886-49710ae1fc28?auto=format&fit=crop&q=80&w=1000',
-    videoUrl: 'UfJvyeQorH4',
-    tags: ['Mindset'],
-    platformLinks: { spotify: LINKS.spotify, youtube: LINKS.youtube, apple: LINKS.apple }
+    title: 'EP 09: Z vězení ke světovým rekordům | Josef Joska Šálek',
+    description: 'Jak se může stát, že tě při přestupu na letišti odvedou ozbrojenci a skončíš ve vězení? Josef Joska Šálek dokázal traumatizující zkušenost v arabské zemi proměnit v příležitost a připravil si půdu pro zdolávání světových rekordů.',
+    duration: '45 min',
+    date: '2024-10-21',
+    imageUrl: '/ep09.jpg',
+    videoUrl: 'vAphua6yLak',
+    tags: ['Mindset', 'Lifestyle'],
+    platformLinks: { 
+      spotify: 'https://open.spotify.com/episode/17phsYbBmJSXgZ7uaf83ZU', 
+      youtube: 'https://youtu.be/vAphua6yLak', 
+      apple: LINKS.apple 
+    }
   },
   {
     id: '8',
