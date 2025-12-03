@@ -323,5 +323,20 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
       youtube: 'https://youtu.be/6mq80ttk-80', 
       apple: LINKS.apple 
     }
+  },
+  {
+    id: '6',
+    title: 'EP 06: Supravodivost a svoboda od ega | Vendy Šmídke Kociánová',
+    description: 'Co se stane, když přestaneš slepě hledat techniky a návody? Vendy Šmídke Kociánová otevírá téma supravodivosti – stavu, kdy přestává fungovat snaha mít vše pod kontrolou a kdy se učíme pustit mysl, ego a iluzi tvůrce.',
+    duration: '52 min',
+    date: '2024-09-30',
+    imageUrl: '/ep06.jpg',
+    videoUrl: 'JnXjnL1VmGE',
+    tags: ['Mindset', 'Lifestyle'],
+    platformLinks: { 
+      spotify: 'https://open.spotify.com/episode/4e0WuapGgjT6dXAFLnEODO', 
+      youtube: 'https://youtu.be/JnXjnL1VmGE', 
+      apple: LINKS.apple 
+    }
   }
 ];
