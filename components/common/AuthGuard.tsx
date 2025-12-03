@@ -9,6 +9,9 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { Lock } from 'lucide-react';
 
+// Admin emails - fallback check if database isn't set up
+const ADMIN_EMAILS = ['zuzzi.husarova@gmail.com', 'ceo@vistadev.mx'];
+
 interface AuthGuardProps {
   children: React.ReactNode;
   requireAdmin?: boolean;
@@ -20,8 +23,12 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({
   requireAdmin = false,
   fallbackPath = '/login'
 }) => {
-  const { isAuthenticated, isAdmin, isLoading } = useAuth();
+  const { isAuthenticated, isAdmin, isLoading, user } = useAuth();
   const location = useLocation();
+  
+  // Check admin by email as fallback
+  const isAdminByEmail = user && ADMIN_EMAILS.includes(user.email || '');
+  const hasAdminAccess = isAdmin || isAdminByEmail;
 
   if (isLoading) {
     return (
@@ -38,7 +45,7 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({
     return <Navigate to={fallbackPath} state={{ from: location }} replace />;
   }
 
-  if (requireAdmin && !isAdmin) {
+  if (requireAdmin && !hasAdminAccess) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 pt-32">
         <div className="text-center max-w-md mx-auto px-4">
