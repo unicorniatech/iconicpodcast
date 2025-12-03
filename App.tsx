@@ -986,7 +986,7 @@ const Chatbot: React.FC = () => {
 
                     <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#F9F9F9]">
                         {messages.map((msg, index) => (
-                            <div key={msg.id} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
+                            <div key={msg.id} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} animate-message-in`}>
                                 <div className={`max-w-[85%] rounded-2xl p-4 shadow-sm relative ${
                                     msg.role === 'user' 
                                     ? 'bg-iconic-black text-white rounded-tr-none' 

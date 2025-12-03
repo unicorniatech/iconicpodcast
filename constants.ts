@@ -172,6 +172,12 @@ const LINKS = {
   amazon: 'https://www.amazon.com/ICONIC-Podcast-by-Zuzzi-Mentor/dp/B0FLDMHDQM'
 };
 
+export const PRICING_PLANS = [
+  { name: 'Mentoring Start', price: '4.990 Kč', recommended: false },
+  { name: 'Business Grow', price: '14.990 Kč', recommended: true },
+  { name: 'Iconic Brand VIP', price: '39.990 Kč', recommended: false },
+];
+
 export const PODCAST_EPISODES: PodcastEpisode[] = [
   {
     id: '14',
@@ -179,90 +185,86 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
     description: 'Prodej je služba. V této epizodě se podíváme na to, jak přenastavit svou mysl, abyste prodávaly s lehkostí a elegancí.',
     duration: '42 min',
     date: '2024-06-10',
-    imageUrl: 'data:image/jpeg;base64,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',
-    videoUrl: 'UfJvyeQorH4', // Real User Provided ID
-    platformLinks: { spotify: LINKS.spotify, youtube: LINKS.youtube, apple: LINKS.apple },
-    tags: ['Business', 'Mindset', 'Sales']
+    imageUrl: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&q=80&w=1000',
+    videoUrl: 'UfJvyeQorH4',
+    tags: ['Business', 'Mindset'],
+    platformLinks: { spotify: LINKS.spotify, youtube: LINKS.youtube, apple: LINKS.apple }
   },
   {
     id: '13',
-    title: 'EP 13: The Iconic Mindset: Odvaha být vidět',
-    description: 'Bojíš se ukázat svou pravou tvář na sociálních sítích? Zuzana sdílí své tipy, jak být autentická a přitahovat ty správné klienty.',
-    duration: '35 min',
-    date: '2024-06-03',
-    imageUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=800',
-    platformLinks: { spotify: LINKS.spotify, youtube: LINKS.youtube, apple: LINKS.apple },
-    tags: ['Mindset', 'Branding']
+    title: 'EP 13: Budování osobní značky v roce 2024',
+    description: 'Osobní značka je vaše nejcennější aktivum. Jak být autentická a přitahovat ty správné klienty bez nutnosti se přetvařovat?',
+    duration: '38 min',
+    date: '2024-05-28',
+    imageUrl: 'https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&q=80&w=1000',
+    videoUrl: 'UfJvyeQorH4',
+    tags: ['Business', 'Lifestyle'],
+    platformLinks: { spotify: LINKS.spotify, youtube: LINKS.youtube, apple: LINKS.apple }
   },
   {
     id: '12',
-    title: 'EP 12: Peníze jsou energie',
-    description: 'Jak si nastavit vztah k penězům tak, aby k tobě proudily. Odbourávání finančních bloků.',
-    duration: '50 min',
-    date: '2024-05-27',
-    imageUrl: 'https://images.unsplash.com/photo-1580519542054-0a2aa6375bc8?auto=format&fit=crop&q=80&w=800',
-    platformLinks: { spotify: LINKS.spotify, youtube: LINKS.youtube, apple: LINKS.apple },
-    tags: ['Finance', 'Mindset']
+    title: 'EP 12: Finanční hojnost a nastavení mysli',
+    description: 'Peníze jsou energie. Zuzana rozebírá bloky, které nám brání vydělávat více, a dává praktické tipy pro finanční svobodu.',
+    duration: '45 min',
+    date: '2024-05-15',
+    imageUrl: 'https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&q=80&w=1000',
+    videoUrl: 'UfJvyeQorH4',
+    tags: ['Finance', 'Mindset'],
+    platformLinks: { spotify: LINKS.spotify, youtube: LINKS.youtube, apple: LINKS.apple }
   },
   {
     id: '11',
-    title: 'EP 11: Time Management pro CEO ženy',
-    description: 'Jak zvládat kariéru, rodinu a čas pro sebe bez vyhoření. Strategie pro efektivní plánování.',
-    duration: '38 min',
-    date: '2024-05-20',
-    imageUrl: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&q=80&w=800',
-    platformLinks: { spotify: LINKS.spotify, youtube: LINKS.youtube, apple: LINKS.apple },
-    tags: ['Business', 'Lifestyle']
+    title: 'EP 11: Jak skloubit byznys a rodinu',
+    description: 'Je možné mít úspěšnou kariéru a zároveň být skvělou mámou? Otevřený rozhovor o work-life balance a prioritách.',
+    duration: '50 min',
+    date: '2024-05-01',
+    imageUrl: 'https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&q=80&w=1000',
+    videoUrl: 'UfJvyeQorH4',
+    tags: ['Lifestyle', 'Business'],
+    platformLinks: { spotify: LINKS.spotify, youtube: LINKS.youtube, apple: LINKS.apple }
   },
   {
     id: '10',
-    title: 'EP 10: Osobní značka, která prodává',
-    description: 'Tvůj brand je to, co o tobě lidé říkají, když nejsi v místnosti. Jak ho budovat vědomě?',
-    duration: '45 min',
-    date: '2024-05-13',
-    imageUrl: 'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&q=80&w=800',
-    platformLinks: { spotify: LINKS.spotify, youtube: LINKS.youtube, apple: LINKS.apple },
-    tags: ['Branding', 'Business']
+    title: 'EP 10: Začínáme podnikat: První kroky',
+    description: 'Od nápadu k realizaci. Co všechno potřebujete vědět, než se pustíte do vlastního projektu? Průvodce pro začínající podnikatelky.',
+    duration: '35 min',
+    date: '2024-04-18',
+    imageUrl: 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&q=80&w=1000',
+    videoUrl: 'UfJvyeQorH4',
+    tags: ['Business'],
+    platformLinks: { spotify: LINKS.spotify, youtube: LINKS.youtube, apple: LINKS.apple }
   },
   {
     id: '9',
-    title: 'EP 09: Interview: Cesta k úspěchu',
-    description: 'Speciální host a inspirativní příběh o tom, že všechno je možné, když se rozhodneš.',
+    title: 'EP 09: Sebedůvěra jako klíč k úspěchu',
+    description: 'Jak si věřit, i když o sobě pochybujete. Techniky pro posílení sebevědomí a překonání imposter syndromu.',
+    duration: '40 min',
+    date: '2024-04-05',
+    imageUrl: 'https://images.unsplash.com/photo-1627483297886-49710ae1fc28?auto=format&fit=crop&q=80&w=1000',
+    videoUrl: 'UfJvyeQorH4',
+    tags: ['Mindset'],
+    platformLinks: { spotify: LINKS.spotify, youtube: LINKS.youtube, apple: LINKS.apple }
+  },
+  {
+    id: '8',
+    title: 'EP 08: Marketingové strategie pro rok 2024',
+    description: 'Co funguje na sociálních sítích dnes? Změny algoritmů, trendy a jak být vidět bez placené reklamy.',
+    duration: '48 min',
+    date: '2024-03-22',
+    imageUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1000',
+    videoUrl: 'UfJvyeQorH4',
+    tags: ['Business', 'Marketing'],
+    platformLinks: { spotify: LINKS.spotify, youtube: LINKS.youtube, apple: LINKS.apple }
+  },
+  {
+    id: '7',
+    title: 'EP 07: Příběh mé cesty',
+    description: 'Jak jsem začínala já? Otevřená zpověď o mých začátcích, chybách a lekcích, které mě formovaly.',
     duration: '55 min',
-    date: '2024-05-06',
-    imageUrl: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=800',
-    platformLinks: { spotify: LINKS.spotify, youtube: LINKS.youtube, apple: LINKS.apple },
-    tags: ['Interview', 'Motivation']
-  },
-  {
-    id: '1',
-    title: 'EP 01: Úvod do světa ICONIC',
-    description: 'Vítejte u první epizody. Kdo je Zuzzi Mentor a co vás čeká v tomto podcastu?',
-    duration: '20 min',
-    date: '2024-01-15',
-    imageUrl: 'https://images.unsplash.com/photo-1478737270239-2f02b77ac618?auto=format&fit=crop&q=80&w=800',
-    platformLinks: { spotify: LINKS.spotify, youtube: LINKS.youtube, apple: LINKS.apple },
-    tags: ['Intro', 'Lifestyle']
-  }
-];
-
-export const PRICING_PLANS = [
-  {
-    name: 'ICONIC Starter',
-    price: 'Free',
-    features: ['Přístup k podcastům', 'Newsletter s tipy', 'Komunita na Instagramu'],
-    recommended: false
-  },
-  {
-    name: 'ICONIC Business',
-    price: 'Consult',
-    features: ['Mentoring 1:1', 'Strategický audit', 'VIP Networking', 'Business Plan Review'],
-    recommended: true
-  },
-  {
-    name: 'ICONIC Academy',
-    price: 'Waitlist',
-    features: ['Online kurz', 'Skupinový coaching', 'Pracovní sešity', 'Mastermind skupina'],
-    recommended: false
+    date: '2024-03-10',
+    imageUrl: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=1000',
+    videoUrl: 'UfJvyeQorH4',
+    tags: ['Lifestyle', 'Mindset'],
+    platformLinks: { spotify: LINKS.spotify, youtube: LINKS.youtube, apple: LINKS.apple }
   }
 ];
