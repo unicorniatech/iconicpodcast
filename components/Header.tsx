@@ -91,6 +91,27 @@ export const Header: React.FC<HeaderProps> = ({ isBannerOpen }) => {
                   </div>
                 )}
              </div>
+             
+             {/* User Auth Buttons */}
+             {user ? (
+               <div className="flex items-center gap-2">
+                 <Link to="/profile" className={`${textColor} hover:text-iconic-pink p-2`} title="Profile">
+                   <User size={20} />
+                 </Link>
+                 <button 
+                   onClick={() => logout()} 
+                   className={`${textColor} hover:text-red-500 p-2`}
+                   title="Sign Out"
+                 >
+                   <LogOut size={20} />
+                 </button>
+               </div>
+             ) : (
+               <Link to="/login" className={`${textColor} hover:text-iconic-pink font-bold text-sm`}>
+                 Sign In
+               </Link>
+             )}
+             
              <a href="https://open.spotify.com/show/5TNpvLzycWShFtP0uu39bE" target="_blank" rel="noopener noreferrer" className="bg-iconic-pink text-white px-5 py-2.5 rounded-full font-bold text-sm hover:bg-pink-600 transition-colors shadow-lg shadow-pink-500/30 flex items-center gap-2">
                  <Mic size={16} /> Subscribe
              </a>
