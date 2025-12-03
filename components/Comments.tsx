@@ -335,49 +335,65 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
           )}
         </div>
 
-        <div className="flex items-center gap-3 sm:gap-4 mt-2 ml-1 sm:ml-2 flex-wrap">
+        <div className="flex items-center gap-2 sm:gap-3 mt-3 ml-1 sm:ml-2 flex-wrap">
+          {/* Like Button */}
           <button
             onClick={() => handleLikeComment(comment.id, comment.user_liked)}
-            className={`group flex items-center gap-1.5 text-xs font-medium transition-all duration-200 px-2 py-1 rounded-full ${
+            className={`group flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full border transition-all duration-300 ease-out ${
               comment.user_liked 
-                ? 'text-iconic-pink bg-iconic-pink/10' 
-                : 'text-gray-400 hover:text-iconic-pink hover:bg-iconic-pink/10'
+                ? 'text-iconic-pink bg-iconic-pink/15 border-iconic-pink/30 shadow-sm' 
+                : 'text-gray-500 bg-gray-50 border-gray-200 hover:text-iconic-pink hover:bg-iconic-pink/10 hover:border-iconic-pink/30 hover:shadow-md'
             }`}
             disabled={!user}
           >
             <Heart 
-              size={14} 
+              size={15} 
               fill={comment.user_liked ? 'currentColor' : 'none'} 
-              className={`transition-transform duration-200 ${comment.user_liked ? 'scale-110' : 'group-hover:scale-125 group-active:scale-90'}`}
+              className={`transition-all duration-300 ${
+                comment.user_liked 
+                  ? 'scale-110 animate-pulse' 
+                  : 'group-hover:scale-125 group-hover:-rotate-12 group-active:scale-75'
+              }`}
             />
-            {comment.like_count > 0 && <span>{comment.like_count}</span>}
+            <span className="transition-all duration-200">{comment.like_count > 0 ? comment.like_count : ''}</span>
           </button>
 
+          {/* Reply Button */}
           {user && !isReply && (
             <button
               onClick={() => { setReplyingTo(comment.id); setReplyContent(''); }}
-              className="group flex items-center gap-1.5 text-xs font-medium text-gray-400 hover:text-iconic-blue hover:bg-iconic-blue/10 px-2 py-1 rounded-full transition-all duration-200"
+              className="group flex items-center gap-1.5 text-xs font-semibold text-gray-500 bg-gray-50 border border-gray-200 hover:text-iconic-blue hover:bg-iconic-blue/10 hover:border-iconic-blue/30 hover:shadow-md px-3 py-1.5 rounded-full transition-all duration-300 ease-out"
             >
-              <MessageCircle size={14} className="transition-transform duration-200 group-hover:scale-110 group-active:scale-90" />
-              {t.reply}
+              <MessageCircle 
+                size={15} 
+                className="transition-all duration-300 group-hover:scale-110 group-hover:rotate-12 group-active:scale-75" 
+              />
+              <span>{t.reply}</span>
             </button>
           )}
 
+          {/* Edit & Delete Buttons */}
           {user && user.id === comment.user_id && (
             <>
               <button
                 onClick={() => { setEditingId(comment.id); setEditContent(comment.content); }}
-                className="group flex items-center gap-1.5 text-xs font-medium text-gray-400 hover:text-iconic-black hover:bg-gray-100 px-2 py-1 rounded-full transition-all duration-200"
+                className="group flex items-center gap-1.5 text-xs font-semibold text-gray-500 bg-gray-50 border border-gray-200 hover:text-amber-600 hover:bg-amber-50 hover:border-amber-200 hover:shadow-md px-3 py-1.5 rounded-full transition-all duration-300 ease-out"
               >
-                <Edit2 size={14} className="transition-transform duration-200 group-hover:scale-110 group-active:scale-90" />
-                {t.edit}
+                <Edit2 
+                  size={15} 
+                  className="transition-all duration-300 group-hover:scale-110 group-hover:-rotate-12 group-active:scale-75" 
+                />
+                <span>{t.edit}</span>
               </button>
               <button
                 onClick={() => handleDeleteComment(comment.id)}
-                className="group flex items-center gap-1.5 text-xs font-medium text-gray-400 hover:text-red-500 hover:bg-red-50 px-2 py-1 rounded-full transition-all duration-200"
+                className="group flex items-center gap-1.5 text-xs font-semibold text-gray-500 bg-gray-50 border border-gray-200 hover:text-red-500 hover:bg-red-50 hover:border-red-200 hover:shadow-md px-3 py-1.5 rounded-full transition-all duration-300 ease-out"
               >
-                <Trash2 size={14} className="transition-transform duration-200 group-hover:scale-110 group-active:scale-90" />
-                {t.delete}
+                <Trash2 
+                  size={15} 
+                  className="transition-all duration-300 group-hover:scale-110 group-hover:rotate-12 group-active:scale-75" 
+                />
+                <span>{t.delete}</span>
               </button>
             </>
           )}
@@ -385,25 +401,25 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
 
         {/* Reply input */}
         {replyingTo === comment.id && (
-          <div className="mt-3 flex gap-2">
+          <div className="mt-4 flex gap-2 animate-fade-in-up">
             <input
               type="text"
               value={replyContent}
               onChange={(e) => setReplyContent(e.target.value)}
               placeholder={t.write_comment}
-              className="flex-1 px-4 py-2 border rounded-full text-sm focus:outline-none focus:border-iconic-pink"
+              className="flex-1 px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-iconic-blue/30 focus:border-iconic-blue/50 focus:bg-white transition-all duration-300"
               autoFocus
             />
             <button
               onClick={() => handleSubmitReply(comment.id)}
               disabled={!replyContent.trim() || submitting}
-              className="p-2 bg-iconic-pink text-white rounded-full disabled:opacity-50"
+              className="group p-2.5 bg-iconic-blue text-white rounded-full hover:bg-blue-600 hover:shadow-lg hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 transition-all duration-300"
             >
-              <Send size={16} />
+              <Send size={16} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </button>
             <button
               onClick={() => setReplyingTo(null)}
-              className="p-2 bg-gray-200 text-gray-600 rounded-full"
+              className="p-2.5 bg-gray-100 text-gray-500 rounded-full hover:bg-gray-200 hover:text-gray-700 hover:scale-105 active:scale-95 transition-all duration-300"
             >
               ✕
             </button>
@@ -433,8 +449,8 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
       {user ? (
         <form onSubmit={handleSubmitComment} className="mb-6 sm:mb-8">
           <div className="flex gap-2 sm:gap-3">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-iconic-pink/20 flex items-center justify-center flex-shrink-0">
-              <span className="text-iconic-pink font-bold text-sm">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-iconic-pink to-iconic-blue flex items-center justify-center flex-shrink-0 shadow-md">
+              <span className="text-white font-bold text-sm">
                 {user.email?.charAt(0).toUpperCase()}
               </span>
             </div>
@@ -444,14 +460,14 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
                 placeholder={t.write_comment}
-                className="flex-1 px-3 sm:px-5 py-2 sm:py-3 bg-gray-50 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-iconic-pink/20 focus:bg-white transition-all"
+                className="flex-1 px-4 sm:px-5 py-2.5 sm:py-3 bg-gray-50 border border-gray-200 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-iconic-pink/30 focus:border-iconic-pink/50 focus:bg-white transition-all duration-300"
               />
               <button
                 type="submit"
                 disabled={!newComment.trim() || submitting}
-                className="p-2 sm:p-3 bg-iconic-pink text-white rounded-full hover:bg-pink-700 disabled:opacity-50 transition-colors"
+                className="group p-2.5 sm:p-3 bg-iconic-pink text-white rounded-full hover:bg-pink-600 hover:shadow-lg hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 transition-all duration-300"
               >
-                <Send size={16} className="sm:w-[18px] sm:h-[18px]" />
+                <Send size={16} className="sm:w-[18px] sm:h-[18px] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </button>
             </div>
           </div>
