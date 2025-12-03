@@ -338,5 +338,20 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
       youtube: 'https://youtu.be/JnXjnL1VmGE', 
       apple: LINKS.apple 
     }
+  },
+  {
+    id: '5',
+    title: 'EP 05: Archetypy a ženská energie | Veronika Slavíková',
+    description: 'Jak archetypy ovlivňují naše vztahy, práci i podnikání? Terapeutka Veronika Slavíková ukazuje, jak skrze archetypy a ženskou energii můžeme lépe porozumět sami sobě. Proč je Marilyn Monroe fascinujícím příkladem ženské síly i zranitelnosti.',
+    duration: '50 min',
+    date: '2024-09-23',
+    imageUrl: '/ep05.jpg',
+    videoUrl: 'erztWsFfKr4',
+    tags: ['Mindset', 'Lifestyle'],
+    platformLinks: { 
+      spotify: 'https://open.spotify.com/episode/14lUpGZJ0NkMEUmPbExJSt', 
+      youtube: 'https://youtu.be/erztWsFfKr4', 
+      apple: LINKS.apple 
+    }
   }
 ];
