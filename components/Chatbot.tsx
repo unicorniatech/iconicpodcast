@@ -150,8 +150,33 @@ export const Chatbot: React.FC = () => {
         }
     };
 
+    const quickPrompts = [
+        lang === 'cs-CZ' ? '💡 Jak začít?' : '💡 How to start?',
+        lang === 'cs-CZ' ? '🎙️ O podcastu' : '🎙️ About podcast',
+        lang === 'cs-CZ' ? '✨ Tipy pro tebe' : '✨ Tips for you',
+    ];
+
     return (
         <>
+            {/* Floating conversation starters - only show when chat is closed */}
+            {!isOpen && (
+                <div className="fixed bottom-20 sm:bottom-24 right-4 sm:right-6 z-40 flex flex-col items-end gap-2 animate-fade-in-up">
+                    {quickPrompts.map((prompt, idx) => (
+                        <button
+                            key={idx}
+                            onClick={() => {
+                                setIsOpen(true);
+                                setTimeout(() => handleSend(prompt.replace(/^[^\s]+\s/, '')), 300);
+                            }}
+                            className="group bg-white/95 backdrop-blur-sm text-iconic-black text-xs sm:text-sm font-medium px-3 sm:px-4 py-2 rounded-full shadow-lg border border-gray-100 hover:bg-iconic-pink hover:text-white hover:border-iconic-pink hover:scale-105 hover:shadow-xl transition-all duration-300 animate-bounce-subtle"
+                            style={{ animationDelay: `${idx * 0.15}s` }}
+                        >
+                            {prompt}
+                        </button>
+                    ))}
+                </div>
+            )}
+
             <button 
                 onClick={() => setIsOpen(!isOpen)}
                 className={`fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 p-3 sm:p-4 rounded-full shadow-2xl transition-all transform hover:scale-110 ${isOpen ? 'bg-iconic-black text-white' : 'bg-iconic-pink text-white'} border-4 border-white`}
