@@ -690,8 +690,146 @@ export const AnalyticsDashboard: React.FC = () => {
               </div>
             </div>
 
+            {/* SEO Health Score */}
+            <div className="grid lg:grid-cols-3 gap-6 mb-8">
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-white/50 shadow-lg">
+                <h3 className="font-bold text-iconic-black mb-4 flex items-center gap-2">
+                  <Target size={20} className="text-iconic-pink" />
+                  SEO Health Score
+                </h3>
+                <div className="flex items-center justify-center mb-4">
+                  <div className="relative w-32 h-32">
+                    <svg className="w-full h-full transform -rotate-90">
+                      <circle cx="64" cy="64" r="56" stroke="#e5e7eb" strokeWidth="12" fill="none" />
+                      <circle cx="64" cy="64" r="56" stroke="url(#gradient)" strokeWidth="12" fill="none" 
+                        strokeDasharray={`${85 * 3.52} 352`} strokeLinecap="round" />
+                      <defs>
+                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                          <stop offset="0%" stopColor="#B7066D" />
+                          <stop offset="100%" stopColor="#9333ea" />
+                        </linearGradient>
+                      </defs>
+                    </svg>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span className="text-3xl font-bold text-iconic-black">85</span>
+                    </div>
+                  </div>
+                </div>
+                <p className="text-center text-sm text-gray-500">Good - Room for improvement</p>
+              </div>
+
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-white/50 shadow-lg">
+                <h3 className="font-bold text-iconic-black mb-4 flex items-center gap-2">
+                  <CheckCircle size={20} className="text-green-500" />
+                  SEO Checklist
+                </h3>
+                <div className="space-y-3">
+                  {[
+                    { item: 'Meta titles on all pages', done: true },
+                    { item: 'Meta descriptions', done: true },
+                    { item: 'Open Graph tags', done: true },
+                    { item: 'Structured data (JSON-LD)', done: true },
+                    { item: 'XML Sitemap', done: false },
+                    { item: 'Robots.txt optimized', done: false },
+                  ].map((check, i) => (
+                    <div key={i} className="flex items-center gap-2">
+                      {check.done ? (
+                        <CheckCircle size={16} className="text-green-500" />
+                      ) : (
+                        <AlertCircle size={16} className="text-amber-500" />
+                      )}
+                      <span className={`text-sm ${check.done ? 'text-gray-700' : 'text-amber-600'}`}>{check.item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-white/50 shadow-lg">
+                <h3 className="font-bold text-iconic-black mb-4 flex items-center gap-2">
+                  <TrendingUp size={20} className="text-iconic-pink" />
+                  Growth Metrics
+                </h3>
+                <div className="space-y-4">
+                  <div>
+                    <div className="flex justify-between text-sm mb-1">
+                      <span className="text-gray-600">Organic Traffic</span>
+                      <span className="font-bold text-green-600">+23%</span>
+                    </div>
+                    <div className="h-2 bg-gray-100 rounded-full">
+                      <div className="h-full w-[68%] bg-gradient-to-r from-green-400 to-green-500 rounded-full"></div>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="flex justify-between text-sm mb-1">
+                      <span className="text-gray-600">Social Traffic</span>
+                      <span className="font-bold text-iconic-pink">+45%</span>
+                    </div>
+                    <div className="h-2 bg-gray-100 rounded-full">
+                      <div className="h-full w-[82%] bg-gradient-to-r from-iconic-pink to-purple-500 rounded-full"></div>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="flex justify-between text-sm mb-1">
+                      <span className="text-gray-600">Direct Traffic</span>
+                      <span className="font-bold text-blue-600">+12%</span>
+                    </div>
+                    <div className="h-2 bg-gray-100 rounded-full">
+                      <div className="h-full w-[45%] bg-gradient-to-r from-blue-400 to-blue-500 rounded-full"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* SEO Improvement Tips */}
+            <div className="bg-gradient-to-br from-purple-600 to-iconic-pink rounded-2xl p-6 text-white mb-8">
+              <h3 className="font-bold text-xl mb-4 flex items-center gap-2">
+                <Target className="text-white" />
+                SEO Improvement Tips
+              </h3>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {[
+                  { title: 'Add XML Sitemap', desc: 'Help search engines discover all your pages', action: 'Create sitemap.xml in public folder' },
+                  { title: 'Optimize Images', desc: 'Add alt text to all images for accessibility & SEO', action: 'Use descriptive alt attributes' },
+                  { title: 'Internal Linking', desc: 'Link between episodes to keep users engaged', action: 'Add "Related Episodes" section' },
+                  { title: 'Page Speed', desc: 'Faster pages rank higher in search results', action: 'Compress images, lazy load content' },
+                  { title: 'Mobile Experience', desc: 'Google uses mobile-first indexing', action: 'Test on multiple devices' },
+                  { title: 'Content Length', desc: 'Longer, quality content ranks better', action: 'Add detailed episode descriptions' },
+                ].map((tip, i) => (
+                  <div key={i} className="bg-white/10 backdrop-blur rounded-xl p-4">
+                    <h4 className="font-bold mb-1">{tip.title}</h4>
+                    <p className="text-sm text-white/70 mb-2">{tip.desc}</p>
+                    <p className="text-xs text-yellow-300">💡 {tip.action}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* How to Analyze Your Site */}
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-white/50 shadow-lg mb-8">
+              <h3 className="font-bold text-iconic-black mb-4 flex items-center gap-2">
+                <Lightbulb size={20} className="text-yellow-500" />
+                How to Analyze Your Site for SEO
+              </h3>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {[
+                  { tool: 'Google Search Console', url: 'https://search.google.com/search-console', desc: 'Monitor search performance, indexing issues, and keywords', icon: '🔍' },
+                  { tool: 'Google PageSpeed', url: 'https://pagespeed.web.dev/', desc: 'Test page speed and Core Web Vitals scores', icon: '⚡' },
+                  { tool: 'Ahrefs Free Tools', url: 'https://ahrefs.com/free-seo-tools', desc: 'Backlink checker, keyword generator, SERP checker', icon: '🔗' },
+                  { tool: 'Schema Validator', url: 'https://validator.schema.org/', desc: 'Validate your structured data markup', icon: '✅' },
+                ].map((tool, i) => (
+                  <a key={i} href={tool.url} target="_blank" rel="noopener noreferrer" 
+                    className="block p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors group">
+                    <div className="text-2xl mb-2">{tool.icon}</div>
+                    <h4 className="font-bold text-iconic-black group-hover:text-iconic-pink transition-colors">{tool.tool}</h4>
+                    <p className="text-xs text-gray-500 mt-1">{tool.desc}</p>
+                  </a>
+                ))}
+              </div>
+            </div>
+
             {/* Optimization Recommendations */}
-            <div className="bg-gradient-to-br from-iconic-black to-gray-800 rounded-2xl p-6 text-white">
+            <div className="bg-gradient-to-br from-iconic-black to-gray-800 rounded-2xl p-6 text-white mb-8">
               <h3 className="font-bold text-xl mb-4 flex items-center gap-2">
                 <Lightbulb className="text-yellow-400" />
                 Optimization Recommendations
@@ -718,18 +856,47 @@ export const AnalyticsDashboard: React.FC = () => {
               </div>
             </div>
 
-            {/* Vercel Analytics Link */}
-            <div className="mt-8 text-center">
-              <p className="text-gray-500 text-sm mb-2">For more detailed analytics:</p>
-              <a
-                href="https://vercel.com/vistadevmx/iconicpodcast/analytics"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-iconic-pink hover:underline font-medium"
-              >
-                <BarChart3 size={16} />
-                Open Vercel Analytics Dashboard
-              </a>
+            {/* External Analytics Links */}
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-white/50 shadow-lg">
+              <h3 className="font-bold text-iconic-black mb-4">External Analytics Tools</h3>
+              <div className="grid sm:grid-cols-3 gap-4">
+                <a
+                  href="https://vercel.com/vistadevmx/iconicpodcast/analytics"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors"
+                >
+                  <BarChart3 size={24} className="text-iconic-black" />
+                  <div>
+                    <p className="font-bold text-iconic-black">Vercel Analytics</p>
+                    <p className="text-xs text-gray-500">Real-time traffic data</p>
+                  </div>
+                </a>
+                <a
+                  href="https://search.google.com/search-console"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors"
+                >
+                  <Globe size={24} className="text-blue-500" />
+                  <div>
+                    <p className="font-bold text-iconic-black">Search Console</p>
+                    <p className="text-xs text-gray-500">Google search performance</p>
+                  </div>
+                </a>
+                <a
+                  href="https://pagespeed.web.dev/analysis?url=https://iconicpodcast.eu"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors"
+                >
+                  <Zap size={24} className="text-yellow-500" />
+                  <div>
+                    <p className="font-bold text-iconic-black">PageSpeed Insights</p>
+                    <p className="text-xs text-gray-500">Performance analysis</p>
+                  </div>
+                </a>
+              </div>
             </div>
           </>
         )}
