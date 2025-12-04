@@ -11,7 +11,7 @@ export const TRANSLATIONS: Record<Language, Translation> = {
     nav_contact: 'Kontakt',
     nav_crm: 'CRM Login',
     hero_title: 'Podcast #1 pro ženy, které chtějí víc',
-    hero_subtitle: 'Poslech podcastu ICONIC je jako káva s mentorkou, která tě nenechá hrát při zdi. Zuzana Husárová ti ukáže, jak být svá a ikonická.',
+    hero_subtitle: 'Poslech ICONIC je jako setkání s mentorkou, která v tobě probudí odvahu být vidět. Zuzzi Husarová tě vrátí zpátky k tvojí síle, autenticitě a ikonickému vedení.',
     hero_cta: 'Poslechnout nejnovější díl',
     hero_kicker: 'The Iconic Podcast',
     hero_spotify_btn: 'Spotify',
