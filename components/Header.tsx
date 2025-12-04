@@ -142,10 +142,11 @@ export const Header: React.FC<HeaderProps> = ({ isBannerOpen }) => {
 
       {/* Mobile Menu Drawer */}
       <div 
-        className={`fixed inset-0 w-full h-full z-50 md:hidden transform transition-transform duration-300 ease-out ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
-        style={{ backgroundColor: '#ffffff' }}
+        className={`fixed inset-0 w-full h-full z-[9999] md:hidden transform transition-transform duration-300 ease-out ${isOpen ? 'translate-x-0' : 'translate-x-full'} bg-white`}
       >
-        <div className="flex flex-col h-full bg-white">
+        {/* Solid white overlay to ensure nothing from the page shows through */}
+        <div className="absolute inset-0 bg-white" />
+        <div className="relative flex flex-col h-full">
           {/* Close button */}
           <div className="flex justify-between items-center p-4 border-b border-gray-100">
             <span className="text-xl font-serif font-black">I<span className="text-iconic-pink">|</span>CONIC</span>
