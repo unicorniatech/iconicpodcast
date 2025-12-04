@@ -160,7 +160,7 @@ export const Chatbot: React.FC = () => {
         <>
             {/* Floating conversation starters - only show when chat is closed */}
             {!isOpen && (
-                <div className="fixed bottom-20 sm:bottom-24 right-4 sm:right-6 z-40 flex flex-col items-end gap-2.5 animate-fade-in-up">
+                <div className="fixed bottom-16 sm:bottom-24 right-3 sm:right-6 z-40 flex flex-col items-end gap-1.5 sm:gap-2.5 animate-fade-in-up">
                     {quickPrompts.map((prompt, idx) => (
                         <button
                             key={idx}
@@ -168,11 +168,11 @@ export const Chatbot: React.FC = () => {
                                 setIsOpen(true);
                                 setTimeout(() => handleSend(prompt.text), 300);
                             }}
-                            className={`group flex items-center gap-2 bg-gradient-to-r ${prompt.color} text-white text-xs sm:text-sm font-semibold px-4 sm:px-5 py-2.5 rounded-full shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-300 animate-bounce-subtle border border-white/20`}
+                            className={`group flex items-center gap-1.5 sm:gap-2 bg-gradient-to-r ${prompt.color} text-white text-[10px] sm:text-sm font-semibold px-3 sm:px-5 py-1.5 sm:py-2.5 rounded-full shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-300 animate-bounce-subtle border border-white/20`}
                             style={{ animationDelay: `${idx * 0.15}s` }}
                         >
-                            <span className="text-base">{prompt.icon}</span>
-                            <span>{prompt.text}</span>
+                            <span className="text-sm sm:text-base">{prompt.icon}</span>
+                            <span className="leading-tight sm:leading-normal">{prompt.text}</span>
                         </button>
                     ))}
                 </div>
