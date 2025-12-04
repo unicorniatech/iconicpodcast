@@ -140,6 +140,11 @@ export const Header: React.FC<HeaderProps> = ({ isBannerOpen }) => {
         onClick={() => setIsOpen(false)}
       />
 
+      {/* Solid white background behind the entire mobile menu */}
+      {isOpen && (
+        <div className="fixed inset-0 bg-white z-[45] md:hidden" />
+      )}
+
       {/* Mobile Menu Drawer */}
       <div 
         className={`fixed inset-0 w-full h-full z-[9999] md:hidden transform transition-transform duration-300 ease-out ${isOpen ? 'translate-x-0' : 'translate-x-full'} bg-white`}
