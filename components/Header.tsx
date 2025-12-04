@@ -48,8 +48,8 @@ export const Header: React.FC<HeaderProps> = ({ isBannerOpen }) => {
   }, []);
 
   const isHome = location.pathname === '/';
-  const textColor = scrolled || !isHome ? 'text-iconic-black' : 'text-white';
-  const navBg = scrolled || !isHome ? 'bg-white/95 backdrop-blur-md shadow-sm' : 'bg-transparent';
+  const textColor = scrolled || !isHome || isOpen ? 'text-iconic-black' : 'text-white';
+  const navBg = scrolled || !isHome || isOpen ? 'bg-white/95 backdrop-blur-md shadow-sm' : 'bg-transparent';
   const topPosition = isBannerOpen ? 'top-12' : 'top-0';
 
   return (
