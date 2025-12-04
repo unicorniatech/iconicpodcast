@@ -518,6 +518,7 @@ export const AnalyticsDashboard: React.FC = () => {
                 value={analytics.totalPageViews.toLocaleString()}
                 trend={+12.5}
                 color="blue"
+                tooltip="Total number of pages viewed by all visitors"
               />
               <MetricCard
                 icon={<Users className="text-white" />}
@@ -525,6 +526,7 @@ export const AnalyticsDashboard: React.FC = () => {
                 value={analytics.uniqueVisitors.toLocaleString()}
                 trend={+8.3}
                 color="green"
+                tooltip="Number of distinct users who visited your site"
               />
               <MetricCard
                 icon={<Clock className="text-white" />}
@@ -532,6 +534,7 @@ export const AnalyticsDashboard: React.FC = () => {
                 value={formatDuration(analytics.avgSessionDuration)}
                 trend={+5.2}
                 color="purple"
+                tooltip="Average time visitors spend on your site per session"
               />
               <MetricCard
                 icon={<MousePointerClick className="text-white" />}
@@ -540,6 +543,7 @@ export const AnalyticsDashboard: React.FC = () => {
                 color="orange"
                 trend={-3.1}
                 invertTrend
+                tooltip="% of visitors who leave after viewing only one page (lower is better)"
               />
             </div>
 
@@ -734,7 +738,7 @@ export const AnalyticsDashboard: React.FC = () => {
   );
 };
 
-// Metric Card Component with colorful backgrounds
+// Metric Card Component with colorful backgrounds and tooltips
 const MetricCard: React.FC<{
   icon: React.ReactNode;
   label: string;
@@ -742,7 +746,8 @@ const MetricCard: React.FC<{
   trend?: number;
   invertTrend?: boolean;
   color?: 'blue' | 'green' | 'purple' | 'orange' | 'pink';
-}> = ({ icon, label, value, trend, invertTrend, color = 'blue' }) => {
+  tooltip?: string;
+}> = ({ icon, label, value, trend, invertTrend, color = 'blue', tooltip }) => {
   const isPositive = invertTrend ? (trend || 0) < 0 : (trend || 0) > 0;
   
   const colorClasses = {
@@ -754,7 +759,14 @@ const MetricCard: React.FC<{
   };
   
   return (
-    <div className={`${colorClasses[color]} rounded-2xl p-5 shadow-lg text-white`}>
+    <div className={`${colorClasses[color]} rounded-2xl p-5 shadow-lg text-white relative group cursor-help`}>
+      {/* Tooltip */}
+      {tooltip && (
+        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-iconic-black text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50 shadow-xl">
+          {tooltip}
+          <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-iconic-black"></div>
+        </div>
+      )}
       <div className="flex items-center justify-between mb-3">
         <div className="w-10 h-10 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center text-white">
           {icon}
