@@ -514,7 +514,7 @@ const ContactPage: React.FC = () => {
 
     return (
         <div className="pt-32 pb-24 min-h-screen relative overflow-hidden">
-             {/* Aurora Background Effect - Pink to Purple Pastel (same as Episodes) */}
+             {/* Aurora Background Effect - same as Episodes section */}
              <div className="absolute inset-0 -z-10">
                  {/* Animated gradient base - pink to purple only */}
                  <div className="absolute inset-0 bg-gradient-to-br from-pink-100/70 via-fuchsia-50/50 to-purple-100/60 animate-gradient-slow bg-[length:400%_400%]"></div>
@@ -545,7 +545,7 @@ const ContactPage: React.FC = () => {
                  <div className="absolute bottom-1/3 left-1/3 w-[190px] h-[190px] bg-rose-400/35 rounded-full blur-[48px] animate-blob" style={{animationDelay: '1.2s'}}></div>
                  <div className="absolute top-1/3 right-1/3 w-[170px] h-[170px] bg-purple-400/30 rounded-full blur-[42px] animate-blob" style={{animationDelay: '5s'}}></div>
                  
-                 {/* Soft white overlay for readability */}
+                 {/* Soft white overlay for readability (same as Episodes) */}
                  <div className="absolute inset-0 bg-white/15"></div>
              </div>
              
