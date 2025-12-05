@@ -49,6 +49,8 @@ export const LoginPage: React.FC = () => {
       toggle_signin: 'Přihlásit se',
       back_home: '← Zpět na hlavní stránku',
       register_success: 'Registrace proběhla úspěšně! Zkontroluj email pro ověření účtu.',
+      show_password: 'Zobrazit heslo',
+      hide_password: 'Skrýt heslo',
     },
     'en-US': {
       title_login: 'Welcome back',
@@ -70,6 +72,8 @@ export const LoginPage: React.FC = () => {
       toggle_signin: 'Sign in',
       back_home: '← Back to home',
       register_success: 'Registration successful! Please check your email to verify your account.',
+      show_password: 'Show password',
+      hide_password: 'Hide password',
     },
     'es-MX': {
       title_login: 'Bienvenida de nuevo',
@@ -91,6 +95,8 @@ export const LoginPage: React.FC = () => {
       toggle_signin: 'Inicia sesión',
       back_home: '← Volver al inicio',
       register_success: 'Registro exitoso. Revisa tu correo para verificar tu cuenta.',
+      show_password: 'Mostrar contraseña',
+      hide_password: 'Ocultar contraseña',
     },
   }[lang] || {
     title_login: 'Welcome back',
@@ -112,6 +118,8 @@ export const LoginPage: React.FC = () => {
     toggle_signin: 'Sign in',
     back_home: '← Back to home',
     register_success: 'Registration successful! Please check your email to verify your account.',
+    show_password: 'Show password',
+    hide_password: 'Hide password',
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -143,7 +151,11 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-950 via-purple-900 to-slate-900 py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    <div
+      className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-950 via-purple-900 to-slate-900 py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden"
+      role="main"
+      aria-labelledby="auth-heading"
+    >
       {/* Background decoration */}
       <div className="absolute top-0 right-0 w-64 sm:w-96 h-64 sm:h-96 bg-iconic-pink/40 rounded-full blur-[140px]"></div>
       <div className="absolute bottom-0 left-0 w-64 sm:w-96 h-64 sm:h-96 bg-iconic-blue/30 rounded-full blur-[130px]"></div>
@@ -156,7 +168,7 @@ export const LoginPage: React.FC = () => {
               I<span className="text-iconic-pink">|</span>CONIC
             </span>
           </Link>
-          <h2 className="mt-6 text-2xl sm:text-3xl font-bold text-white">
+          <h2 id="auth-heading" className="mt-6 text-2xl sm:text-3xl font-bold text-white">
             {mode === 'login' ? t.title_login : t.title_register}
           </h2>
           <p className="mt-2 text-sm text-white/80">
@@ -169,7 +181,12 @@ export const LoginPage: React.FC = () => {
           <div className="bg-white/18 backdrop-blur-2xl rounded-2xl p-6 sm:p-8 border border-white/35 shadow-[0_16px_60px_rgba(0,0,0,0.75)] ring-1 ring-white/10">
             {/* Error message */}
             {error && (
-              <div className="mb-6 p-4 bg-red-500/20 border border-red-500/50 rounded-lg flex items-start gap-3">
+              <div
+                id="auth-error"
+                role="alert"
+                aria-live="polite"
+                className="mb-6 p-4 bg-red-500/20 border border-red-500/50 rounded-lg flex items-start gap-3"
+              >
                 <AlertCircle className="text-red-400 flex-shrink-0 mt-0.5" size={20} />
                 <p className="text-red-200 text-sm">{error}</p>
               </div>
@@ -177,7 +194,12 @@ export const LoginPage: React.FC = () => {
 
             {/* Success message */}
             {success && (
-              <div className="mb-6 p-4 bg-green-500/20 border border-green-500/50 rounded-lg flex items-start gap-3">
+              <div
+                id="auth-success"
+                role="status"
+                aria-live="polite"
+                className="mb-6 p-4 bg-green-500/20 border border-green-500/50 rounded-lg flex items-start gap-3"
+              >
                 <CheckCircle className="text-green-400 flex-shrink-0 mt-0.5" size={20} />
                 <p className="text-green-200 text-sm">{success}</p>
               </div>
@@ -228,6 +250,8 @@ export const LoginPage: React.FC = () => {
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors"
+                    aria-label={showPassword ? t.hide_password : t.show_password}
+                    aria-pressed={showPassword}
                   >
                     {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                   </button>

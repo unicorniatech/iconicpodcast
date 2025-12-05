@@ -38,6 +38,8 @@ export const ResetPasswordPage: React.FC = () => {
       error_short: 'Heslo musí mít alespoň 6 znaků.',
       error_invalid: 'Neplatný nebo expirovaný odkaz. Požádejte o nový.',
       error_generic: 'Něco se pokazilo. Zkuste to prosím znovu.',
+      show_password: 'Zobrazit heslo',
+      hide_password: 'Skrýt heslo',
     },
     'en-US': {
       title: 'New Password',
@@ -55,6 +57,8 @@ export const ResetPasswordPage: React.FC = () => {
       error_short: 'Password must be at least 6 characters.',
       error_invalid: 'Invalid or expired link. Please request a new one.',
       error_generic: 'Something went wrong. Please try again.',
+      show_password: 'Show password',
+      hide_password: 'Hide password',
     },
     'es-MX': {
       title: 'Nueva contraseña',
@@ -72,6 +76,8 @@ export const ResetPasswordPage: React.FC = () => {
       error_short: 'La contraseña debe tener al menos 6 caracteres.',
       error_invalid: 'Enlace no válido o expirado. Solicita uno nuevo.',
       error_generic: 'Algo salió mal. Inténtalo de nuevo.',
+      show_password: 'Mostrar contraseña',
+      hide_password: 'Ocultar contraseña',
     },
   }[lang] || {
     title: 'New Password',
@@ -89,6 +95,8 @@ export const ResetPasswordPage: React.FC = () => {
     error_short: 'Password must be at least 6 characters.',
     error_invalid: 'Invalid or expired link. Please request a new one.',
     error_generic: 'Something went wrong. Please try again.',
+    show_password: 'Show password',
+    hide_password: 'Hide password',
   };
 
   useEffect(() => {
@@ -138,7 +146,11 @@ export const ResetPasswordPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-950 via-purple-900 to-slate-900 py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    <div
+      className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-950 via-purple-900 to-slate-900 py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden"
+      role="main"
+      aria-labelledby="reset-heading"
+    >
       {/* Background decoration */}
       <div className="absolute top-0 right-0 w-64 sm:w-96 h-64 sm:h-96 bg-iconic-pink/40 rounded-full blur-[140px]"></div>
       <div className="absolute bottom-0 left-0 w-64 sm:w-96 h-64 sm:h-96 bg-iconic-blue/30 rounded-full blur-[130px]"></div>
@@ -151,7 +163,7 @@ export const ResetPasswordPage: React.FC = () => {
               I<span className="text-iconic-pink">|</span>CONIC
             </span>
           </Link>
-          <h2 className="mt-6 text-2xl sm:text-3xl font-bold text-white">
+          <h2 id="reset-heading" className="mt-6 text-2xl sm:text-3xl font-bold text-white">
             {t.title}
           </h2>
           <p className="mt-2 text-sm text-white/80">
@@ -160,7 +172,12 @@ export const ResetPasswordPage: React.FC = () => {
         </div>
 
         {success ? (
-          <div className="bg-white/18 backdrop-blur-2xl rounded-2xl p-6 sm:p-8 border border-white/35 shadow-[0_16px_60px_rgba(0,0,0,0.75)] text-center">
+          <div
+            id="reset-success"
+            role="status"
+            aria-live="polite"
+            className="bg-white/18 backdrop-blur-2xl rounded-2xl p-6 sm:p-8 border border-white/35 shadow-[0_16px_60px_rgba(0,0,0,0.75)] text-center"
+          >
             <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
               <CheckCircle className="text-green-400" size={32} />
             </div>
@@ -174,7 +191,12 @@ export const ResetPasswordPage: React.FC = () => {
             </Link>
           </div>
         ) : !isValidSession && error ? (
-          <div className="bg-white/18 backdrop-blur-2xl rounded-2xl p-6 sm:p-8 border border-white/35 shadow-[0_16px_60px_rgba(0,0,0,0.75)] text-center">
+          <div
+            id="reset-invalid"
+            role="alert"
+            aria-live="polite"
+            className="bg-white/18 backdrop-blur-2xl rounded-2xl p-6 sm:p-8 border border-white/35 shadow-[0_16px_60px_rgba(0,0,0,0.75)] text-center"
+          >
             <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
               <AlertCircle className="text-red-400" size={32} />
             </div>
@@ -191,7 +213,12 @@ export const ResetPasswordPage: React.FC = () => {
             <div className="bg-white/18 backdrop-blur-2xl rounded-2xl p-6 sm:p-8 border border-white/35 shadow-[0_16px_60px_rgba(0,0,0,0.75)]">
               {/* Error message */}
               {error && (
-                <div className="mb-6 p-4 bg-red-500/20 border border-red-500/50 rounded-lg flex items-start gap-3">
+                <div
+                  id="reset-error"
+                  role="alert"
+                  aria-live="polite"
+                  className="mb-6 p-4 bg-red-500/20 border border-red-500/50 rounded-lg flex items-start gap-3"
+                >
                   <AlertCircle className="text-red-400 flex-shrink-0 mt-0.5" size={20} />
                   <p className="text-red-200 text-sm">{error}</p>
                 </div>
@@ -221,6 +248,8 @@ export const ResetPasswordPage: React.FC = () => {
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors"
+                      aria-label={showPassword ? t.hide_password : t.show_password}
+                      aria-pressed={showPassword}
                     >
                       {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                     </button>
@@ -254,6 +283,8 @@ export const ResetPasswordPage: React.FC = () => {
               <button
                 type="submit"
                 disabled={isLoading}
+                aria-busy={isLoading}
+                aria-describedby={error ? 'reset-error' : undefined}
                 className="w-full mt-6 bg-gradient-to-r from-iconic-pink to-purple-600 text-white font-bold py-3 sm:py-4 rounded-xl hover:shadow-[0_0_20px_rgba(183,6,109,0.6)] hover:scale-[1.02] transition-all transform border border-white/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
               >
                 {isLoading ? (

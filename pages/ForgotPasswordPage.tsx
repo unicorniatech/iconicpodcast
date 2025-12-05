@@ -94,7 +94,11 @@ export const ForgotPasswordPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-950 via-purple-900 to-slate-900 py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    <div
+      className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-950 via-purple-900 to-slate-900 py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden"
+      role="main"
+      aria-labelledby="forgot-heading"
+    >
       {/* Background decoration */}
       <div className="absolute top-0 right-0 w-64 sm:w-96 h-64 sm:h-96 bg-iconic-pink/40 rounded-full blur-[140px]"></div>
       <div className="absolute bottom-0 left-0 w-64 sm:w-96 h-64 sm:h-96 bg-iconic-blue/30 rounded-full blur-[130px]"></div>
@@ -107,7 +111,7 @@ export const ForgotPasswordPage: React.FC = () => {
               I<span className="text-iconic-pink">|</span>CONIC
             </span>
           </Link>
-          <h2 className="mt-6 text-2xl sm:text-3xl font-bold text-white">
+          <h2 id="forgot-heading" className="mt-6 text-2xl sm:text-3xl font-bold text-white">
             {t.title}
           </h2>
           <p className="mt-2 text-sm text-white/80 px-4">
@@ -116,7 +120,12 @@ export const ForgotPasswordPage: React.FC = () => {
         </div>
 
         {success ? (
-          <div className="bg-white/18 backdrop-blur-2xl rounded-2xl p-6 sm:p-8 border border-white/35 shadow-[0_16px_60px_rgba(0,0,0,0.75)] text-center">
+          <div
+            id="forgot-success"
+            role="status"
+            aria-live="polite"
+            className="bg-white/18 backdrop-blur-2xl rounded-2xl p-6 sm:p-8 border border-white/35 shadow-[0_16px_60px_rgba(0,0,0,0.75)] text-center"
+          >
             <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
               <CheckCircle className="text-green-400" size={32} />
             </div>
@@ -135,7 +144,12 @@ export const ForgotPasswordPage: React.FC = () => {
             <div className="bg-white/18 backdrop-blur-2xl rounded-2xl p-6 sm:p-8 border border-white/35 shadow-[0_16px_60px_rgba(0,0,0,0.75)]">
               {/* Error message */}
               {error && (
-                <div className="mb-6 p-4 bg-red-500/20 border border-red-500/50 rounded-lg flex items-start gap-3">
+                <div
+                  id="forgot-error"
+                  role="alert"
+                  aria-live="polite"
+                  className="mb-6 p-4 bg-red-500/20 border border-red-500/50 rounded-lg flex items-start gap-3"
+                >
                   <AlertCircle className="text-red-400 flex-shrink-0 mt-0.5" size={20} />
                   <p className="text-red-200 text-sm">{error}</p>
                 </div>
@@ -166,6 +180,8 @@ export const ForgotPasswordPage: React.FC = () => {
               <button
                 type="submit"
                 disabled={isLoading}
+                aria-busy={isLoading}
+                aria-describedby={error ? 'forgot-error' : undefined}
                 className="w-full mt-6 bg-gradient-to-r from-iconic-pink to-purple-600 text-white font-bold py-3 sm:py-4 rounded-xl hover:shadow-[0_0_20px_rgba(183,6,109,0.6)] hover:scale-[1.02] transition-all transform border border-white/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
               >
                 {isLoading ? (
