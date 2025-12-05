@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { Link, useLocation } from 'react-router-dom';
 import { Globe, Menu, X, Mic, ChevronDown, User, LogOut } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -134,110 +135,113 @@ export const Header: React.FC<HeaderProps> = ({ isBannerOpen }) => {
         </div>
       </div>
       
-            {/* Mobile Menu Overlay */}
-      <div 
-        className={`fixed inset-0 bg-black/60 z-40 md:hidden transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
-        onClick={() => setIsOpen(false)}
-      />
-
-      {/* Mobile Menu Drawer - solid dark background */}
-      <div 
-        className={`fixed inset-0 w-full h-full z-[9999] md:hidden transform transition-transform duration-300 ease-out ${isOpen ? 'translate-x-0' : 'translate-x-full'} bg-gray-900 text-white`}
-      >
-        <div className="relative flex flex-col h-full">
-          {/* Close button */}
-          <div className="flex justify-between items-center p-4 border-b border-white/10">
-            <span className="text-xl font-serif font-black">I<span className="text-iconic-pink">|</span>CONIC</span>
-            <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-white/10 rounded-full">
-              <X size={24} />
-            </button>
-          </div>
-
-          {/* Navigation Links */}
-          <nav className="flex-1 py-6 px-4">
-            <Link to="/" onClick={() => setIsOpen(false)} className="flex items-center px-4 py-4 text-white hover:text-iconic-pink hover:bg-white/10 rounded-xl text-lg font-bold transition-colors">
-              {t.nav_home}
-            </Link>
-            <Link to="/episodes" onClick={() => setIsOpen(false)} className="flex items-center px-4 py-4 text-white hover:text-iconic-pink hover:bg-white/10 rounded-xl text-lg font-bold transition-colors">
-              {t.nav_episodes}
-            </Link>
-            <Link to="/contact" onClick={() => setIsOpen(false)} className="flex items-center px-4 py-4 text-white hover:text-iconic-pink hover:bg-white/10 rounded-xl text-lg font-bold transition-colors">
-              {t.nav_contact}
-            </Link>
-            
-            {/* User section */}
-            {user ? (
-              <>
-                <div className="border-t border-white/10 my-4"></div>
-                <Link to="/profile" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-4 py-4 text-white hover:text-iconic-pink hover:bg-white/10 rounded-xl text-lg font-bold transition-colors">
-                  <User size={20} />
-                  {t.menu_profile}
-                </Link>
-                <button 
-                  onClick={() => { logout(); setIsOpen(false); }} 
-                  className="flex items-center gap-3 w-full px-4 py-4 text-gray-300 hover:text-red-400 hover:bg-red-500/10 rounded-xl text-lg font-medium transition-colors"
-                >
-                  <LogOut size={20} />
-                  {t.menu_sign_out}
-                </button>
-              </>
-            ) : (
-              <>
-                <div className="border-t border-white/10 my-4"></div>
-                <Link to="/login" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-4 py-4 text-iconic-pink hover:bg-pink-500/10 rounded-xl text-lg font-bold transition-colors">
-                  <User size={20} />
-                  {t.menu_sign_in}
-                </Link>
-              </>
-            )}
-          </nav>
-
-          {/* Language Switcher */}
-          <div className="border-t border-white/10 p-4">
-            <p className="text-xs text-gray-300 uppercase tracking-wider mb-3 px-2">{t.menu_language}</p>
-            <div className="grid grid-cols-3 gap-2">
-              <button 
-                onClick={() => {setLang('cs-CZ'); setIsOpen(false)}} 
-                className={`py-3 rounded-xl text-sm font-bold transition-all ${lang === 'cs-CZ' ? 'bg-iconic-pink text-white' : 'bg-white/10 text-gray-200 hover:bg-white/20'}`}
-              >
-                🇨🇿 CZ
-              </button>
-              <button 
-                onClick={() => {setLang('en-US'); setIsOpen(false)}} 
-                className={`py-3 rounded-xl text-sm font-bold transition-all ${lang === 'en-US' ? 'bg-iconic-pink text-white' : 'bg-white/10 text-gray-200 hover:bg-white/20'}`}
-              >
-                🇺🇸 EN
-              </button>
-              <button 
-                onClick={() => {setLang('es-MX'); setIsOpen(false)}} 
-                className={`py-3 rounded-xl text-sm font-bold transition-all ${lang === 'es-MX' ? 'bg-iconic-pink text-white' : 'bg-white/10 text-gray-200 hover:bg-white/20'}`}
-              >
-                🇲🇽 ES
-              </button>
-            </div>
-          </div>
-
-          {/* Subscribe Button */}
-          <div className="p-4 border-t border-white/10">
-            <a 
-              href="https://www.youtube.com/@ZuzziHusarova" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="flex items-center justify-center gap-2 w-full bg-iconic-pink text-white py-4 rounded-xl font-bold hover:bg-pink-600 transition-colors"
-            >
-              <Mic size={20} /> Subscribe on YouTube
-            </a>
-          </div>
-        </div>
-      </div>
-
       {/* Mobile Language Dropdown (when clicking globe) */}
       {langMenuOpen && (
         <div className="md:hidden absolute top-full right-4 mt-2 w-40 bg-white rounded-xl shadow-xl py-2 border border-gray-100 animate-fade-in-up z-50">
-          <button onClick={() => {setLang('cs-CZ'); setLangMenuOpen(false);}} className={`block w-full text-left px-4 py-3 hover:bg-gray-50 text-sm font-medium ${lang === 'cs-CZ' ? 'text-iconic-pink' : ''}`}>🇨🇿 Čeština</button>
+          <button onClick={() => {setLang('cs-CZ'); setLangMenuOpen(false);}} className={`block w-full text-left px-4 py-3 hover:bg-gray-50 text-sm font-medium ${lang === 'cs-CZ' ? 'text-iconic-pink' : ''}`}>
+🇨🇿 Čeština</button>
           <button onClick={() => {setLang('en-US'); setLangMenuOpen(false);}} className={`block w-full text-left px-4 py-3 hover:bg-gray-50 text-sm font-medium ${lang === 'en-US' ? 'text-iconic-pink' : ''}`}>🇺🇸 English</button>
           <button onClick={() => {setLang('es-MX'); setLangMenuOpen(false);}} className={`block w-full text-left px-4 py-3 hover:bg-gray-50 text-sm font-medium ${lang === 'es-MX' ? 'text-iconic-pink' : ''}`}>🇲🇽 Español</button>
         </div>
+      )}
+      
+      {/* Mobile Menu Overlay & Drawer rendered via portal to cover full viewport */}
+      {isOpen && createPortal(
+        <div className="fixed inset-0 z-[9999] md:hidden">
+          {/* Dark backdrop */}
+          <div 
+            className="absolute inset-0 bg-black/70" 
+            onClick={() => setIsOpen(false)}
+          />
+
+          {/* Drawer content */}
+          <div className="relative inset-0 w-full h-full bg-gray-900 text-white flex flex-col">
+            {/* Close button / header */}
+            <div className="flex justify-between items-center p-4 border-b border-white/10">
+              <span className="text-xl font-serif font-black">I<span className="text-iconic-pink">|</span>CONIC</span>
+              <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-white/10 rounded-full">
+                <X size={24} />
+              </button>
+            </div>
+
+            {/* Navigation Links */}
+            <nav className="flex-1 py-6 px-4 overflow-y-auto">
+              <Link to="/" onClick={() => setIsOpen(false)} className="flex items-center px-4 py-4 text-white hover:text-iconic-pink hover:bg-white/10 rounded-xl text-lg font-bold transition-colors">
+                {t.nav_home}
+              </Link>
+              <Link to="/episodes" onClick={() => setIsOpen(false)} className="flex items-center px-4 py-4 text-white hover:text-iconic-pink hover:bg-white/10 rounded-xl text-lg font-bold transition-colors">
+                {t.nav_episodes}
+              </Link>
+              <Link to="/contact" onClick={() => setIsOpen(false)} className="flex items-center px-4 py-4 text-white hover:text-iconic-pink hover:bg-white/10 rounded-xl text-lg font-bold transition-colors">
+                {t.nav_contact}
+              </Link>
+              
+              {/* User section */}
+              {user ? (
+                <>
+                  <div className="border-t border-white/10 my-4"></div>
+                  <Link to="/profile" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-4 py-4 text-white hover:text-iconic-pink hover:bg-white/10 rounded-xl text-lg font-bold transition-colors">
+                    <User size={20} />
+                    {t.menu_profile}
+                  </Link>
+                  <button 
+                    onClick={() => { logout(); setIsOpen(false); }} 
+                    className="flex items-center gap-3 w-full px-4 py-4 text-gray-300 hover:text-red-400 hover:bg-red-500/10 rounded-xl text-lg font-medium transition-colors"
+                  >
+                    <LogOut size={20} />
+                    {t.menu_sign_out}
+                  </button>
+                </>
+              ) : (
+                <>
+                  <div className="border-t border-white/10 my-4"></div>
+                  <Link to="/login" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-4 py-4 text-iconic-pink hover:bg-pink-500/10 rounded-xl text-lg font-bold transition-colors">
+                    <User size={20} />
+                    {t.menu_sign_in}
+                  </Link>
+                </>
+              )}
+
+              {/* Language Switcher */}
+              <div className="border-t border-white/10 p-4 mt-4">
+                <p className="text-xs text-gray-300 uppercase tracking-wider mb-3 px-2">{t.menu_language}</p>
+                <div className="grid grid-cols-3 gap-2">
+                  <button 
+                    onClick={() => {setLang('cs-CZ'); setIsOpen(false)}} 
+                    className={`py-3 rounded-xl text-sm font-bold transition-all ${lang === 'cs-CZ' ? 'bg-iconic-pink text-white' : 'bg-white/10 text-gray-200 hover:bg-white/20'}`}
+                  >
+                    🇨🇿 CZ
+                  </button>
+                  <button 
+                    onClick={() => {setLang('en-US'); setIsOpen(false)}} 
+                    className={`py-3 rounded-xl text-sm font-bold transition-all ${lang === 'en-US' ? 'bg-iconic-pink text-white' : 'bg-white/10 text-gray-200 hover:bg-white/20'}`}
+                  >
+                    🇺🇸 EN
+                  </button>
+                  <button 
+                    onClick={() => {setLang('es-MX'); setIsOpen(false)}} 
+                    className={`py-3 rounded-xl text-sm font-bold transition-all ${lang === 'es-MX' ? 'bg-iconic-pink text-white' : 'bg-white/10 text-gray-200 hover:bg-white/20'}`}
+                  >
+                    🇲🇽 ES
+                  </button>
+                </div>
+              </div>
+
+              {/* Subscribe Button */}
+              <div className="p-4 border-t border-white/10 mt-4">
+                <a 
+                  href="https://www.youtube.com/@ZuzziHusarova" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="flex items-center justify-center gap-2 w-full bg-iconic-pink text-white py-4 rounded-xl font-bold hover:bg-pink-600 transition-colors"
+                >
+                  <Mic size={20} /> Subscribe on YouTube
+                </a>
+              </div>
+            </nav>
+          </div>
+        </div>,
+        document.body
       )}
     </nav>
   );
