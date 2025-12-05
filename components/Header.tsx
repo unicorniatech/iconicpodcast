@@ -268,6 +268,20 @@ export const Header: React.FC<HeaderProps> = ({ isBannerOpen }) => {
                     <User size={20} />
                     {t.menu_profile}
                   </Link>
+                  {isAdmin && (
+                    <Link
+                      to="/crm"
+                      onClick={() => {
+                        setIsOpen(false);
+                        if (typeof window !== 'undefined') {
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }
+                      }}
+                      className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-200 hover:text-iconic-pink hover:bg-white/10 rounded-xl transition-colors"
+                    >
+                      {t.nav_crm}
+                    </Link>
+                  )}
                   <button 
                     onClick={async () => {
                       if (isLoggingOut) return;
