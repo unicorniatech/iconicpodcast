@@ -422,6 +422,10 @@ const EpisodeDetail: React.FC = () => {
 
     const localizedDescription = episode.summaries?.[lang] || episode.description;
 
+    const relatedEpisodes = PODCAST_EPISODES
+      .filter(ep => ep.id !== episode.id && ep.tags && episode.tags && ep.tags.some(tag => episode.tags!.includes(tag)))
+      .slice(0, 3);
+
     return (
         <div className="pt-20 min-h-screen">
             <SEOHead 
@@ -484,6 +488,29 @@ const EpisodeDetail: React.FC = () => {
                         <ScrollReveal delay={300}>
                             <Comments episodeId={episode.id} />
                         </ScrollReveal>
+                        {/* Related episodes */}
+                        {relatedEpisodes.length > 0 && (
+                          <ScrollReveal delay={400}>
+                            <div className="mt-10 border-t border-gray-200 pt-6">
+                              <h3 className="text-lg sm:text-xl font-serif font-bold mb-4 text-iconic-black">
+                                {lang === 'cs-CZ' ? 'Související epizody' : lang === 'es-MX' ? 'Episodios relacionados' : 'Related episodes'}
+                              </h3>
+                              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                {relatedEpisodes.map(rel => (
+                                  <Link key={rel.id} to={`/episodes/${rel.id}`} className="group block bg-white rounded-xl border border-gray-200 p-3 hover:border-iconic-pink hover:shadow-md transition-all">
+                                    <div className="aspect-video rounded-lg overflow-hidden mb-2">
+                                      <img src={rel.imageUrl} alt={rel.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
+                                    </div>
+                                    <div className="text-[11px] uppercase tracking-wide text-gray-400 mb-1">{rel.date}</div>
+                                    <div className="text-sm font-semibold text-iconic-black line-clamp-2 group-hover:text-iconic-pink">
+                                      {rel.title}
+                                    </div>
+                                  </Link>
+                                ))}
+                              </div>
+                            </div>
+                          </ScrollReveal>
+                        )}
                     </div>
                     <div>
                          <ScrollReveal delay={300}>
