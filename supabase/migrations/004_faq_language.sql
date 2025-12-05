@@ -1,0 +1,1 @@
+-- Migration 004: Add language support to FAQs\n-- NOTE: Run this in your Supabase SQL editor before relying on multi-language FAQ features in the app.\n\nALTER TABLE faqs\n  ADD COLUMN IF NOT EXISTS language TEXT NOT NULL DEFAULT 'cs-CZ';\n\nCREATE INDEX IF NOT EXISTS idx_faqs_language ON faqs(language);\n

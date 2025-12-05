@@ -138,9 +138,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = async (): Promise<void> => {
     try {
-      await signOut();
+      if (isSupabaseConfigured()) {
+        await signOut();
+      }
     } catch (error) {
       logError(createAppError(error, 'AUTH_ERROR', { action: 'logout' }));
+    } finally {
+      // Always clear local auth state so the UI reliably logs out
+      setState(prev => ({
+        ...prev,
+        user: null,
+        session: null,
+        isAuthenticated: false,
+        isAdmin: false
+      }));
     }
   };
 

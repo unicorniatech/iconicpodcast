@@ -6,6 +6,7 @@
  */
 
 import React, { useEffect } from 'react';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface SEOHeadProps {
   title?: string;
@@ -46,6 +47,10 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
   episodeImage,
   episodeUrl
 }) => {
+  const { lang } = useLanguage();
+  const htmlLang = lang || 'cs-CZ';
+  const ogLocale = htmlLang === 'cs-CZ' ? 'cs_CZ' : htmlLang === 'es-MX' ? 'es_MX' : 'en_US';
+
   const fullTitle = title ? `${title} | ${SITE_NAME}` : DEFAULT_TITLE;
   const fullUrl = url.startsWith('http') ? url : `${SITE_URL}${url}`;
   const fullImage = image.startsWith('http') ? image : `${SITE_URL}${image}`;
@@ -110,8 +115,12 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
     ]
   };
 
-  // Update document title and meta tags using useEffect
+  // Update document title, lang attribute, and meta tags using useEffect
   useEffect(() => {
+    // Set html lang attribute
+    if (typeof document !== 'undefined') {
+      document.documentElement.lang = htmlLang;
+    }
     // Set title
     document.title = fullTitle;
 
@@ -138,13 +147,13 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
     setMeta('og:image', fullImage, true);
     setMeta('og:url', fullUrl, true);
     setMeta('og:site_name', SITE_NAME, true);
+    setMeta('og:locale', ogLocale, true);
 
     // Twitter
     setMeta('twitter:title', fullTitle);
     setMeta('twitter:description', description);
     setMeta('twitter:image', fullImage);
-
-  }, [fullTitle, description, author, type, fullImage, fullUrl]);
+  }, [fullTitle, description, author, type, fullImage, fullUrl, htmlLang, ogLocale]);
 
   // This component doesn't render anything visible
   return null;

@@ -116,7 +116,7 @@ export const ProfilePage: React.FC = () => {
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) return;
+    if (!user || isSaving || isLoading) return;
     if (!isSupabaseConfigured()) {
       const appError = createAppError(
         new Error('Supabase is not configured'),
