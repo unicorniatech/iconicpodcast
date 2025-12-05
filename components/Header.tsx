@@ -9,21 +9,15 @@ interface HeaderProps {
     isBannerOpen: boolean;
 }
 
-// Admin emails that can see CRM
-const ADMIN_EMAILS = ['zuzzi.husarova@gmail.com', 'ceo@vistadev.mx'];
-
 export const Header: React.FC<HeaderProps> = ({ isBannerOpen }) => {
   const { lang, setLang, t } = useLanguage();
-  const { user, logout } = useAuth();
+  const { user, logout, isAdmin } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [langMenuOpen, setLangMenuOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const langMenuRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
-  
-  // Check if current user is admin
-  const isAdmin = user && ADMIN_EMAILS.includes(user.email || '');
 
   // Close mobile menu on route change
   useEffect(() => {
