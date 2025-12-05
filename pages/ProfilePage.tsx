@@ -7,7 +7,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { supabase } from '../services/supabaseClient';
+import { supabase, isSupabaseConfigured } from '../services/supabaseClient';
+import { logError, createAppError } from '../services/errorService';
 import { User, Mail, Camera, LogOut, Save, AlertCircle, CheckCircle } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 
@@ -87,6 +88,9 @@ export const ProfilePage: React.FC = () => {
 
   const fetchProfile = async () => {
     if (!user) return;
+    if (!isSupabaseConfigured()) {
+      return;
+    }
     setIsLoading(true);
     
     try {
@@ -101,10 +105,10 @@ export const ProfilePage: React.FC = () => {
         setBio(data.bio || '');
       } else if (error && error.code !== 'PGRST116') {
         // PGRST116 = no rows returned, which is fine for new users
-        console.error('Error fetching profile:', error);
+        logError(createAppError(error, 'SUPABASE_ERROR', { action: 'fetchProfile', page: 'profile' }));
       }
     } catch (err) {
-      console.error('Error:', err);
+      logError(createAppError(err, 'SUPABASE_ERROR', { action: 'fetchProfile', page: 'profile' }));
     } finally {
       setIsLoading(false);
     }
@@ -113,6 +117,16 @@ export const ProfilePage: React.FC = () => {
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
+    if (!isSupabaseConfigured()) {
+      const appError = createAppError(
+        new Error('Supabase is not configured'),
+        'SUPABASE_NOT_CONFIGURED',
+        { action: 'saveProfile' }
+      );
+      logError(appError);
+      setError(appError.message || t.error);
+      return;
+    }
     
     setError(null);
     setSuccess(null);
@@ -129,13 +143,17 @@ export const ProfilePage: React.FC = () => {
         });
 
       if (error) {
-        setError(t.error);
+        const appError = createAppError(error, 'SUPABASE_ERROR', { action: 'saveProfile' });
+        logError(appError);
+        setError(appError.message || t.error);
       } else {
         setSuccess(t.success);
         setTimeout(() => setSuccess(null), 3000);
       }
-    } catch {
-      setError(t.error);
+    } catch (err) {
+      const appError = createAppError(err, 'SUPABASE_ERROR', { action: 'saveProfile' });
+      logError(appError);
+      setError(appError.message || t.error);
     } finally {
       setIsSaving(false);
     }
@@ -261,7 +279,6 @@ export const ProfilePage: React.FC = () => {
                 type="submit"
                 disabled={isSaving}
                 aria-busy={isSaving}
-                aria-describedby={error ? 'profile-error' : undefined}
                 className="flex-1 flex items-center justify-center gap-2 bg-iconic-pink text-white font-bold py-3 px-6 rounded-xl hover:bg-pink-600 transition-colors disabled:opacity-50"
               >
                 {isSaving ? (
@@ -289,6 +306,29 @@ export const ProfilePage: React.FC = () => {
           </form>
         </div>
       </div>
+
+      {/* Toast notifications */}
+      {(error || success) && (
+        <div className="fixed inset-x-4 bottom-6 sm:inset-x-auto sm:right-6 sm:left-auto z-50">
+          <div
+            id={error ? 'profile-error' : 'profile-success'}
+            role={error ? 'alert' : 'status'}
+            aria-live="polite"
+            className={`max-w-sm mx-auto rounded-xl shadow-lg border px-4 py-3 flex items-center gap-3 text-sm ${
+              error
+                ? 'bg-red-600 text-white border-red-400'
+                : 'bg-emerald-600 text-white border-emerald-400'
+            }`}
+          >
+            {error ? (
+              <AlertCircle className="flex-shrink-0" size={20} />
+            ) : (
+              <CheckCircle className="flex-shrink-0" size={20} />
+            )}
+            <p className="flex-1">{error || success}</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
