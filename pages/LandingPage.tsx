@@ -125,7 +125,11 @@ const LandingPageTemplate: React.FC<LandingPageProps> = ({
   };
 
   return (
-    <div className={`min-h-screen bg-gradient-to-br ${backgroundGradient} flex items-center justify-center p-4 relative overflow-hidden`}>
+    <div
+      className={`min-h-screen bg-gradient-to-br ${backgroundGradient} flex items-center justify-center p-4 relative overflow-hidden`}
+      role="main"
+      aria-labelledby="landing-heading"
+    >
       {/* Background decoration */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-[100px]"></div>
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-iconic-pink/20 rounded-full blur-[100px]"></div>
@@ -168,7 +172,7 @@ const LandingPageTemplate: React.FC<LandingPageProps> = ({
               </div>
 
               {/* Title */}
-              <h1 className="text-3xl md:text-4xl font-serif font-bold text-white text-center mb-4 leading-tight">
+              <h1 id="landing-heading" className="text-3xl md:text-4xl font-serif font-bold text-white text-center mb-4 leading-tight">
                 {title}
               </h1>
               <p className="text-white/80 text-center mb-8">
@@ -186,7 +190,12 @@ const LandingPageTemplate: React.FC<LandingPageProps> = ({
               {/* Form */}
               <form onSubmit={handleSubmit} className="space-y-4">
                 {error && (
-                  <div className="p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-200 text-sm">
+                  <div
+                    id="landing-error"
+                    role="alert"
+                    aria-live="polite"
+                    className="p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-200 text-sm"
+                  >
                     {error}
                   </div>
                 )}
@@ -221,6 +230,8 @@ const LandingPageTemplate: React.FC<LandingPageProps> = ({
                 <button
                   type="submit"
                   disabled={isSubmitting}
+                  aria-busy={isSubmitting}
+                  aria-describedby={error ? 'landing-error' : undefined}
                   className="w-full bg-gradient-to-r from-iconic-pink to-purple-600 text-white font-bold py-4 rounded-xl hover:shadow-[0_0_20px_rgba(183,6,109,0.6)] hover:scale-[1.02] transition-all transform border border-white/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                 >
                   {isSubmitting ? (

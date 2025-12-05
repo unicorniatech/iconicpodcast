@@ -549,7 +549,11 @@ const ContactPage: React.FC = () => {
     };
 
     return (
-        <div className="pt-32 pb-24 min-h-screen relative overflow-hidden">
+        <div
+          className="pt-32 pb-24 min-h-screen relative overflow-hidden"
+          role="main"
+          aria-labelledby="contact-heading"
+        >
              {/* Aurora Background Effect - same as Episodes section */}
              <div className="absolute inset-0 -z-10">
                  {/* Animated gradient base - pink to purple only */}
@@ -589,7 +593,7 @@ const ContactPage: React.FC = () => {
              <div className="max-w-4xl mx-auto px-4 relative z-10">
                  <div className="text-center mb-16">
                      <ScrollReveal>
-                         <h1 className="text-4xl md:text-6xl font-serif font-black text-iconic-black mb-4">{t.contact_title}</h1>
+                         <h1 id="contact-heading" className="text-4xl md:text-6xl font-serif font-black text-iconic-black mb-4">{t.contact_title}</h1>
                          <p className="text-gray-600 text-xl font-light">{t.contact_subtitle}</p>
                      </ScrollReveal>
                  </div>
@@ -656,7 +660,11 @@ const ContactPage: React.FC = () => {
 
                          <div className="p-12 bg-white/95">
                              {submitted ? (
-                                 <div className="h-full flex flex-col items-center justify-center text-center animate-fade-in-up">
+                                 <div
+                                   className="h-full flex flex-col items-center justify-center text-center animate-fade-in-up"
+                                   role="status"
+                                   aria-live="polite"
+                                 >
                                      <CheckCircle size={64} className="text-green-500 mb-6" />
                                      <h3 className="text-3xl font-serif font-bold mb-4">{t.contact_success_title}</h3>
                                      <p className="text-gray-600">{t.contact_success_msg}</p>
@@ -664,7 +672,14 @@ const ContactPage: React.FC = () => {
                              ) : (
                                  <form onSubmit={handleSubmit} className="space-y-6">
                                      {error && (
-                                       <div className="p-3 bg-red-100 border border-red-300 rounded-lg text-red-700 text-sm">{error}</div>
+                                       <div
+                                         id="contact-error"
+                                         role="alert"
+                                         aria-live="polite"
+                                         className="p-3 bg-red-100 border border-red-300 rounded-lg text-red-700 text-sm"
+                                       >
+                                         {error}
+                                       </div>
                                      )}
                                      <div>
                                          <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">{t.form_name}</label>
@@ -682,7 +697,13 @@ const ContactPage: React.FC = () => {
                                          <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">{t.form_message}</label>
                                          <textarea required name="message" rows={4} className="w-full p-4 border-2 border-gray-100 rounded-lg focus:ring-0 focus:border-iconic-black outline-none transition-all bg-gray-50 focus:bg-white"></textarea>
                                      </div>
-                                     <button type="submit" disabled={isSubmitting} className="w-full bg-iconic-pink text-white py-4 rounded-lg font-bold text-lg hover:bg-iconic-black transition-colors disabled:opacity-50">
+                                     <button
+                                       type="submit"
+                                       disabled={isSubmitting}
+                                       aria-busy={isSubmitting}
+                                       aria-describedby={error ? 'contact-error' : undefined}
+                                       className="w-full bg-iconic-pink text-white py-4 rounded-lg font-bold text-lg hover:bg-iconic-black transition-colors disabled:opacity-50"
+                                     >
                                        {isSubmitting ? '...' : t.form_submit}
                                      </button>
                                  </form>

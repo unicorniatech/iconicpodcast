@@ -149,7 +149,11 @@ export const ProfilePage: React.FC = () => {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen pt-24 pb-16 px-4 sm:px-6 bg-gradient-to-br from-pink-50 via-white to-purple-50">
+    <div
+      className="min-h-screen pt-24 pb-16 px-4 sm:px-6 bg-gradient-to-br from-pink-50 via-white to-purple-50"
+      role="main"
+      aria-labelledby="profile-heading"
+    >
       <div className="max-w-2xl mx-auto">
         {/* Back link */}
         <Link to="/" className="inline-flex items-center text-gray-500 hover:text-iconic-black mb-6 text-sm font-medium">
@@ -171,7 +175,7 @@ export const ProfilePage: React.FC = () => {
               </div>
             </div>
             
-            <h1 className="text-xl sm:text-2xl font-bold text-white mt-4">{t.title}</h1>
+            <h1 id="profile-heading" className="text-xl sm:text-2xl font-bold text-white mt-4">{t.title}</h1>
             <p className="text-gray-300 text-sm mt-1">{user.email}</p>
           </div>
 
@@ -179,14 +183,24 @@ export const ProfilePage: React.FC = () => {
           <form onSubmit={handleSave} className="p-6 sm:p-8 space-y-6">
             {/* Messages */}
             {error && (
-              <div className="p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3">
+              <div
+                id="profile-error"
+                role="alert"
+                aria-live="polite"
+                className="p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3"
+              >
                 <AlertCircle className="text-red-500 flex-shrink-0 mt-0.5" size={20} />
                 <p className="text-red-700 text-sm">{error}</p>
               </div>
             )}
             
             {success && (
-              <div className="p-4 bg-green-50 border border-green-200 rounded-xl flex items-start gap-3">
+              <div
+                id="profile-success"
+                role="status"
+                aria-live="polite"
+                className="p-4 bg-green-50 border border-green-200 rounded-xl flex items-start gap-3"
+              >
                 <CheckCircle className="text-green-500 flex-shrink-0 mt-0.5" size={20} />
                 <p className="text-green-700 text-sm">{success}</p>
               </div>
@@ -246,6 +260,8 @@ export const ProfilePage: React.FC = () => {
               <button
                 type="submit"
                 disabled={isSaving}
+                aria-busy={isSaving}
+                aria-describedby={error ? 'profile-error' : undefined}
                 className="flex-1 flex items-center justify-center gap-2 bg-iconic-pink text-white font-bold py-3 px-6 rounded-xl hover:bg-pink-600 transition-colors disabled:opacity-50"
               >
                 {isSaving ? (
