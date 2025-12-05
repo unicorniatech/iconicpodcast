@@ -798,6 +798,39 @@ export const AnalyticsDashboard: React.FC = () => {
           />
         </div>
 
+        {/* Growth & SEO Metrics (sample, for quick at-a-glance view) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <MetricCard
+            icon={<TrendingUp size={20} />}
+            label={t.organic_traffic}
+            value="+68%"
+            trend={68}
+            color="green"
+          />
+          <MetricCard
+            icon={<MousePointerClick size={20} />}
+            label={t.ctr}
+            value="4.3%"
+            trend={12}
+            color="blue"
+          />
+          <MetricCard
+            icon={<Users size={20} />}
+            label={t.returning_visitors}
+            value="37%"
+            trend={8}
+            color="purple"
+          />
+          <MetricCard
+            icon={<Activity size={20} />}
+            label={t.seo_health}
+            value="82 / 100"
+            trend={5}
+            color="pink"
+            tooltip={t.seo_note}
+          />
+        </div>
+
         {/* SEO Improvement Tips */}
             <div className="bg-gradient-to-br from-purple-600 to-iconic-pink rounded-2xl p-6 text-white mb-8">
               <h3 className="font-bold text-xl mb-4 flex items-center gap-2">
