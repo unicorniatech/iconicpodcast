@@ -117,6 +117,25 @@ export const PodcastToolsPage: React.FC = () => {
         published: 'Published',
       };
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-white pt-32 px-4 pb-12">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-8 flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-iconic-pink to-iconic-blue flex items-center justify-center text-white shadow-md">
+              <CalendarDays size={20} />
+            </div>
+            <div>
+              <h1 className="text-2xl font-serif font-bold text-iconic-black">{t.title}</h1>
+              <p className="text-gray-800 text-sm">Lightweight workspace to plan episodes and manage guests.</p>
+            </div>
+          </div>
+          <div className="text-gray-500 text-sm">Loading...</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-white pt-32 px-4 pb-12">
       <div className="max-w-7xl mx-auto">
@@ -130,11 +149,8 @@ export const PodcastToolsPage: React.FC = () => {
           </div>
         </div>
 
-        {isLoading ? (
-          <div className="text-gray-500 text-sm">Loading...</div>
-        ) : (
-          <div className="bg-white rounded-3xl shadow-lg border border-gray-200 p-4 sm:p-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="bg-white rounded-3xl shadow-lg border border-gray-200 p-4 sm:p-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Guests column */}
             <div className="bg-white rounded-2xl shadow-md border border-gray-300 p-4 sm:p-6">
               <div className="flex items-center justify-between mb-4">
@@ -334,10 +350,10 @@ export const PodcastToolsPage: React.FC = () => {
               </div>
             </div>
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
-};
+}
 
 export default PodcastToolsPage;
