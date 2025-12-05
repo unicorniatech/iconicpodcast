@@ -27,6 +27,9 @@ interface AuthContextType extends AuthState {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Fallback admin emails to keep CRM accessible even if admin_users is not yet populated
+const ADMIN_EMAILS_FALLBACK = ['zuzzi.husarova@gmail.com', 'ceo@vistadev.mx'];
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, setState] = useState<AuthState>({
     user: null,
@@ -37,7 +40,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   });
 
   const checkAdminStatus = useCallback(async (): Promise<boolean> => {
-    if (!state.user || !isSupabaseConfigured()) return false;
+    if (!state.user) return false;
+
+    // Email-based fallback so key accounts always see CRM
+    if (state.user.email && ADMIN_EMAILS_FALLBACK.includes(state.user.email)) {
+      return true;
+    }
+
+    if (!isSupabaseConfigured()) return false;
 
     try {
       const { data, error } = await supabase

@@ -9,7 +9,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Link, useParams, useSearchParams } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link, useParams, useSearchParams, Navigate } from 'react-router-dom';
 import { 
   Play, Video, CheckCircle, ExternalLink, Download, Trash2, Save, Tag, Mail, Phone, Plus, X, 
   Mic, Youtube, Instagram
@@ -1152,6 +1152,8 @@ function AppContent() {
               <AdminDashboard />
             </AuthGuard>
           } />
+          {/* Legacy podcast tools path - redirect into CRM for now */}
+          <Route path="/crm/podcast" element={<Navigate to="/crm" replace />} />
           
           {/* Analytics Dashboard - Admin only */}
           <Route path="/analytics" element={
