@@ -126,7 +126,7 @@ export const PodcastToolsPage: React.FC = () => {
           </div>
           <div>
             <h1 className="text-2xl font-serif font-bold text-iconic-black">{t.title}</h1>
-            <p className="text-gray-700 text-sm">Lightweight workspace to plan episodes and manage guests.</p>
+            <p className="text-gray-800 text-sm">Lightweight workspace to plan episodes and manage guests.</p>
           </div>
         </div>
 
@@ -135,7 +135,7 @@ export const PodcastToolsPage: React.FC = () => {
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Guests column */}
-            <div className="bg-white rounded-2xl shadow-md border border-gray-200 p-4 sm:p-6">
+            <div className="bg-white rounded-2xl shadow-md border border-gray-300 p-4 sm:p-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="flex items-center gap-2 font-semibold text-iconic-black">
                   <UserPlus size={18} /> {t.guests}
@@ -186,19 +186,19 @@ export const PodcastToolsPage: React.FC = () => {
                 {guests.map((g) => (
                   <div
                     key={g.id}
-                    className="flex items-start justify-between gap-2 border border-gray-100 rounded-xl px-3 py-2 text-xs"
+                    className="flex items-start justify-between gap-2 border border-gray-200 rounded-xl px-3 py-2 text-xs bg-white"
                   >
                     <div>
                       <div className="font-semibold text-iconic-black">{g.full_name}</div>
-                      {g.expertise && <div className="text-gray-500">{g.expertise}</div>}
-                      {g.email && <div className="text-gray-500">{g.email}</div>}
-                      {g.instagram_handle && <div className="text-gray-400">@{g.instagram_handle}</div>}
+                      {g.expertise && <div className="text-gray-700">{g.expertise}</div>}
+                      {g.email && <div className="text-gray-700">{g.email}</div>}
+                      {g.instagram_handle && <div className="text-gray-600">@{g.instagram_handle}</div>}
                     </div>
                     <div className="flex flex-col items-end gap-1">
                       <button
                         type="button"
                         onClick={() => handleEditGuest(g)}
-                        className="text-gray-400 hover:text-iconic-blue"
+                        className="text-gray-500 hover:text-iconic-blue"
                       >
                         <Edit2 size={14} />
                       </button>
@@ -209,7 +209,7 @@ export const PodcastToolsPage: React.FC = () => {
                           const { data: gg } = await getGuests();
                           setGuests(gg || []);
                         }}
-                        className="text-gray-300 hover:text-red-500"
+                        className="text-gray-400 hover:text-red-500"
                       >
                         <Trash2 size={14} />
                       </button>
@@ -220,7 +220,7 @@ export const PodcastToolsPage: React.FC = () => {
             </div>
 
             {/* Episode planner column */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-6">
+            <div className="bg-white rounded-2xl shadow-md border border-gray-300 p-4 sm:p-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="flex items-center gap-2 font-semibold text-iconic-black">
                   <FileText size={18} /> {t.episodes}
@@ -298,15 +298,15 @@ export const PodcastToolsPage: React.FC = () => {
                 {plans.map((p) => (
                   <div
                     key={p.id}
-                    className="border border-gray-100 rounded-xl px-3 py-2 text-xs flex items-start justify-between gap-2"
+                    className="border border-gray-200 rounded-xl px-3 py-2 text-xs flex items-start justify-between gap-2 bg-white"
                   >
                     <div>
                       <div className="font-semibold text-iconic-black">{p.title}</div>
-                      <div className="text-gray-500 flex gap-2">
+                      <div className="text-gray-700 flex gap-2">
                         <span>{t.status}: {p.status}</span>
                         {p.planned_date && <span>{t.date}: {p.planned_date}</span>}
                       </div>
-                      {p.outline && <div className="text-gray-600 mt-1 line-clamp-2">{p.outline}</div>}
+                      {p.outline && <div className="text-gray-800 mt-1 line-clamp-2">{p.outline}</div>}
                     </div>
                     <div className="flex flex-col items-end gap-1">
                       <button
