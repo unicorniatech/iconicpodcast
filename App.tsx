@@ -31,6 +31,7 @@ import { ResetPasswordPage } from './pages/ResetPasswordPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { AnalyticsDashboard } from './pages/AnalyticsDashboard';
 import { YouTubeLandingPage, InstagramLandingPage, SocialLandingPage } from './pages/LandingPage';
+import { FAQPage } from './pages/FAQPage';
 
 // Services & Data
 import { TRANSLATIONS, PODCAST_EPISODES, PRICING_PLANS } from './constants';
@@ -1134,6 +1135,7 @@ function AppContent() {
           <Route path="/episodes" element={<EpisodeList />} />
           <Route path="/episodes/:id" element={<EpisodeDetail />} />
           <Route path="/contact" element={<ContactPage />} />
+          <Route path="/faq" element={<FAQPage />} />
           <Route path="/about" element={<ContactPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />

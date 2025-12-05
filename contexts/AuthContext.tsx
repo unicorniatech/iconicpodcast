@@ -61,7 +61,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       setState(prev => ({
         ...prev,
         session,
@@ -69,6 +69,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isAuthenticated: !!session?.user,
         isLoading: false
       }));
+
+      // Ensure isAdmin is correctly set on page reload for existing sessions
+      if (session?.user) {
+        const isAdminFlag = await checkAdminStatus();
+        setState(prev => ({ ...prev, isAdmin: isAdminFlag }));
+      }
     });
 
     // Listen for auth changes
