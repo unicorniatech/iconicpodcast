@@ -143,15 +143,10 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-      {/* Animated gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-iconic-pink via-purple-900 via-iconic-black to-iconic-blue bg-[length:400%_400%] animate-gradient-slow"></div>
-      <div className="absolute inset-0 bg-black/30 backdrop-blur-[2px]"></div>
-      
-      {/* Animated floating orbs */}
-      <div className="absolute top-1/4 left-1/4 w-64 sm:w-96 h-64 sm:h-96 bg-iconic-pink/40 rounded-full blur-[100px] animate-blob"></div>
-      <div className="absolute bottom-1/4 right-1/4 w-64 sm:w-96 h-64 sm:h-96 bg-iconic-blue/30 rounded-full blur-[100px] animate-blob animation-delay-2000"></div>
-      <div className="absolute top-1/2 right-1/3 w-48 sm:w-72 h-48 sm:h-72 bg-purple-600/30 rounded-full blur-[80px] animate-blob animation-delay-4000"></div>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-950 via-purple-900 to-slate-900 py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      {/* Background decoration */}
+      <div className="absolute top-0 right-0 w-64 sm:w-96 h-64 sm:h-96 bg-iconic-pink/40 rounded-full blur-[140px]"></div>
+      <div className="absolute bottom-0 left-0 w-64 sm:w-96 h-64 sm:h-96 bg-iconic-blue/30 rounded-full blur-[130px]"></div>
 
       <div className="max-w-md w-full space-y-8 relative z-10">
         {/* Logo */}
@@ -164,14 +159,14 @@ export const LoginPage: React.FC = () => {
           <h2 className="mt-6 text-2xl sm:text-3xl font-bold text-white">
             {mode === 'login' ? t.title_login : t.title_register}
           </h2>
-          <p className="mt-2 text-sm text-gray-300">
+          <p className="mt-2 text-sm text-white/80">
             {mode === 'login' ? t.subtitle_login : t.subtitle_register}
           </p>
         </div>
 
         {/* Form */}
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="bg-white/10 backdrop-blur-2xl rounded-2xl p-6 sm:p-8 border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.4)] ring-1 ring-white/10">
+          <div className="bg-white/18 backdrop-blur-2xl rounded-2xl p-6 sm:p-8 border border-white/35 shadow-[0_16px_60px_rgba(0,0,0,0.75)] ring-1 ring-white/10">
             {/* Error message */}
             {error && (
               <div className="mb-6 p-4 bg-red-500/20 border border-red-500/50 rounded-lg flex items-start gap-3">
