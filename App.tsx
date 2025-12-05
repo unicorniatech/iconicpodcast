@@ -411,6 +411,11 @@ const EpisodeDetail: React.FC = () => {
     const episode = PODCAST_EPISODES.find(p => p.id === id);
     const { t, lang } = useLanguage();
 
+    // Always start at top when opening an episode detail
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, [id]);
+
     if (!episode) return <div className="pt-32 text-center">Episode not found</div>;
 
     const localizedDescription = episode.summaries?.[lang] || episode.description;
