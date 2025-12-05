@@ -57,7 +57,15 @@ export const Header: React.FC<HeaderProps> = ({ isBannerOpen }) => {
     <nav className={`fixed w-full z-50 transition-all duration-300 ${topPosition} py-4 ${navBg}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
-          <Link to="/" className="flex items-center space-x-2 group">
+          <Link
+            to="/"
+            className="flex items-center space-x-2 group"
+            onClick={() => {
+              if (typeof window !== 'undefined') {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }
+            }}
+          >
             <span className={`text-3xl font-serif font-black tracking-tight ${textColor} group-hover:text-iconic-pink transition-colors`}>
               I<span className="text-iconic-pink">|</span>CONIC
             </span>
