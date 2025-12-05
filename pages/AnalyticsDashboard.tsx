@@ -769,6 +769,35 @@ export const AnalyticsDashboard: React.FC = () => {
           </div>
         )}
 
+        {/* Key Metrics Summary */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <MetricCard
+            icon={<Eye size={20} />}
+            label={t.metric_page_views}
+            value={analytics.totalPageViews.toLocaleString()}
+            color="purple"
+          />
+          <MetricCard
+            icon={<Users size={20} />}
+            label={t.metric_unique_visitors}
+            value={analytics.uniqueVisitors.toLocaleString()}
+            color="pink"
+          />
+          <MetricCard
+            icon={<Clock size={20} />}
+            label={t.metric_avg_session}
+            value={analytics.avgSessionDuration > 0 ? formatDuration(analytics.avgSessionDuration) : '0s'}
+            color="green"
+          />
+          <MetricCard
+            icon={<MousePointerClick size={20} />}
+            label={t.metric_bounce_rate}
+            value={`${analytics.bounceRate.toFixed(1)}%`}
+            color="orange"
+            invertTrend
+          />
+        </div>
+
         {/* SEO Improvement Tips */}
             <div className="bg-gradient-to-br from-purple-600 to-iconic-pink rounded-2xl p-6 text-white mb-8">
               <h3 className="font-bold text-xl mb-4 flex items-center gap-2">
