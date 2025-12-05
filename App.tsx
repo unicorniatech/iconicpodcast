@@ -240,6 +240,7 @@ const GuestInvitationModal: React.FC<GuestInvitationModalProps> = ({ onClose }) 
 const PodcastCard: React.FC<{ episode: PodcastEpisode }> = ({ episode }) => {
   const { lang } = useLanguage();
   const summary = episode.summaries?.[lang] || episode.description;
+  const [imageLoaded, setImageLoaded] = React.useState(false);
 
   return (
     <div className="group relative bg-white/70 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden border border-white/50 flex flex-col h-full z-20">
@@ -247,7 +248,17 @@ const PodcastCard: React.FC<{ episode: PodcastEpisode }> = ({ episode }) => {
       <div className="absolute inset-0 bg-gradient-to-br from-iconic-pink/5 via-transparent to-iconic-blue/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl sm:rounded-3xl"></div>
       
       <div className="relative overflow-hidden aspect-video">
-        <img src={episode.imageUrl} alt={episode.title} className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" />
+        {!imageLoaded && (
+          <div className="absolute inset-0 bg-gray-200 animate-pulse" />
+        )}
+        <img
+          src={episode.imageUrl}
+          alt={episode.title}
+          className={`w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+          loading="lazy"
+          decoding="async"
+          onLoad={() => setImageLoaded(true)}
+        />
         <div className="absolute inset-0 bg-gradient-to-t from-iconic-black/80 via-iconic-black/20 to-transparent opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity flex items-end p-4 sm:p-6">
            <Link to={`/episodes/${episode.id}`} className="bg-white/90 backdrop-blur-sm text-iconic-black p-2.5 sm:p-3 rounded-full hover:bg-iconic-pink hover:text-white transition-all transform sm:translate-y-4 sm:group-hover:translate-y-0 hover:scale-110">
               <Play size={20} className="sm:w-6 sm:h-6" fill="currentColor" />

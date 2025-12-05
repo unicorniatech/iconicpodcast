@@ -8,6 +8,7 @@ import { ZUZZI_HERO_IMAGE } from '../constants';
 export const Hero: React.FC = () => {
   const { t } = useLanguage();
   const [mounted, setMounted] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -112,7 +113,7 @@ export const Hero: React.FC = () => {
 
             {/* Hero image with animated frame */}
             <div className={`order-1 lg:order-2 flex justify-center items-center h-full transition-all duration-1000 delay-300 ${mounted ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
-                <div className="relative w-full max-w-sm md:max-w-md">
+              <div className="relative w-full max-w-sm md:max-w-md">
                     {/* Animated rotating borders */}
                     <div className="absolute -inset-4 rounded-[40px] border border-white/10 animate-spin-slow"></div>
                     <div className="absolute -inset-8 rounded-[48px] border border-iconic-pink/20 animate-spin-slow" style={{animationDirection: 'reverse', animationDuration: '20s'}}></div>
@@ -122,10 +123,18 @@ export const Hero: React.FC = () => {
                     
                     {/* Main image container */}
                     <div className="relative rounded-[32px] overflow-hidden shadow-2xl aspect-[3/4] z-10 bg-gray-800 group">
+                        {/* Skeleton placeholder */}
+                        {!imageLoaded && (
+                          <div className="absolute inset-0 bg-gray-700 animate-pulse" />
+                        )}
                         <img 
                             src={ZUZZI_HERO_IMAGE} 
                             alt="Zuzana Husarova" 
-                            className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-1000"
+                            className={`w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-1000 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+                            loading="eager"
+                            decoding="async"
+                            fetchPriority="high"
+                            onLoad={() => setImageLoaded(true)}
                         />
                         {/* Gradient overlay */}
                         <div className="absolute inset-0 bg-gradient-to-t from-iconic-black via-transparent to-transparent opacity-60"></div>
