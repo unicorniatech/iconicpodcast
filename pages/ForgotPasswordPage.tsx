@@ -44,6 +44,19 @@ export const ForgotPasswordPage: React.FC = () => {
       back_to_home: '← Back to home',
       error_generic: 'Something went wrong. Please try again.',
     },
+    'es-MX': {
+      title: 'Olvidé mi contraseña',
+      subtitle: 'Ingresa tu correo y te enviaremos un enlace para restablecer tu contraseña.',
+      email_label: 'Correo',
+      email_placeholder: 'tu@ejemplo.com',
+      submit: 'Enviar enlace',
+      sending: 'Enviando...',
+      success_title: '¡Correo enviado!',
+      success_message: 'Revisa tu bandeja de entrada y haz clic en el enlace para restablecer tu contraseña.',
+      back_to_login: 'Volver al inicio de sesión',
+      back_to_home: '← Volver al inicio',
+      error_generic: 'Algo salió mal. Inténtalo de nuevo.',
+    },
   }[lang] || {
     title: 'Forgot Password',
     subtitle: 'Enter your email and we\'ll send you a link to reset your password.',
@@ -97,7 +110,7 @@ export const ForgotPasswordPage: React.FC = () => {
           <h2 className="mt-6 text-2xl sm:text-3xl font-bold text-white">
             {t.title}
           </h2>
-          <p className="mt-2 text-sm text-gray-400 px-4">
+          <p className="mt-2 text-sm text-gray-300 px-4">
             {t.subtitle}
           </p>
         </div>
@@ -108,7 +121,7 @@ export const ForgotPasswordPage: React.FC = () => {
               <CheckCircle className="text-green-400" size={32} />
             </div>
             <h3 className="text-xl font-bold text-white mb-2">{t.success_title}</h3>
-            <p className="text-gray-400 mb-6">{t.success_message}</p>
+            <p className="text-gray-300 mb-6">{t.success_message}</p>
             <Link
               to="/login"
               className="inline-flex items-center gap-2 text-iconic-pink font-bold hover:underline"
@@ -143,7 +156,7 @@ export const ForgotPasswordPage: React.FC = () => {
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full pl-12 pr-4 py-3 sm:py-4 bg-white/5 border border-white/20 rounded-xl text-white placeholder-white/30 focus:outline-none focus:bg-white/10 focus:border-iconic-pink transition-all text-base"
+                    className="w-full pl-12 pr-4 py-3 sm:py-4 bg-white/5 border border-white/20 rounded-xl text-white placeholder-white/60 focus:outline-none focus:bg-white/10 focus:border-iconic-pink transition-all text-base"
                     placeholder={t.email_placeholder}
                   />
                 </div>
@@ -178,7 +191,7 @@ export const ForgotPasswordPage: React.FC = () => {
 
         {/* Back to home */}
         <div className="text-center">
-          <Link to="/" className="text-gray-500 hover:text-white transition-colors text-sm">
+          <Link to="/" className="text-gray-200 hover:text-white transition-colors text-sm">
             {t.back_to_home}
           </Link>
         </div>

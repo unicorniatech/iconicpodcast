@@ -7,6 +7,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import { Mail, Lock, Eye, EyeOff, AlertCircle, CheckCircle } from 'lucide-react';
 
 type AuthMode = 'login' | 'register';
@@ -23,8 +24,95 @@ export const LoginPage: React.FC = () => {
   const { login, register } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const { lang } = useLanguage();
 
   const from = (location.state as { from?: { pathname: string } })?.from?.pathname || '/';
+
+  const t = {
+    'cs-CZ': {
+      title_login: 'Vítej zpět',
+      title_register: 'Vytvoř si účet',
+      subtitle_login: 'Přihlas se ke svému účtu',
+      subtitle_register: 'Přidej se ke komunitě ICONIC',
+      email_label: 'Email',
+      email_placeholder: 'ty@example.com',
+      password_label: 'Heslo',
+      password_placeholder: '••••••••',
+      forgot_password: 'Zapomenuté heslo?',
+      submit_login: 'Přihlásit se',
+      submit_register: 'Vytvořit účet',
+      submitting_login: 'Přihlašuji...',
+      submitting_register: 'Vytvářím účet...',
+      toggle_no_account: 'Nemáš účet?',
+      toggle_signup: 'Zaregistrovat se',
+      toggle_have_account: 'Už máš účet?',
+      toggle_signin: 'Přihlásit se',
+      back_home: '← Zpět na hlavní stránku',
+      register_success: 'Registrace proběhla úspěšně! Zkontroluj email pro ověření účtu.',
+    },
+    'en-US': {
+      title_login: 'Welcome back',
+      title_register: 'Create your account',
+      subtitle_login: 'Sign in to access your account',
+      subtitle_register: 'Join the ICONIC community',
+      email_label: 'Email',
+      email_placeholder: 'you@example.com',
+      password_label: 'Password',
+      password_placeholder: '••••••••',
+      forgot_password: 'Forgot password?',
+      submit_login: 'Sign In',
+      submit_register: 'Create Account',
+      submitting_login: 'Signing in...',
+      submitting_register: 'Creating account...',
+      toggle_no_account: "Don't have an account?",
+      toggle_signup: 'Sign up',
+      toggle_have_account: 'Already have an account?',
+      toggle_signin: 'Sign in',
+      back_home: '← Back to home',
+      register_success: 'Registration successful! Please check your email to verify your account.',
+    },
+    'es-MX': {
+      title_login: 'Bienvenida de nuevo',
+      title_register: 'Crea tu cuenta',
+      subtitle_login: 'Inicia sesión para acceder a tu cuenta',
+      subtitle_register: 'Únete a la comunidad ICONIC',
+      email_label: 'Correo',
+      email_placeholder: 'tu@ejemplo.com',
+      password_label: 'Contraseña',
+      password_placeholder: '••••••••',
+      forgot_password: '¿Olvidaste tu contraseña?',
+      submit_login: 'Iniciar sesión',
+      submit_register: 'Crear cuenta',
+      submitting_login: 'Iniciando sesión...',
+      submitting_register: 'Creando cuenta...',
+      toggle_no_account: '¿No tienes cuenta?',
+      toggle_signup: 'Regístrate',
+      toggle_have_account: '¿Ya tienes cuenta?',
+      toggle_signin: 'Inicia sesión',
+      back_home: '← Volver al inicio',
+      register_success: 'Registro exitoso. Revisa tu correo para verificar tu cuenta.',
+    },
+  }[lang] || {
+    title_login: 'Welcome back',
+    title_register: 'Create your account',
+    subtitle_login: 'Sign in to access your account',
+    subtitle_register: 'Join the ICONIC community',
+    email_label: 'Email',
+    email_placeholder: 'you@example.com',
+    password_label: 'Password',
+    password_placeholder: '••••••••',
+    forgot_password: 'Forgot password?',
+    submit_login: 'Sign In',
+    submit_register: 'Create Account',
+    submitting_login: 'Signing in...',
+    submitting_register: 'Creating account...',
+    toggle_no_account: "Don't have an account?",
+    toggle_signup: 'Sign up',
+    toggle_have_account: 'Already have an account?',
+    toggle_signin: 'Sign in',
+    back_home: '← Back to home',
+    register_success: 'Registration successful! Please check your email to verify your account.',
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,7 +133,7 @@ export const LoginPage: React.FC = () => {
         if (error) {
           setError(error);
         } else {
-          setSuccess('Registration successful! Please check your email to verify your account.');
+          setSuccess(t.register_success);
           setMode('login');
         }
       }
@@ -74,12 +162,10 @@ export const LoginPage: React.FC = () => {
             </span>
           </Link>
           <h2 className="mt-6 text-2xl sm:text-3xl font-bold text-white">
-            {mode === 'login' ? 'Welcome back' : 'Create your account'}
+            {mode === 'login' ? t.title_login : t.title_register}
           </h2>
-          <p className="mt-2 text-sm text-gray-400">
-            {mode === 'login' 
-              ? 'Sign in to access your account' 
-              : 'Join the ICONIC community'}
+          <p className="mt-2 text-sm text-gray-300">
+            {mode === 'login' ? t.subtitle_login : t.subtitle_register}
           </p>
         </div>
 
@@ -106,7 +192,7 @@ export const LoginPage: React.FC = () => {
               {/* Email */}
               <div>
                 <label htmlFor="email" className="block text-xs font-bold text-white/70 uppercase tracking-widest mb-2">
-                  Email
+                  {t.email_label}
                 </label>
                 <div className="relative">
                   <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40" size={20} />
@@ -118,8 +204,8 @@ export const LoginPage: React.FC = () => {
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full pl-12 pr-4 py-3 sm:py-4 bg-white/5 border border-white/20 rounded-xl text-white placeholder-white/30 focus:outline-none focus:bg-white/10 focus:border-iconic-pink transition-all text-base"
-                    placeholder="you@example.com"
+                    className="w-full pl-12 pr-4 py-3 sm:py-4 bg-white/5 border border-white/20 rounded-xl text-white placeholder-white/60 focus:outline-none focus:bg-white/10 focus:border-iconic-pink transition-all text-base"
+                    placeholder={t.email_placeholder}
                   />
                 </div>
               </div>
@@ -127,7 +213,7 @@ export const LoginPage: React.FC = () => {
               {/* Password */}
               <div>
                 <label htmlFor="password" className="block text-xs font-bold text-white/70 uppercase tracking-widest mb-2">
-                  Password
+                  {t.password_label}
                 </label>
                 <div className="relative">
                   <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40" size={20} />
@@ -140,8 +226,8 @@ export const LoginPage: React.FC = () => {
                     minLength={6}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-12 pr-12 py-3 sm:py-4 bg-white/5 border border-white/20 rounded-xl text-white placeholder-white/30 focus:outline-none focus:bg-white/10 focus:border-iconic-pink transition-all text-base"
-                    placeholder="••••••••"
+                    className="w-full pl-12 pr-12 py-3 sm:py-4 bg-white/5 border border-white/20 rounded-xl text-white placeholder-white/60 focus:outline-none focus:bg-white/10 focus:border-iconic-pink transition-all text-base"
+                    placeholder={t.password_placeholder}
                   />
                   <button
                     type="button"
@@ -157,8 +243,11 @@ export const LoginPage: React.FC = () => {
             {/* Forgot password link */}
             {mode === 'login' && (
               <div className="text-right">
-                <Link to="/forgot-password" className="text-sm text-iconic-pink hover:underline">
-                  Forgot password?
+                <Link
+                  to="/forgot-password"
+                  className="text-sm text-white/90 hover:text-iconic-pink hover:underline"
+                >
+                  {t.forgot_password}
                 </Link>
               </div>
             )}
@@ -172,36 +261,36 @@ export const LoginPage: React.FC = () => {
               {isLoading ? (
                 <span className="flex items-center justify-center gap-2">
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  {mode === 'login' ? 'Signing in...' : 'Creating account...'}
+                  {mode === 'login' ? t.submitting_login : t.submitting_register}
                 </span>
               ) : (
-                mode === 'login' ? 'Sign In' : 'Create Account'
+                mode === 'login' ? t.submit_login : t.submit_register
               )}
             </button>
           </div>
 
           {/* Toggle mode */}
-          <p className="text-center text-gray-400">
+          <p className="text-center text-gray-300">
             {mode === 'login' ? (
               <>
-                Don't have an account?{' '}
+                {t.toggle_no_account}{' '}
                 <button
                   type="button"
                   onClick={() => { setMode('register'); setError(null); setSuccess(null); }}
                   className="text-iconic-pink font-bold hover:underline"
                 >
-                  Sign up
+                  {t.toggle_signup}
                 </button>
               </>
             ) : (
               <>
-                Already have an account?{' '}
+                {t.toggle_have_account}{' '}
                 <button
                   type="button"
                   onClick={() => { setMode('login'); setError(null); setSuccess(null); }}
                   className="text-iconic-pink font-bold hover:underline"
                 >
-                  Sign in
+                  {t.toggle_signin}
                 </button>
               </>
             )}
@@ -210,8 +299,8 @@ export const LoginPage: React.FC = () => {
 
         {/* Back to home */}
         <div className="text-center">
-          <Link to="/" className="text-gray-500 hover:text-white transition-colors text-sm">
-            ← Back to home
+          <Link to="/" className="text-gray-200 hover:text-white transition-colors text-sm">
+            {t.back_home}
           </Link>
         </div>
       </div>

@@ -69,7 +69,7 @@ export const Hero: React.FC = () => {
                     </span>
                 </h1>
 
-                <p className={`text-base sm:text-lg md:text-xl text-gray-400 font-light leading-relaxed mb-8 max-w-lg mx-auto lg:mx-0 transition-all duration-700 delay-300 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}>
+                <p className={`text-base sm:text-lg md:text-xl text-gray-200 font-light leading-relaxed mb-8 max-w-lg mx-auto lg:mx-0 transition-all duration-700 delay-300 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}>
                     {t.hero_subtitle}
                 </p>
 
@@ -98,9 +98,9 @@ export const Hero: React.FC = () => {
                 {/* Stats row */}
                 <div className={`flex flex-wrap gap-8 mt-12 justify-center lg:justify-start transition-all duration-700 delay-500 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}>
                     {[
-                        { value: '50K+', label: 'Listeners' },
-                        { value: '15+', label: 'Episodes' },
-                        { value: '4.9', label: 'Rating' },
+                        { value: '50K+', label: t.hero_stats_listeners_label },
+                        { value: '15+', label: t.hero_stats_episodes_label },
+                        { value: '4.9', label: t.hero_stats_rating_label },
                     ].map((stat, i) => (
                         <div key={i} className="text-center lg:text-left">
                             <div className="text-2xl sm:text-3xl font-bold text-white">{stat.value}</div>
@@ -147,8 +147,8 @@ export const Hero: React.FC = () => {
                                     <Mic size={18} className="text-white" />
                                 </div>
                                 <div>
-                                    <div className="text-white font-bold text-sm">ICONIC Podcast</div>
-                                    <div className="text-white/60 text-xs">New episode every week</div>
+                                    <div className="text-white font-bold text-sm">{t.hero_card_title}</div>
+                                    <div className="text-white/60 text-xs">{t.hero_card_subtitle}</div>
                                 </div>
                             </div>
                         </div>
@@ -160,7 +160,7 @@ export const Hero: React.FC = () => {
       
       {/* Scroll indicator */}
       <div className={`absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 transition-all duration-700 delay-700 ${mounted ? 'opacity-100' : 'opacity-0'}`}>
-        <span className="text-white/40 text-xs uppercase tracking-widest">Scroll</span>
+        <span className="text-white/40 text-xs uppercase tracking-widest">{t.hero_scroll_label}</span>
         <div className="w-6 h-10 border-2 border-white/20 rounded-full flex justify-center pt-2">
           <div className="w-1.5 h-3 bg-white/40 rounded-full animate-bounce"></div>
         </div>

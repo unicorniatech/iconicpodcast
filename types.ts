@@ -5,6 +5,8 @@ export interface PodcastEpisode {
   id: string;
   title: string;
   description: string;
+  // Per-language short summaries/tooltips for episode cards and SEO
+  summaries?: Record<Language, string>;
   duration: string;
   date: string;
   imageUrl: string;
@@ -113,4 +115,27 @@ export interface Translation {
   menu_sign_in: string;
   menu_sign_out: string;
   menu_language: string;
+  // Hero extras
+  hero_stats_listeners_label: string;
+  hero_stats_episodes_label: string;
+  hero_stats_rating_label: string;
+  hero_scroll_label: string;
+  hero_card_title: string;
+  hero_card_subtitle: string;
+  // Header extras
+  header_subscribe_cta: string;
+  header_subscribe_youtube: string;
+  // Chatbot UI
+  chatbot_header_title: string;
+  chatbot_header_status: string;
+  chatbot_lead_intro: string;
+  chatbot_pricing_intro: string;
+  chatbot_recommend_reason: string;
+  chatbot_acknowledge: string;
+  chatbot_lead_name_placeholder: string;
+  chatbot_lead_email_placeholder: string;
+  chatbot_lead_phone_placeholder: string;
+  chatbot_lead_submit: string;
+  chatbot_input_placeholder: string;
+  chatbot_listen_cta: string;
 }

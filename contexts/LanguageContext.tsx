@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { TRANSLATIONS } from '../constants';
 import { Language, Translation } from '../types';
 
@@ -15,7 +15,46 @@ const LanguageContext = createContext<LanguageContextType>({
 });
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [lang, setLang] = useState<Language>('cs-CZ');
+  const detectInitialLanguage = (): Language => {
+    if (typeof window === 'undefined') {
+      return 'cs-CZ';
+    }
+
+    try {
+      const stored = window.localStorage.getItem('iconic_lang') as Language | null;
+      if (stored && (stored === 'cs-CZ' || stored === 'en-US' || stored === 'es-MX')) {
+        return stored;
+      }
+
+      const browserLang = window.navigator.language || (window.navigator.languages && window.navigator.languages[0]);
+      if (browserLang) {
+        const normalized = browserLang.toLowerCase();
+        if (normalized.startsWith('cs')) return 'cs-CZ';
+        if (normalized.startsWith('en')) return 'en-US';
+        if (normalized.startsWith('es')) return 'es-MX';
+      }
+    } catch {
+      // Fallback to default below
+    }
+
+    return 'cs-CZ';
+  };
+
+  const [lang, setLangState] = useState<Language>(detectInitialLanguage);
+
+  useEffect(() => {
+    try {
+      if (typeof window !== 'undefined') {
+        window.localStorage.setItem('iconic_lang', lang);
+      }
+    } catch {
+      // Ignore storage errors
+    }
+  }, [lang]);
+
+  const setLang = (next: Language) => {
+    setLangState(next);
+  };
 
   const contextValue = {
     lang,

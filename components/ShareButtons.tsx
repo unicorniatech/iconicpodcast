@@ -189,7 +189,7 @@ export const ShareButtons: React.FC<ShareButtonsProps> = ({ episodeId, title, ur
 
       {/* Share buttons */}
       <div className="flex items-center gap-2 flex-wrap">
-        <span className="text-sm text-gray-400 mr-1 hidden sm:inline-flex items-center">
+        <span className="text-sm text-gray-500 mr-1 hidden sm:inline-flex items-center">
           <Share2 size={16} className="mr-1" />
           {t.share}:
         </span>

@@ -95,6 +95,120 @@ export const AnalyticsDashboard: React.FC = () => {
   const [performance, setPerformance] = useState<PerformanceMetric[]>([]);
   const [error, setError] = useState<string | null>(null);
 
+  const t = {
+    'cs-CZ': {
+      back_to_crm: 'Zpět do CRM',
+      title: 'Analytics Dashboard',
+      subtitle: 'Skutečná data a doporučení pro optimalizaci',
+      loading: 'Načítám analytiku...',
+      range_7d: '7 dní',
+      range_30d: '30 dní',
+      range_90d: '90 dní',
+      sample_notice: 'Zobrazují se ukázková data. Pro zapnutí reálné analytiky spusťte SQL migraci v Supabase.',
+      metric_page_views: 'Zobrazení stránek',
+      metric_unique_visitors: 'Unikátní návštěvníci',
+      metric_avg_session: 'Prům. relace',
+      metric_bounce_rate: 'Bounce rate',
+      traffic_trend: 'Trendy návštěvnosti',
+      device_breakdown: 'Zařízení',
+      top_pages: 'Top stránky',
+      top_countries: 'Top země',
+      core_web_vitals: 'Core Web Vitals',
+      seo_health: 'SEO skóre',
+      seo_note: 'Dobré – je zde prostor pro zlepšení',
+      seo_checklist: 'SEO checklist',
+      growth_metrics: 'Růstové metriky',
+      organic_traffic: 'Organická návštěvnost',
+      ctr: 'CTR z výsledků vyhledávání',
+      returning_visitors: 'Vrací se návštěvníci',
+      recommendations_title: 'Doporučení pro optimalizaci',
+      recommendations_subtitle: 'Doporučení na základě aktuálních dat',
+    },
+    'en-US': {
+      back_to_crm: 'Back to CRM',
+      title: 'Analytics Dashboard',
+      subtitle: 'Real-time insights and optimization recommendations',
+      loading: 'Loading analytics...',
+      range_7d: '7 Days',
+      range_30d: '30 Days',
+      range_90d: '90 Days',
+      sample_notice: 'Showing sample data. To enable real analytics, run the SQL migration in Supabase.',
+      metric_page_views: 'Page Views',
+      metric_unique_visitors: 'Unique Visitors',
+      metric_avg_session: 'Avg. Session',
+      metric_bounce_rate: 'Bounce Rate',
+      traffic_trend: 'Traffic Trend',
+      device_breakdown: 'Device Breakdown',
+      top_pages: 'Top Pages',
+      top_countries: 'Top Countries',
+      core_web_vitals: 'Core Web Vitals',
+      seo_health: 'SEO Health Score',
+      seo_note: 'Good - Room for improvement',
+      seo_checklist: 'SEO Checklist',
+      growth_metrics: 'Growth Metrics',
+      organic_traffic: 'Organic Traffic',
+      ctr: 'Search CTR',
+      returning_visitors: 'Returning visitors',
+      recommendations_title: 'Optimization Recommendations',
+      recommendations_subtitle: 'Suggestions based on your current data',
+    },
+    'es-MX': {
+      back_to_crm: 'Volver al CRM',
+      title: 'Panel de analítica',
+      subtitle: 'Insights en tiempo real y recomendaciones de optimización',
+      loading: 'Cargando analítica...',
+      range_7d: '7 días',
+      range_30d: '30 días',
+      range_90d: '90 días',
+      sample_notice: 'Mostrando datos de ejemplo. Para activar la analítica real, ejecuta la migración SQL en Supabase.',
+      metric_page_views: 'Vistas de página',
+      metric_unique_visitors: 'Visitantes únicos',
+      metric_avg_session: 'Sesión prom.',
+      metric_bounce_rate: 'Tasa de rebote',
+      traffic_trend: 'Tendencia de tráfico',
+      device_breakdown: 'Dispositivos',
+      top_pages: 'Páginas principales',
+      top_countries: 'Países principales',
+      core_web_vitals: 'Core Web Vitals',
+      seo_health: 'Puntaje SEO',
+      seo_note: 'Bueno, con margen para mejorar',
+      seo_checklist: 'Checklist SEO',
+      growth_metrics: 'Métricas de crecimiento',
+      organic_traffic: 'Tráfico orgánico',
+      ctr: 'CTR en buscadores',
+      returning_visitors: 'Visitantes que regresan',
+      recommendations_title: 'Recomendaciones de optimización',
+      recommendations_subtitle: 'Sugerencias basadas en tus datos actuales',
+    },
+  }[lang] || {
+    back_to_crm: 'Back to CRM',
+    title: 'Analytics Dashboard',
+    subtitle: 'Real-time insights and optimization recommendations',
+    loading: 'Loading analytics...',
+    range_7d: '7 Days',
+    range_30d: '30 Days',
+    range_90d: '90 Days',
+    sample_notice: 'Showing sample data. To enable real analytics, run the SQL migration in Supabase.',
+    metric_page_views: 'Page Views',
+    metric_unique_visitors: 'Unique Visitors',
+    metric_avg_session: 'Avg. Session',
+    metric_bounce_rate: 'Bounce Rate',
+    traffic_trend: 'Traffic Trend',
+    device_breakdown: 'Device Breakdown',
+    top_pages: 'Top Pages',
+    top_countries: 'Top Countries',
+    core_web_vitals: 'Core Web Vitals',
+    seo_health: 'SEO Health Score',
+    seo_note: 'Good - Room for improvement',
+    seo_checklist: 'SEO Checklist',
+    growth_metrics: 'Growth Metrics',
+    organic_traffic: 'Organic Traffic',
+    ctr: 'Search CTR',
+    returning_visitors: 'Returning visitors',
+    recommendations_title: 'Optimization Recommendations',
+    recommendations_subtitle: 'Suggestions based on your current data',
+  };
+
   // Fetch analytics data
   useEffect(() => {
     fetchAnalytics();
@@ -375,32 +489,89 @@ export const AnalyticsDashboard: React.FC = () => {
 
     // High bounce rate
     if (analytics.bounceRate > 50) {
+      const title =
+        lang === 'cs-CZ'
+          ? 'Snižte míru odchodu'
+          : lang === 'es-MX'
+          ? 'Reduce la tasa de rebote'
+          : 'Reduce Bounce Rate';
+      const description =
+        lang === 'cs-CZ'
+          ? `Vaše bounce rate je ${analytics.bounceRate.toFixed(1)} %, což je nad doporučenými 40 %.`
+          : lang === 'es-MX'
+          ? `Tu tasa de rebote es ${analytics.bounceRate.toFixed(1)} %, lo que está por encima del 40 % recomendado.`
+          : `Your bounce rate is ${analytics.bounceRate.toFixed(1)}%, which is above the recommended 40%.`;
+      const action =
+        lang === 'cs-CZ'
+          ? 'Přidejte atraktivní obsah nad ohybem, zlepšete rychlost načítání a mějte jasné výzvy k akci.'
+          : lang === 'es-MX'
+          ? 'Añade contenido atractivo arriba del pliegue, mejora la velocidad de carga y usa llamados a la acción claros.'
+          : 'Add engaging content above the fold, improve page load speed, and ensure clear calls-to-action.';
+
       recs.push({
-        title: 'Reduce Bounce Rate',
-        description: `Your bounce rate is ${analytics.bounceRate.toFixed(1)}%, which is above the recommended 40%.`,
+        title,
+        description,
         priority: 'high' as const,
-        action: 'Add engaging content above the fold, improve page load speed, and ensure clear calls-to-action.'
+        action,
       });
     }
 
     // Low session duration
     if (analytics.avgSessionDuration < 60) {
+      const title =
+        lang === 'cs-CZ'
+          ? 'Zvyšte zapojení'
+          : lang === 'es-MX'
+          ? 'Incrementa el engagement'
+          : 'Increase Engagement';
+      const description =
+        lang === 'cs-CZ'
+          ? `Průměrná délka relace je pouze ${formatDuration(analytics.avgSessionDuration)}.`
+          : lang === 'es-MX'
+          ? `La duración promedio de la sesión es solo ${formatDuration(analytics.avgSessionDuration)}.`
+          : `Average session duration is only ${formatDuration(analytics.avgSessionDuration)}.`;
+      const action =
+        lang === 'cs-CZ'
+          ? 'Přidejte více poutavého obsahu, interní odkazy a zvažte video obsah, aby návštěvníci zůstali déle.'
+          : lang === 'es-MX'
+          ? 'Añade contenido más atractivo, enlaces internos y considera video para que las personas se queden más tiempo.'
+          : 'Add more engaging content, internal links, and consider adding video content to keep visitors longer.';
+
       recs.push({
-        title: 'Increase Engagement',
-        description: `Average session duration is only ${formatDuration(analytics.avgSessionDuration)}.`,
+        title,
+        description,
         priority: 'high' as const,
-        action: 'Add more engaging content, internal links, and consider adding video content to keep visitors longer.'
+        action,
       });
     }
 
     // Mobile optimization
     const mobileDevice = analytics.deviceBreakdown.find(d => d.device === 'Mobile');
     if (mobileDevice && mobileDevice.percentage > 40) {
+      const title =
+        lang === 'cs-CZ'
+          ? 'Optimalizace pro mobily'
+          : lang === 'es-MX'
+          ? 'Optimización móvil'
+          : 'Mobile Optimization';
+      const description =
+        lang === 'cs-CZ'
+          ? `${mobileDevice.percentage.toFixed(1)} % návštěvnosti je z mobilních zařízení.`
+          : lang === 'es-MX'
+          ? `${mobileDevice.percentage.toFixed(1)} % de tu tráfico viene de dispositivos móviles.`
+          : `${mobileDevice.percentage.toFixed(1)}% of your traffic is from mobile devices.`;
+      const action =
+        lang === 'cs-CZ'
+          ? 'Ujistěte se, že všechny stránky jsou responzivní, tlačítka jsou pohodlná na dotek a formuláře se snadno vyplňují na mobilu.'
+          : lang === 'es-MX'
+          ? 'Asegúrate de que todas las páginas sean totalmente responsivas, con botones cómodos y formularios fáciles de completar en móvil.'
+          : 'Ensure all pages are fully responsive, buttons are touch-friendly, and forms are easy to fill on mobile.';
+
       recs.push({
-        title: 'Mobile Optimization',
-        description: `${mobileDevice.percentage.toFixed(1)}% of your traffic is from mobile devices.`,
+        title,
+        description,
         priority: 'medium' as const,
-        action: 'Ensure all pages are fully responsive, buttons are touch-friendly, and forms are easy to fill on mobile.'
+        action,
       });
     }
 
@@ -408,21 +579,59 @@ export const AnalyticsDashboard: React.FC = () => {
     if (analytics.topPages.length > 0) {
       const homePage = analytics.topPages.find(p => p.path === '/');
       if (homePage && homePage.avgDuration < 30) {
+        const title =
+          lang === 'cs-CZ'
+            ? 'Zvyšte zapojení na homepage'
+            : lang === 'es-MX'
+            ? 'Mejora el engagement en la página principal'
+            : 'Improve Homepage Engagement';
+        const description =
+          lang === 'cs-CZ'
+            ? 'Návštěvníci tráví na vaší homepage méně než 30 sekund.'
+            : lang === 'es-MX'
+            ? 'Los visitantes pasan menos de 30 segundos en tu página principal.'
+            : 'Visitors spend less than 30 seconds on your homepage.';
+        const action =
+          lang === 'cs-CZ'
+            ? 'Přidejte silné nadpisy, doporučené epizody a jasnou navigaci, aby návštěvníci prozkoumávali dál.'
+            : lang === 'es-MX'
+            ? 'Añade titulares potentes, episodios destacados y navegación clara para que exploren más.'
+            : 'Add compelling headlines, featured episodes, and clear navigation to keep visitors exploring.';
+
         recs.push({
-          title: 'Improve Homepage Engagement',
-          description: 'Visitors spend less than 30 seconds on your homepage.',
+          title,
+          description,
           priority: 'medium' as const,
-          action: 'Add compelling headlines, featured episodes, and clear navigation to keep visitors exploring.'
+          action,
         });
       }
     }
 
     // Add general recommendations
+    const seoTitle =
+      lang === 'cs-CZ'
+        ? 'SEO optimalizace'
+        : lang === 'es-MX'
+        ? 'Optimización SEO'
+        : 'SEO Optimization';
+    const seoDescription =
+      lang === 'cs-CZ'
+        ? 'Zlepšete viditelnost ve vyhledávání.'
+        : lang === 'es-MX'
+        ? 'Mejora tu visibilidad en buscadores.'
+        : 'Improve organic search visibility.';
+    const seoAction =
+      lang === 'cs-CZ'
+        ? 'Přidejte meta popisky, optimalizujte obrázky pomocí alt textu a tvořte obsah kolem cílových klíčových slov.'
+        : lang === 'es-MX'
+        ? 'Añade metadescripciones, optimiza imágenes con texto alternativo y crea contenido alrededor de tus keywords.'
+        : 'Add meta descriptions, optimize images with alt text, and create content around target keywords.';
+
     recs.push({
-      title: 'SEO Optimization',
-      description: 'Improve organic search visibility.',
+      title: seoTitle,
+      description: seoDescription,
       priority: 'low' as const,
-      action: 'Add meta descriptions, optimize images with alt text, and create content around target keywords.'
+      action: seoAction,
     });
 
     return recs;
@@ -430,12 +639,62 @@ export const AnalyticsDashboard: React.FC = () => {
 
   const recommendations = getRecommendations();
 
+  const seoTips =
+    lang === 'cs-CZ'
+      ? [
+          { title: 'Přidejte XML sitemapu', desc: 'Pomůže vyhledávačům objevit všechny vaše stránky', action: 'Vytvořte sitemap.xml ve složce public' },
+          { title: 'Optimalizujte obrázky', desc: 'Přidejte alt text ke všem obrázkům pro přístupnost a SEO', action: 'Používejte popisné alt atributy' },
+          { title: 'Interní prolinkování', desc: 'Propojte epizody mezi sebou, aby uživatelé zůstali déle', action: 'Přidejte sekci „Související epizody“' },
+          { title: 'Rychlost stránek', desc: 'Rychlejší stránky mají lepší pozice ve vyhledávání', action: 'Komprimujte obrázky, používejte lazy loading' },
+          { title: 'Mobilní zážitek', desc: 'Google používá mobile-first indexování', action: 'Testujte web na různých zařízeních' },
+          { title: 'Délka obsahu', desc: 'Delší kvalitní obsah má lepší výsledky', action: 'Přidejte detailní popisy epizod' },
+        ]
+      : lang === 'es-MX'
+      ? [
+          { title: 'Agrega un sitemap XML', desc: 'Ayuda a los buscadores a descubrir todas tus páginas', action: 'Crea sitemap.xml en la carpeta public' },
+          { title: 'Optimiza tus imágenes', desc: 'Añade texto alternativo a todas las imágenes para accesibilidad y SEO', action: 'Usa atributos alt descriptivos' },
+          { title: 'Enlazado interno', desc: 'Enlaza entre episodios para mantener a las personas navegando', action: 'Añade una sección de “Episodios relacionados”' },
+          { title: 'Velocidad de página', desc: 'Las páginas más rápidas se posicionan mejor', action: 'Comprime imágenes y usa carga diferida' },
+          { title: 'Experiencia móvil', desc: 'Google usa indexación mobile-first', action: 'Prueba el sitio en distintos dispositivos' },
+          { title: 'Longitud del contenido', desc: 'Contenido largo y de calidad rinde mejor', action: 'Añade descripciones detalladas de los episodios' },
+        ]
+      : [
+          { title: 'Add XML Sitemap', desc: 'Help search engines discover all your pages', action: 'Create sitemap.xml in public folder' },
+          { title: 'Optimize Images', desc: 'Add alt text to all images for accessibility & SEO', action: 'Use descriptive alt attributes' },
+          { title: 'Internal Linking', desc: 'Link between episodes to keep users engaged', action: 'Add "Related Episodes" section' },
+          { title: 'Page Speed', desc: 'Faster pages rank higher in search results', action: 'Compress images, lazy load content' },
+          { title: 'Mobile Experience', desc: 'Google uses mobile-first indexing', action: 'Test on multiple devices' },
+          { title: 'Content Length', desc: 'Longer, quality content ranks better', action: 'Add detailed episode descriptions' },
+        ];
+
+  const seoTools =
+    lang === 'cs-CZ'
+      ? [
+          { tool: 'Google Search Console', url: 'https://search.google.com/search-console', desc: 'Sledujte výkon ve vyhledávání, indexaci a klíčová slova', icon: '🔍' },
+          { tool: 'Google PageSpeed', url: 'https://pagespeed.web.dev/', desc: 'Testujte rychlost stránek a Core Web Vitals', icon: '⚡' },
+          { tool: 'Ahrefs Free Tools', url: 'https://ahrefs.com/free-seo-tools', desc: 'Kontrola odkazů, návrhy klíčových slov a SERP analýza', icon: '🔗' },
+          { tool: 'Schema Validator', url: 'https://validator.schema.org/', desc: 'Validujte své structured data', icon: '✅' },
+        ]
+      : lang === 'es-MX'
+      ? [
+          { tool: 'Google Search Console', url: 'https://search.google.com/search-console', desc: 'Supervisa el rendimiento en búsqueda, indexación y keywords', icon: '🔍' },
+          { tool: 'Google PageSpeed', url: 'https://pagespeed.web.dev/', desc: 'Prueba la velocidad de tus páginas y Core Web Vitals', icon: '⚡' },
+          { tool: 'Ahrefs Free Tools', url: 'https://ahrefs.com/free-seo-tools', desc: 'Backlinks, ideas de palabras clave y análisis de SERP', icon: '🔗' },
+          { tool: 'Schema Validator', url: 'https://validator.schema.org/', desc: 'Valida tu marcado de datos estructurados', icon: '✅' },
+        ]
+      : [
+          { tool: 'Google Search Console', url: 'https://search.google.com/search-console', desc: 'Monitor search performance, indexing issues, and keywords', icon: '🔍' },
+          { tool: 'Google PageSpeed', url: 'https://pagespeed.web.dev/', desc: 'Test page speed and Core Web Vitals scores', icon: '⚡' },
+          { tool: 'Ahrefs Free Tools', url: 'https://ahrefs.com/free-seo-tools', desc: 'Backlink checker, keyword generator, SERP checker', icon: '🔗' },
+          { tool: 'Schema Validator', url: 'https://validator.schema.org/', desc: 'Validate your structured data markup', icon: '✅' },
+        ];
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 pt-24 flex items-center justify-center">
         <div className="text-center">
           <div className="w-12 h-12 border-4 border-iconic-pink border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading analytics...</p>
+          <p className="text-gray-600">{t.loading}</p>
         </div>
       </div>
     );
@@ -453,17 +712,19 @@ export const AnalyticsDashboard: React.FC = () => {
       </div>
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        {analytics && (
+          <>
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <div>
             <Link to="/crm" className="inline-flex items-center text-gray-500 hover:text-iconic-pink mb-2 text-sm">
-              <ArrowLeft size={16} className="mr-1" /> Back to CRM
+              <ArrowLeft size={16} className="mr-1" /> {t.back_to_crm}
             </Link>
             <h1 className="text-2xl sm:text-3xl font-bold text-iconic-black flex items-center gap-3">
               <BarChart3 className="text-iconic-pink" />
-              Analytics Dashboard
+              {t.title}
             </h1>
-            <p className="text-gray-500 mt-1">Real-time insights and optimization recommendations</p>
+            <p className="text-gray-500 mt-1">{t.subtitle}</p>
           </div>
           
           <div className="flex items-center gap-3">
@@ -479,7 +740,7 @@ export const AnalyticsDashboard: React.FC = () => {
                       : 'text-gray-600 hover:bg-gray-100'
                   }`}
                 >
-                  {range === '7d' ? '7 Days' : range === '30d' ? '30 Days' : '90 Days'}
+                  {range === '7d' ? t.range_7d : range === '30d' ? t.range_30d : t.range_90d}
                 </button>
               ))}
             </div>
@@ -501,287 +762,14 @@ export const AnalyticsDashboard: React.FC = () => {
               <div>
                 <p className="text-amber-800 font-medium">{error}</p>
                 <p className="text-amber-700 text-sm mt-1">
-                  Showing sample data. To enable real analytics, run the SQL migration in Supabase.
+                  {t.sample_notice}
                 </p>
               </div>
             </div>
           </div>
         )}
 
-        {analytics && (
-          <>
-            {/* Key Metrics */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-              <MetricCard
-                icon={<Eye className="text-white" />}
-                label="Page Views"
-                value={analytics.totalPageViews.toLocaleString()}
-                trend={+12.5}
-                color="blue"
-                tooltip="Total number of pages viewed by all visitors"
-              />
-              <MetricCard
-                icon={<Users className="text-white" />}
-                label="Unique Visitors"
-                value={analytics.uniqueVisitors.toLocaleString()}
-                trend={+8.3}
-                color="green"
-                tooltip="Number of distinct users who visited your site"
-              />
-              <MetricCard
-                icon={<Clock className="text-white" />}
-                label="Avg. Session"
-                value={formatDuration(analytics.avgSessionDuration)}
-                trend={+5.2}
-                color="purple"
-                tooltip="Average time visitors spend on your site per session"
-              />
-              <MetricCard
-                icon={<MousePointerClick className="text-white" />}
-                label="Bounce Rate"
-                value={`${analytics.bounceRate.toFixed(1)}%`}
-                color="orange"
-                trend={-3.1}
-                invertTrend
-                tooltip="% of visitors who leave after viewing only one page (lower is better)"
-              />
-            </div>
-
-            {/* Charts Row */}
-            <div className="grid lg:grid-cols-2 gap-6 mb-8">
-              {/* Daily Trend */}
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-white/50 shadow-lg">
-                <h3 className="font-bold text-iconic-black mb-4 flex items-center gap-2">
-                  <Activity size={20} className="text-iconic-pink" />
-                  Traffic Trend
-                </h3>
-                <div className="h-48 flex items-end gap-1">
-                  {analytics.dailyTrend.map((day, i) => (
-                    <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                      <div
-                        className="w-full bg-iconic-pink/20 rounded-t-sm relative group"
-                        style={{ height: `${(day.views / Math.max(...analytics.dailyTrend.map(d => d.views))) * 100}%`, minHeight: '4px' }}
-                      >
-                        <div
-                          className="absolute bottom-0 left-0 right-0 bg-iconic-pink rounded-t-sm"
-                          style={{ height: `${(day.visitors / Math.max(...analytics.dailyTrend.map(d => d.views))) * 100}%`, minHeight: '2px' }}
-                        />
-                        <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-iconic-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
-                          {day.views} views, {day.visitors} visitors
-                        </div>
-                      </div>
-                      <span className="text-xs text-gray-400">
-                        {new Date(day.date).toLocaleDateString('en', { weekday: 'short' })}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-                <div className="flex items-center gap-4 mt-4 text-xs text-gray-500">
-                  <span className="flex items-center gap-1"><span className="w-3 h-3 bg-iconic-pink/20 rounded"></span> Page Views</span>
-                  <span className="flex items-center gap-1"><span className="w-3 h-3 bg-iconic-pink rounded"></span> Visitors</span>
-                </div>
-              </div>
-
-              {/* Device Breakdown */}
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-white/50 shadow-lg">
-                <h3 className="font-bold text-iconic-black mb-4 flex items-center gap-2">
-                  <Smartphone size={20} className="text-iconic-pink" />
-                  Device Breakdown
-                </h3>
-                <div className="space-y-4">
-                  {analytics.deviceBreakdown.map((device) => (
-                    <div key={device.device}>
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="flex items-center gap-2 text-sm font-medium text-gray-700">
-                          {device.device === 'Mobile' && <Smartphone size={16} />}
-                          {device.device === 'Desktop' && <Monitor size={16} />}
-                          {device.device === 'Tablet' && <Tablet size={16} />}
-                          {device.device}
-                        </span>
-                        <span className="text-sm text-gray-500">{device.percentage.toFixed(1)}%</span>
-                      </div>
-                      <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                        <div
-                          className="h-full bg-gradient-to-r from-iconic-pink to-purple-500 rounded-full"
-                          style={{ width: `${device.percentage}%` }}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Top Pages & Countries */}
-            <div className="grid lg:grid-cols-2 gap-6 mb-8">
-              {/* Top Pages */}
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-white/50 shadow-lg">
-                <h3 className="font-bold text-iconic-black mb-4 flex items-center gap-2">
-                  <Layers size={20} className="text-iconic-pink" />
-                  Top Pages
-                </h3>
-                <div className="space-y-3">
-                  {analytics.topPages.map((page, i) => (
-                    <div key={page.path} className="flex items-center justify-between py-2 border-b border-gray-50 last:border-0">
-                      <div className="flex items-center gap-3">
-                        <span className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center text-xs font-bold text-gray-500">
-                          {i + 1}
-                        </span>
-                        <span className="text-sm font-medium text-gray-700 truncate max-w-[200px]">
-                          {page.path === '/' ? 'Homepage' : page.path}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-4 text-sm">
-                        <span className="text-gray-500">{page.views} views</span>
-                        <span className="text-gray-400">{formatDuration(page.avgDuration)} avg</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Countries */}
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-white/50 shadow-lg">
-                <h3 className="font-bold text-iconic-black mb-4 flex items-center gap-2">
-                  <Globe size={20} className="text-iconic-pink" />
-                  Top Countries
-                </h3>
-                <div className="space-y-3">
-                  {analytics.countryBreakdown.map((country, i) => (
-                    <div key={country.country} className="flex items-center justify-between py-2 border-b border-gray-50 last:border-0">
-                      <div className="flex items-center gap-3">
-                        <span className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center text-xs font-bold text-gray-500">
-                          {i + 1}
-                        </span>
-                        <span className="text-sm font-medium text-gray-700">{country.country}</span>
-                      </div>
-                      <span className="text-sm text-gray-500">{country.count} visits</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Performance Metrics */}
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-white/50 shadow-lg mb-8">
-              <h3 className="font-bold text-iconic-black mb-4 flex items-center gap-2">
-                <Zap size={20} className="text-iconic-pink" />
-                Core Web Vitals
-              </h3>
-              <div className="grid sm:grid-cols-3 gap-4">
-                {performance.map((metric) => (
-                  <div key={metric.name} className="p-4 bg-gray-50 rounded-xl">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-gray-700">{metric.name.split('(')[0].trim()}</span>
-                      <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${
-                        metric.rating === 'good' ? 'bg-green-100 text-green-700' :
-                        metric.rating === 'needs-improvement' ? 'bg-yellow-100 text-yellow-700' :
-                        'bg-red-100 text-red-700'
-                      }`}>
-                        {metric.rating === 'good' ? 'Good' : metric.rating === 'needs-improvement' ? 'Needs Work' : 'Poor'}
-                      </span>
-                    </div>
-                    <p className="text-2xl font-bold text-iconic-black mb-1">
-                      {metric.name.includes('CLS') ? metric.value.toFixed(2) : `${Math.round(metric.value)}ms`}
-                    </p>
-                    <p className="text-xs text-gray-500">{metric.description}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* SEO Health Score */}
-            <div className="grid lg:grid-cols-3 gap-6 mb-8">
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-white/50 shadow-lg">
-                <h3 className="font-bold text-iconic-black mb-4 flex items-center gap-2">
-                  <Target size={20} className="text-iconic-pink" />
-                  SEO Health Score
-                </h3>
-                <div className="flex items-center justify-center mb-4">
-                  <div className="relative w-32 h-32">
-                    <svg className="w-full h-full transform -rotate-90">
-                      <circle cx="64" cy="64" r="56" stroke="#e5e7eb" strokeWidth="12" fill="none" />
-                      <circle cx="64" cy="64" r="56" stroke="url(#gradient)" strokeWidth="12" fill="none" 
-                        strokeDasharray={`${85 * 3.52} 352`} strokeLinecap="round" />
-                      <defs>
-                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                          <stop offset="0%" stopColor="#B7066D" />
-                          <stop offset="100%" stopColor="#9333ea" />
-                        </linearGradient>
-                      </defs>
-                    </svg>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="text-3xl font-bold text-iconic-black">85</span>
-                    </div>
-                  </div>
-                </div>
-                <p className="text-center text-sm text-gray-500">Good - Room for improvement</p>
-              </div>
-
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-white/50 shadow-lg">
-                <h3 className="font-bold text-iconic-black mb-4 flex items-center gap-2">
-                  <CheckCircle size={20} className="text-green-500" />
-                  SEO Checklist
-                </h3>
-                <div className="space-y-3">
-                  {[
-                    { item: 'Meta titles on all pages', done: true },
-                    { item: 'Meta descriptions', done: true },
-                    { item: 'Open Graph tags', done: true },
-                    { item: 'Structured data (JSON-LD)', done: true },
-                    { item: 'XML Sitemap', done: false },
-                    { item: 'Robots.txt optimized', done: false },
-                  ].map((check, i) => (
-                    <div key={i} className="flex items-center gap-2">
-                      {check.done ? (
-                        <CheckCircle size={16} className="text-green-500" />
-                      ) : (
-                        <AlertCircle size={16} className="text-amber-500" />
-                      )}
-                      <span className={`text-sm ${check.done ? 'text-gray-700' : 'text-amber-600'}`}>{check.item}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-white/50 shadow-lg">
-                <h3 className="font-bold text-iconic-black mb-4 flex items-center gap-2">
-                  <TrendingUp size={20} className="text-iconic-pink" />
-                  Growth Metrics
-                </h3>
-                <div className="space-y-4">
-                  <div>
-                    <div className="flex justify-between text-sm mb-1">
-                      <span className="text-gray-600">Organic Traffic</span>
-                      <span className="font-bold text-green-600">+23%</span>
-                    </div>
-                    <div className="h-2 bg-gray-100 rounded-full">
-                      <div className="h-full w-[68%] bg-gradient-to-r from-green-400 to-green-500 rounded-full"></div>
-                    </div>
-                  </div>
-                  <div>
-                    <div className="flex justify-between text-sm mb-1">
-                      <span className="text-gray-600">Social Traffic</span>
-                      <span className="font-bold text-iconic-pink">+45%</span>
-                    </div>
-                    <div className="h-2 bg-gray-100 rounded-full">
-                      <div className="h-full w-[82%] bg-gradient-to-r from-iconic-pink to-purple-500 rounded-full"></div>
-                    </div>
-                  </div>
-                  <div>
-                    <div className="flex justify-between text-sm mb-1">
-                      <span className="text-gray-600">Direct Traffic</span>
-                      <span className="font-bold text-blue-600">+12%</span>
-                    </div>
-                    <div className="h-2 bg-gray-100 rounded-full">
-                      <div className="h-full w-[45%] bg-gradient-to-r from-blue-400 to-blue-500 rounded-full"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* SEO Improvement Tips */}
+        {/* SEO Improvement Tips */}
             <div className="bg-gradient-to-br from-purple-600 to-iconic-pink rounded-2xl p-6 text-white mb-8">
               <h3 className="font-bold text-xl mb-4 flex items-center gap-2">
                 <Target className="text-white" />
@@ -830,10 +818,11 @@ export const AnalyticsDashboard: React.FC = () => {
 
             {/* Optimization Recommendations */}
             <div className="bg-gradient-to-br from-iconic-black to-gray-800 rounded-2xl p-6 text-white mb-8">
-              <h3 className="font-bold text-xl mb-4 flex items-center gap-2">
+              <h3 className="font-bold text-xl mb-1 flex items-center gap-2">
                 <Lightbulb className="text-yellow-400" />
-                Optimization Recommendations
+                {t.recommendations_title}
               </h3>
+              <p className="text-sm text-white/70 mb-4">{t.recommendations_subtitle}</p>
               <div className="grid sm:grid-cols-2 gap-4">
                 {recommendations.map((rec, i) => (
                   <div key={i} className="bg-white/10 backdrop-blur rounded-xl p-4">

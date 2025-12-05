@@ -76,19 +76,19 @@ export const Chatbot: React.FC = () => {
                         setMessages(prev => [...prev, { 
                             id: (Date.now() + 1).toString(), 
                             role: 'model', 
-                            text: lang === 'cs-CZ' ? "Ráda tě propojím se Zuzanou a jejím týmem. Vyplň prosím kontaktní údaje:" : "I'd love to connect you with Zuzana and her team. Please fill in your contact details:", 
+                            text: t.chatbot_lead_intro, 
                             type: 'ui-form' 
                         }]);
                     } else if (call.name === 'show_pricing') {
                         setMessages(prev => [...prev, { 
                             id: (Date.now() + 2).toString(), 
                             role: 'model', 
-                            text: lang === 'cs-CZ' ? "Zde jsou možnosti spolupráce a mentoringu:" : "Here are the mentoring options:", 
+                            text: t.chatbot_pricing_intro, 
                             type: 'ui-pricing' 
                         }]);
                     } else if (call.name === 'recommend_podcast') {
                         const episodeId = call.args.episodeId as string;
-                        const reason = (call.args.reason as string) || (lang === 'cs-CZ' ? "Myslím, že tato epizoda se ti bude líbit!" : "I think you'll love this episode!");
+                        const reason = (call.args.reason as string) || t.chatbot_recommend_reason;
                         setMessages(prev => [...prev, {
                              id: (Date.now() + 3).toString(),
                              role: 'model',
@@ -99,7 +99,7 @@ export const Chatbot: React.FC = () => {
                     }
                 }
             } else if (!response.text) {
-                 setMessages(prev => [...prev, { id: Date.now().toString(), role: 'model', text: lang === 'cs-CZ' ? "Rozumím." : "I understand." }]);
+                 setMessages(prev => [...prev, { id: Date.now().toString(), role: 'model', text: t.chatbot_acknowledge }]);
             }
         } catch (error) {
             const appError = createAppError(error, 'GEMINI_ERROR', { action: 'chatSend' });
@@ -133,18 +133,22 @@ export const Chatbot: React.FC = () => {
                 throw error;
             }
             
-            setNotification(lang === 'cs-CZ' ? "Úspěšně odesláno! Děkujeme." : "Successfully sent! Thank you.");
+            setNotification(lang === 'cs-CZ' ? "Úspěšně odesláno! Děkujeme." : lang === 'es-MX' ? "Enviado correctamente. Gracias." : "Successfully sent! Thank you.");
             setTimeout(() => setNotification(null), 3000);
             
             setMessages(prev => [...prev, { 
                 id: Date.now().toString(), 
                 role: 'model', 
-                text: lang === 'cs-CZ' ? `Děkuji, ${name}. Údaje jsem předala. Ozveme se co nejdříve! ✨` : `Thank you, ${name}. I've passed on your details. We'll be in touch soon! ✨`,
+                text: lang === 'cs-CZ' 
+                   ? `Děkuji, ${name}. Údaje jsem předala. Ozveme se co nejdříve! ✨`
+                   : lang === 'es-MX'
+                   ? `Gracias, ${name}. He compartido tus datos. ¡Nos pondremos en contacto muy pronto! ✨`
+                   : `Thank you, ${name}. I've passed on your details. We'll be in touch soon! ✨`,
                 type: 'ui-notification'
             }]);
         } catch (error) {
             logError(createAppError(error, 'UNKNOWN_ERROR', { action: 'chatLeadSubmit' }));
-            setNotification(lang === 'cs-CZ' ? "Něco se pokazilo. Zkuste to znovu." : "Something went wrong. Please try again.");
+            setNotification(lang === 'cs-CZ' ? "Něco se pokazilo. Zkuste to znovu." : lang === 'es-MX' ? "Algo salió mal. Inténtalo de nuevo." : "Something went wrong. Please try again.");
             setTimeout(() => setNotification(null), 3000);
         } finally {
             setIsSubmitting(false);
@@ -152,9 +156,9 @@ export const Chatbot: React.FC = () => {
     };
 
     const quickPrompts = [
-        { text: lang === 'cs-CZ' ? 'Jak začít?' : 'How to start?', icon: '💡', color: 'from-iconic-pink to-fuchsia-500' },
-        { text: lang === 'cs-CZ' ? 'O podcastu' : 'About podcast', icon: '🎙️', color: 'from-fuchsia-500 to-purple-500' },
-        { text: lang === 'cs-CZ' ? 'Tipy pro tebe' : 'Tips for you', icon: '✨', color: 'from-purple-500 to-violet-500' },
+        { text: lang === 'cs-CZ' ? 'Jak začít?' : lang === 'es-MX' ? '¿Cómo empezar?' : 'How to start?', icon: '💡', color: 'from-iconic-pink to-fuchsia-500' },
+        { text: lang === 'cs-CZ' ? 'O podcastu' : lang === 'es-MX' ? 'Sobre el podcast' : 'About podcast', icon: '🎙️', color: 'from-fuchsia-500 to-purple-500' },
+        { text: lang === 'cs-CZ' ? 'Tipy pro tebe' : lang === 'es-MX' ? 'Ideas para ti' : 'Tips for you', icon: '✨', color: 'from-purple-500 to-violet-500' },
     ];
 
     return (
@@ -165,7 +169,7 @@ export const Chatbot: React.FC = () => {
                     {/* Dismiss button for quick prompts */}
                     <button
                         onClick={() => setShowQuickPrompts(false)}
-                        className="mb-1 w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-black/60 backdrop-blur text-white flex items-center justify-center text-[10px] sm:text-xs shadow-lg border border-white/30"
+                        className="mb-1 w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-black text-white flex items-center justify-center text-[10px] sm:text-xs shadow-lg border border-white/30"
                         aria-label="Hide quick chat suggestions"
                     >
                         <X size={12} className="sm:w-3.5 sm:h-3.5" />
@@ -205,10 +209,10 @@ export const Chatbot: React.FC = () => {
                             <span className="font-serif font-bold italic text-xl">I</span>
                         </div>
                         <div>
-                            <h3 className="font-bold text-base sm:text-lg leading-tight">ICONIC Assistant</h3>
+                            <h3 className="font-bold text-base sm:text-lg leading-tight">{t.chatbot_header_title}</h3>
                             <div className="flex items-center text-xs text-white/80">
                                 <span className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
-                                Online • AI Powered
+                                {t.chatbot_header_status}
                             </div>
                         </div>
                     </div>
@@ -245,11 +249,11 @@ export const Chatbot: React.FC = () => {
 
                                     {msg.type === 'ui-form' && (
                                         <form onSubmit={handleLeadSubmit} className="mt-4 space-y-3 bg-gray-50 p-4 rounded-xl border border-gray-200">
-                                            <input required name="name" type="text" placeholder={lang === 'cs-CZ' ? "Jméno a Příjmení" : "Full Name"} className="w-full p-3 text-sm border border-gray-200 rounded-lg bg-white focus:border-iconic-pink focus:outline-none transition-colors" />
-                                            <input required name="email" type="email" placeholder="Email" className="w-full p-3 text-sm border border-gray-200 rounded-lg bg-white focus:border-iconic-pink focus:outline-none transition-colors" />
-                                            <input name="phone" type="tel" placeholder={lang === 'cs-CZ' ? "Telefon (+420...)" : "Phone"} className="w-full p-3 text-sm border border-gray-200 rounded-lg bg-white focus:border-iconic-pink focus:outline-none transition-colors" />
+                                            <input required name="name" type="text" placeholder={t.chatbot_lead_name_placeholder} className="w-full p-3 text-sm border border-gray-200 rounded-lg bg-white focus:border-iconic-pink focus:outline-none transition-colors" />
+                                            <input required name="email" type="email" placeholder={t.chatbot_lead_email_placeholder} className="w-full p-3 text-sm border border-gray-200 rounded-lg bg-white focus:border-iconic-pink focus:outline-none transition-colors" />
+                                            <input name="phone" type="tel" placeholder={t.chatbot_lead_phone_placeholder} className="w-full p-3 text-sm border border-gray-200 rounded-lg bg-white focus:border-iconic-pink focus:outline-none transition-colors" />
                                             <button type="submit" disabled={isSubmitting} className="w-full bg-iconic-pink text-white py-3 rounded-lg text-sm font-bold hover:bg-pink-700 transition-colors disabled:opacity-50">
-                                                {isSubmitting ? '...' : (lang === 'cs-CZ' ? 'Odeslat' : 'Submit')}
+                                                {isSubmitting ? '...' : t.chatbot_lead_submit}
                                             </button>
                                         </form>
                                     )}
@@ -276,7 +280,7 @@ export const Chatbot: React.FC = () => {
                                                         <img src={ep.imageUrl} alt={ep.title} className="w-full h-32 object-cover" />
                                                         <div className="p-3">
                                                             <div className="font-bold text-sm leading-tight mb-2">{ep.title}</div>
-                                                            <Link to={`/episodes/${ep.id}`} className="text-xs text-iconic-pink font-bold flex items-center">{lang === 'cs-CZ' ? 'Poslechnout' : 'Listen'} <ChevronRight size={12} /></Link>
+                                                            <Link to={`/episodes/${ep.id}`} className="text-xs text-iconic-pink font-bold flex items-center">{t.chatbot_listen_cta} <ChevronRight size={12} /></Link>
                                                         </div>
                                                     </div>
                                                 );
@@ -306,7 +310,7 @@ export const Chatbot: React.FC = () => {
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                            placeholder={lang === 'cs-CZ' ? "Zeptejte se na cokoliv..." : "Ask anything..."}
+                            placeholder={t.chatbot_input_placeholder}
                             className="flex-1 p-3.5 pl-5 rounded-full bg-gray-50 border border-gray-200 focus:outline-none focus:border-iconic-pink transition-colors"
                         />
                         <button onClick={() => handleSend()} disabled={!input.trim() || isThinking} className="p-3.5 bg-iconic-black text-white rounded-full hover:bg-iconic-pink disabled:opacity-50 transition-colors">

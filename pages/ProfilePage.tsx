@@ -50,6 +50,19 @@ export const ProfilePage: React.FC = () => {
       error: 'Failed to save profile.',
       back: '← Back',
     },
+    'es-MX': {
+      title: 'Mi Perfil',
+      display_name: 'Nombre para mostrar',
+      email: 'Correo',
+      bio: 'Sobre mí',
+      bio_placeholder: 'Escribe algo sobre ti...',
+      save: 'Guardar cambios',
+      saving: 'Guardando...',
+      logout: 'Cerrar sesión',
+      success: '¡Perfil guardado correctamente!',
+      error: 'No se pudo guardar el perfil.',
+      back: '← Volver',
+    },
   }[lang] || {
     title: 'My Profile',
     display_name: 'Display Name',
@@ -136,7 +149,7 @@ export const ProfilePage: React.FC = () => {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-24 pb-12 px-4 sm:px-6">
+    <div className="min-h-screen pt-24 pb-16 px-4 sm:px-6 bg-gradient-to-br from-pink-50 via-white to-purple-50">
       <div className="max-w-2xl mx-auto">
         {/* Back link */}
         <Link to="/" className="inline-flex items-center text-gray-500 hover:text-iconic-black mb-6 text-sm font-medium">
@@ -144,7 +157,7 @@ export const ProfilePage: React.FC = () => {
         </Link>
 
         {/* Profile Card */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
           {/* Header */}
           <div className="bg-gradient-to-r from-iconic-black to-gray-800 px-6 py-8 sm:px-8 sm:py-10 text-center relative">
             <div className="absolute top-0 right-0 w-32 h-32 bg-iconic-pink/20 rounded-full blur-[60px]"></div>
@@ -159,7 +172,7 @@ export const ProfilePage: React.FC = () => {
             </div>
             
             <h1 className="text-xl sm:text-2xl font-bold text-white mt-4">{t.title}</h1>
-            <p className="text-gray-400 text-sm mt-1">{user.email}</p>
+            <p className="text-gray-300 text-sm mt-1">{user.email}</p>
           </div>
 
           {/* Form */}
@@ -185,7 +198,7 @@ export const ProfilePage: React.FC = () => {
                 {t.display_name}
               </label>
               <div className="relative">
-                <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300" size={20} />
                 <input
                   id="displayName"
                   type="text"
@@ -203,7 +216,7 @@ export const ProfilePage: React.FC = () => {
                 {t.email}
               </label>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300" size={20} />
                 <input
                   type="email"
                   value={user.email || ''}

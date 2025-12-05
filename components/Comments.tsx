@@ -363,7 +363,7 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
             <span className="font-bold text-sm text-iconic-black">
               {comment.user_profile?.display_name || 'Anonymous'}
             </span>
-            <span className="text-xs text-gray-400">
+            <span className="text-xs text-gray-500">
               {formatDate(comment.created_at)}
               {comment.is_edited && <span className="ml-1">• {t.edited}</span>}
             </span>
@@ -548,9 +548,9 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
 
       {/* Comments list */}
       {loading ? (
-        <div className="text-center py-8 text-gray-400">Loading...</div>
+        <div className="text-center py-8 text-gray-500">Loading...</div>
       ) : comments.length === 0 ? (
-        <div className="text-center py-8 text-gray-400">{t.no_comments}</div>
+        <div className="text-center py-8 text-gray-500">{t.no_comments}</div>
       ) : (
         <div className="space-y-6">
           {comments.map((comment) => (

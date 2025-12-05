@@ -27,13 +27,13 @@ export const ResetPasswordPage: React.FC = () => {
       subtitle: 'Zadejte své nové heslo.',
       password_label: 'Nové heslo',
       confirm_label: 'Potvrdit heslo',
-      password_placeholder: '••••••••',
+      password_placeholder: '\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022',
       submit: 'Nastavit heslo',
       saving: 'Ukládám...',
       success_title: 'Heslo změněno!',
       success_message: 'Vaše heslo bylo úspěšně změněno. Nyní se můžete přihlásit.',
       go_to_login: 'Přejít na přihlášení',
-      back_to_home: '← Zpět na hlavní stránku',
+      back_to_home: '\u2190 Zpět na hlavní stránku',
       error_mismatch: 'Hesla se neshodují.',
       error_short: 'Heslo musí mít alespoň 6 znaků.',
       error_invalid: 'Neplatný nebo expirovaný odkaz. Požádejte o nový.',
@@ -44,30 +44,47 @@ export const ResetPasswordPage: React.FC = () => {
       subtitle: 'Enter your new password.',
       password_label: 'New Password',
       confirm_label: 'Confirm Password',
-      password_placeholder: '••••••••',
+      password_placeholder: '\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022',
       submit: 'Set Password',
       saving: 'Saving...',
       success_title: 'Password Changed!',
       success_message: 'Your password has been successfully changed. You can now sign in.',
       go_to_login: 'Go to Login',
-      back_to_home: '← Back to home',
+      back_to_home: '\u2190 Back to home',
       error_mismatch: 'Passwords do not match.',
       error_short: 'Password must be at least 6 characters.',
       error_invalid: 'Invalid or expired link. Please request a new one.',
       error_generic: 'Something went wrong. Please try again.',
+    },
+    'es-MX': {
+      title: 'Nueva contraseña',
+      subtitle: 'Ingresa tu nueva contraseña.',
+      password_label: 'Nueva contraseña',
+      confirm_label: 'Confirmar contraseña',
+      password_placeholder: '\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022',
+      submit: 'Guardar contraseña',
+      saving: 'Guardando...',
+      success_title: '\u00a1Contraseña cambiada!',
+      success_message: 'Tu contraseña se ha cambiado correctamente. Ahora puedes iniciar sesión.',
+      go_to_login: 'Ir a iniciar sesión',
+      back_to_home: '\u2190 Volver al inicio',
+      error_mismatch: 'Las contraseñas no coinciden.',
+      error_short: 'La contraseña debe tener al menos 6 caracteres.',
+      error_invalid: 'Enlace no válido o expirado. Solicita uno nuevo.',
+      error_generic: 'Algo salió mal. Inténtalo de nuevo.',
     },
   }[lang] || {
     title: 'New Password',
     subtitle: 'Enter your new password.',
     password_label: 'New Password',
     confirm_label: 'Confirm Password',
-    password_placeholder: '••••••••',
+    password_placeholder: '\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022',
     submit: 'Set Password',
     saving: 'Saving...',
     success_title: 'Password Changed!',
     success_message: 'Your password has been successfully changed. You can now sign in.',
     go_to_login: 'Go to Login',
-    back_to_home: '← Back to home',
+    back_to_home: '\u2190 Back to home',
     error_mismatch: 'Passwords do not match.',
     error_short: 'Password must be at least 6 characters.',
     error_invalid: 'Invalid or expired link. Please request a new one.',
@@ -137,7 +154,7 @@ export const ResetPasswordPage: React.FC = () => {
           <h2 className="mt-6 text-2xl sm:text-3xl font-bold text-white">
             {t.title}
           </h2>
-          <p className="mt-2 text-sm text-gray-400">
+          <p className="mt-2 text-sm text-gray-300">
             {t.subtitle}
           </p>
         </div>
@@ -148,7 +165,7 @@ export const ResetPasswordPage: React.FC = () => {
               <CheckCircle className="text-green-400" size={32} />
             </div>
             <h3 className="text-xl font-bold text-white mb-2">{t.success_title}</h3>
-            <p className="text-gray-400 mb-6">{t.success_message}</p>
+            <p className="text-gray-300 mb-6">{t.success_message}</p>
             <Link
               to="/login"
               className="inline-block w-full bg-gradient-to-r from-iconic-pink to-purple-600 text-white font-bold py-3 sm:py-4 rounded-xl hover:shadow-[0_0_20px_rgba(183,6,109,0.6)] transition-all text-center"
@@ -197,7 +214,7 @@ export const ResetPasswordPage: React.FC = () => {
                       minLength={6}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="w-full pl-12 pr-12 py-3 sm:py-4 bg-white/5 border border-white/20 rounded-xl text-white placeholder-white/30 focus:outline-none focus:bg-white/10 focus:border-iconic-pink transition-all text-base"
+                      className="w-full pl-12 pr-12 py-3 sm:py-4 bg-white/5 border border-white/20 rounded-xl text-white placeholder-white/60 focus:outline-none focus:bg-white/10 focus:border-iconic-pink transition-all text-base"
                       placeholder={t.password_placeholder}
                     />
                     <button
@@ -226,7 +243,7 @@ export const ResetPasswordPage: React.FC = () => {
                       minLength={6}
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
-                      className="w-full pl-12 pr-4 py-3 sm:py-4 bg-white/5 border border-white/20 rounded-xl text-white placeholder-white/30 focus:outline-none focus:bg-white/10 focus:border-iconic-pink transition-all text-base"
+                      className="w-full pl-12 pr-4 py-3 sm:py-4 bg-white/5 border border-white/20 rounded-xl text-white placeholder-white/60 focus:outline-none focus:bg-white/10 focus:border-iconic-pink transition-all text-base"
                       placeholder={t.password_placeholder}
                     />
                   </div>
@@ -254,7 +271,7 @@ export const ResetPasswordPage: React.FC = () => {
 
         {/* Back to home */}
         <div className="text-center">
-          <Link to="/" className="text-gray-500 hover:text-white transition-colors text-sm">
+          <Link to="/" className="text-gray-200 hover:text-white transition-colors text-sm">
             {t.back_to_home}
           </Link>
         </div>
