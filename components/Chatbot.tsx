@@ -17,6 +17,7 @@ import { logError, createAppError } from '../services/errorService';
 export const Chatbot: React.FC = () => {
     const { lang, t } = useLanguage();
     const [isOpen, setIsOpen] = useState(false);
+    const [showQuickPrompts, setShowQuickPrompts] = useState(true);
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [input, setInput] = useState('');
     const [isThinking, setIsThinking] = useState(false);
@@ -158,9 +159,18 @@ export const Chatbot: React.FC = () => {
 
     return (
         <>
-            {/* Floating conversation starters - only show when chat is closed */}
-            {!isOpen && (
+            {/* Floating conversation starters - only show when chat is closed and not dismissed */}
+            {!isOpen && showQuickPrompts && (
                 <div className="fixed bottom-16 sm:bottom-24 right-3 sm:right-6 z-40 flex flex-col items-end gap-1.5 sm:gap-2.5 animate-fade-in-up">
+                    {/* Dismiss button for quick prompts */}
+                    <button
+                        onClick={() => setShowQuickPrompts(false)}
+                        className="mb-1 w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-black/60 backdrop-blur text-white flex items-center justify-center text-[10px] sm:text-xs shadow-lg border border-white/30"
+                        aria-label="Hide quick chat suggestions"
+                    >
+                        <X size={12} className="sm:w-3.5 sm:h-3.5" />
+                    </button>
+
                     {quickPrompts.map((prompt, idx) => (
                         <button
                             key={idx}
