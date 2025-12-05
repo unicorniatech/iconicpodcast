@@ -73,7 +73,17 @@ export const Header: React.FC<HeaderProps> = ({ isBannerOpen }) => {
           
           <div className="hidden md:block">
             <div className={`ml-10 flex items-center space-x-8 font-bold text-sm tracking-wide ${textColor}`}>
-              <Link to="/" className="hover:text-iconic-pink transition-colors px-3 py-2">{t.nav_home}</Link>
+              <Link
+                to="/"
+                className="hover:text-iconic-pink transition-colors px-3 py-2"
+                onClick={() => {
+                  if (typeof window !== 'undefined') {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }
+                }}
+              >
+                {t.nav_home}
+              </Link>
               <Link to="/episodes" className="hover:text-iconic-pink transition-colors px-3 py-2">{t.nav_episodes}</Link>
               <Link to="/contact" className="hover:text-iconic-pink transition-colors px-3 py-2">{t.nav_contact}</Link>
               {isAdmin && (
