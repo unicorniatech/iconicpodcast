@@ -776,18 +776,21 @@ export const AnalyticsDashboard: React.FC = () => {
             label={t.metric_page_views}
             value={analytics.totalPageViews.toLocaleString()}
             color="purple"
+            tooltip={t.metric_page_views}
           />
           <MetricCard
             icon={<Users size={20} />}
             label={t.metric_unique_visitors}
             value={analytics.uniqueVisitors.toLocaleString()}
             color="pink"
+            tooltip={t.metric_unique_visitors}
           />
           <MetricCard
             icon={<Clock size={20} />}
             label={t.metric_avg_session}
             value={analytics.avgSessionDuration > 0 ? formatDuration(analytics.avgSessionDuration) : '0s'}
             color="green"
+            tooltip={t.metric_avg_session}
           />
           <MetricCard
             icon={<MousePointerClick size={20} />}
@@ -795,6 +798,7 @@ export const AnalyticsDashboard: React.FC = () => {
             value={`${analytics.bounceRate.toFixed(1)}%`}
             color="orange"
             invertTrend
+            tooltip={t.metric_bounce_rate}
           />
         </div>
 
@@ -806,6 +810,7 @@ export const AnalyticsDashboard: React.FC = () => {
             value="+68%"
             trend={68}
             color="green"
+            tooltip={t.organic_traffic}
           />
           <MetricCard
             icon={<MousePointerClick size={20} />}
@@ -813,6 +818,7 @@ export const AnalyticsDashboard: React.FC = () => {
             value="4.3%"
             trend={12}
             color="blue"
+            tooltip={t.ctr}
           />
           <MetricCard
             icon={<Users size={20} />}
@@ -820,6 +826,7 @@ export const AnalyticsDashboard: React.FC = () => {
             value="37%"
             trend={8}
             color="purple"
+            tooltip={t.returning_visitors}
           />
           <MetricCard
             icon={<Activity size={20} />}
