@@ -118,15 +118,15 @@ export const PodcastToolsPage: React.FC = () => {
       };
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-32 px-4 pb-12">
+    <div className="min-h-screen bg-white pt-32 px-4 pb-12">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-iconic-pink to-iconic-blue flex items-center justify-center text-white">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-iconic-pink to-iconic-blue flex items-center justify-center text-white shadow-md">
             <CalendarDays size={20} />
           </div>
           <div>
             <h1 className="text-2xl font-serif font-bold text-iconic-black">{t.title}</h1>
-            <p className="text-gray-500 text-sm">Lightweight workspace to plan episodes and manage guests.</p>
+            <p className="text-gray-700 text-sm">Lightweight workspace to plan episodes and manage guests.</p>
           </div>
         </div>
 
@@ -135,7 +135,7 @@ export const PodcastToolsPage: React.FC = () => {
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Guests column */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-6">
+            <div className="bg-white rounded-2xl shadow-md border border-gray-200 p-4 sm:p-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="flex items-center gap-2 font-semibold text-iconic-black">
                   <UserPlus size={18} /> {t.guests}
