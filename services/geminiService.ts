@@ -27,6 +27,10 @@ export interface ChatResponse {
 // API endpoint - configure based on deployment
 const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
+// Network safety settings
+const REQUEST_TIMEOUT_MS = 15000; // 15 seconds
+const MAX_RETRIES = 2;
+
 // Build podcast context from episodes data
 export const buildPodcastContext = (episodes: Array<{ id: string; title: string; description: string }>) => {
   return episodes.map(p => 
@@ -110,47 +114,83 @@ export const sendMessage = async (
     return getDevFallbackResponse(message, session.language);
   }
 
-  try {
-    const response = await fetch(`${API_BASE_URL}/chat`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        sessionId: session.id,
-        message,
-        language: session.language,
-        podcastContext
-      })
-    });
+  const attemptRequest = async (): Promise<ChatResponse> => {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.error || `HTTP ${response.status}`);
-    }
+    try {
+      const response = await fetch(`${API_BASE_URL}/chat`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          sessionId: session.id,
+          message,
+          language: session.language,
+          podcastContext
+        }),
+        signal: controller.signal
+      });
 
-    const data = await response.json();
+      clearTimeout(timeoutId);
 
-    if (data.error) {
-      const appError = createAppError(new Error(data.error), 'GEMINI_ERROR');
+      let data: any = null;
+      try {
+        data = await response.json();
+      } catch (jsonError) {
+        const appError = createAppError(jsonError, 'GEMINI_ERROR', { action: 'sendMessage', phase: 'parse' });
+        return { text: '', error: appError };
+      }
+
+      if (!response.ok || data?.error) {
+        const baseError = new Error(data?.error || `HTTP ${response.status}`);
+        const appError = createAppError(baseError, 'GEMINI_ERROR', { action: 'sendMessage', status: response.status });
+        return { text: '', error: appError };
+      }
+
       return {
-        text: '',
-        error: appError
+        text: data.text || '',
+        functionCalls: data.functionCalls
       };
+    } catch (error) {
+      clearTimeout(timeoutId);
+
+      const appError =
+        error instanceof DOMException && error.name === 'AbortError'
+          ? createAppError(error, 'NETWORK_ERROR', { action: 'sendMessage', reason: 'timeout' })
+          : createAppError(error, 'NETWORK_ERROR', { action: 'sendMessage' });
+
+      return { text: '', error: appError };
+    }
+  };
+
+  let lastError: AppError | undefined;
+
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    const result = await attemptRequest();
+    if (!result.error) {
+      return result;
     }
 
-    return {
-      text: data.text || '',
-      functionCalls: data.functionCalls
-    };
-  } catch (error) {
-    const appError = createAppError(error, 'NETWORK_ERROR', { action: 'sendMessage' });
-    logError(appError);
-    return {
-      text: '',
-      error: appError
-    };
+    lastError = result.error;
+
+    // Only retry on network-type issues; other errors should return immediately
+    if (lastError.code !== 'NETWORK_ERROR') {
+      logError(lastError);
+      return result;
+    }
+
+    // On final attempt, return whatever we have
+    if (attempt === MAX_RETRIES) {
+      logError(lastError);
+      return result;
+    }
   }
+
+  const fallbackError = lastError || createAppError(new Error('Unknown error'), 'UNKNOWN_ERROR', { action: 'sendMessage' });
+  logError(fallbackError);
+  return { text: '', error: fallbackError };
 };
 
 /**
