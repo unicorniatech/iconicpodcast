@@ -136,53 +136,46 @@ export const Header: React.FC<HeaderProps> = ({ isBannerOpen }) => {
       
             {/* Mobile Menu Overlay */}
       <div 
-        className={`fixed inset-0 bg-black/50 z-40 md:hidden transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+        className={`fixed inset-0 bg-black/60 z-40 md:hidden transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
         onClick={() => setIsOpen(false)}
       />
 
-      {/* Solid white background behind the entire mobile menu */}
-      {isOpen && (
-        <div className="fixed inset-0 bg-white z-[45] md:hidden" />
-      )}
-
-      {/* Mobile Menu Drawer */}
+      {/* Mobile Menu Drawer - solid dark background */}
       <div 
-        className={`fixed inset-0 w-full h-full z-[9999] md:hidden transform transition-transform duration-300 ease-out ${isOpen ? 'translate-x-0' : 'translate-x-full'} bg-white`}
+        className={`fixed inset-0 w-full h-full z-[9999] md:hidden transform transition-transform duration-300 ease-out ${isOpen ? 'translate-x-0' : 'translate-x-full'} bg-gray-900 text-white`}
       >
-        {/* Solid white overlay to ensure nothing from the page shows through */}
-        <div className="absolute inset-0 bg-white" />
         <div className="relative flex flex-col h-full">
           {/* Close button */}
-          <div className="flex justify-between items-center p-4 border-b border-gray-100">
+          <div className="flex justify-between items-center p-4 border-b border-white/10">
             <span className="text-xl font-serif font-black">I<span className="text-iconic-pink">|</span>CONIC</span>
-            <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-gray-100 rounded-full">
+            <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-white/10 rounded-full">
               <X size={24} />
             </button>
           </div>
 
           {/* Navigation Links */}
           <nav className="flex-1 py-6 px-4">
-            <Link to="/" onClick={() => setIsOpen(false)} className="flex items-center px-4 py-4 text-iconic-black hover:text-iconic-pink hover:bg-gray-50 rounded-xl text-lg font-bold transition-colors">
+            <Link to="/" onClick={() => setIsOpen(false)} className="flex items-center px-4 py-4 text-white hover:text-iconic-pink hover:bg-white/10 rounded-xl text-lg font-bold transition-colors">
               {t.nav_home}
             </Link>
-            <Link to="/episodes" onClick={() => setIsOpen(false)} className="flex items-center px-4 py-4 text-iconic-black hover:text-iconic-pink hover:bg-gray-50 rounded-xl text-lg font-bold transition-colors">
+            <Link to="/episodes" onClick={() => setIsOpen(false)} className="flex items-center px-4 py-4 text-white hover:text-iconic-pink hover:bg-white/10 rounded-xl text-lg font-bold transition-colors">
               {t.nav_episodes}
             </Link>
-            <Link to="/contact" onClick={() => setIsOpen(false)} className="flex items-center px-4 py-4 text-iconic-black hover:text-iconic-pink hover:bg-gray-50 rounded-xl text-lg font-bold transition-colors">
+            <Link to="/contact" onClick={() => setIsOpen(false)} className="flex items-center px-4 py-4 text-white hover:text-iconic-pink hover:bg-white/10 rounded-xl text-lg font-bold transition-colors">
               {t.nav_contact}
             </Link>
             
             {/* User section */}
             {user ? (
               <>
-                <div className="border-t border-gray-100 my-4"></div>
-                <Link to="/profile" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-4 py-4 text-iconic-black hover:text-iconic-pink hover:bg-gray-50 rounded-xl text-lg font-bold transition-colors">
+                <div className="border-t border-white/10 my-4"></div>
+                <Link to="/profile" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-4 py-4 text-white hover:text-iconic-pink hover:bg-white/10 rounded-xl text-lg font-bold transition-colors">
                   <User size={20} />
                   {t.menu_profile}
                 </Link>
                 <button 
                   onClick={() => { logout(); setIsOpen(false); }} 
-                  className="flex items-center gap-3 w-full px-4 py-4 text-gray-500 hover:text-red-500 hover:bg-red-50 rounded-xl text-lg font-medium transition-colors"
+                  className="flex items-center gap-3 w-full px-4 py-4 text-gray-300 hover:text-red-400 hover:bg-red-500/10 rounded-xl text-lg font-medium transition-colors"
                 >
                   <LogOut size={20} />
                   {t.menu_sign_out}
@@ -190,8 +183,8 @@ export const Header: React.FC<HeaderProps> = ({ isBannerOpen }) => {
               </>
             ) : (
               <>
-                <div className="border-t border-gray-100 my-4"></div>
-                <Link to="/login" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-4 py-4 text-iconic-pink hover:bg-pink-50 rounded-xl text-lg font-bold transition-colors">
+                <div className="border-t border-white/10 my-4"></div>
+                <Link to="/login" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-4 py-4 text-iconic-pink hover:bg-pink-500/10 rounded-xl text-lg font-bold transition-colors">
                   <User size={20} />
                   {t.menu_sign_in}
                 </Link>
@@ -200,24 +193,24 @@ export const Header: React.FC<HeaderProps> = ({ isBannerOpen }) => {
           </nav>
 
           {/* Language Switcher */}
-          <div className="border-t border-gray-100 p-4">
-            <p className="text-xs text-gray-400 uppercase tracking-wider mb-3 px-2">{t.menu_language}</p>
+          <div className="border-t border-white/10 p-4">
+            <p className="text-xs text-gray-300 uppercase tracking-wider mb-3 px-2">{t.menu_language}</p>
             <div className="grid grid-cols-3 gap-2">
               <button 
                 onClick={() => {setLang('cs-CZ'); setIsOpen(false)}} 
-                className={`py-3 rounded-xl text-sm font-bold transition-all ${lang === 'cs-CZ' ? 'bg-iconic-pink text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                className={`py-3 rounded-xl text-sm font-bold transition-all ${lang === 'cs-CZ' ? 'bg-iconic-pink text-white' : 'bg-white/10 text-gray-200 hover:bg-white/20'}`}
               >
                 🇨🇿 CZ
               </button>
               <button 
                 onClick={() => {setLang('en-US'); setIsOpen(false)}} 
-                className={`py-3 rounded-xl text-sm font-bold transition-all ${lang === 'en-US' ? 'bg-iconic-pink text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                className={`py-3 rounded-xl text-sm font-bold transition-all ${lang === 'en-US' ? 'bg-iconic-pink text-white' : 'bg-white/10 text-gray-200 hover:bg-white/20'}`}
               >
                 🇺🇸 EN
               </button>
               <button 
                 onClick={() => {setLang('es-MX'); setIsOpen(false)}} 
-                className={`py-3 rounded-xl text-sm font-bold transition-all ${lang === 'es-MX' ? 'bg-iconic-pink text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                className={`py-3 rounded-xl text-sm font-bold transition-all ${lang === 'es-MX' ? 'bg-iconic-pink text-white' : 'bg-white/10 text-gray-200 hover:bg-white/20'}`}
               >
                 🇲🇽 ES
               </button>
@@ -225,7 +218,7 @@ export const Header: React.FC<HeaderProps> = ({ isBannerOpen }) => {
           </div>
 
           {/* Subscribe Button */}
-          <div className="p-4 border-t border-gray-100">
+          <div className="p-4 border-t border-white/10">
             <a 
               href="https://www.youtube.com/@ZuzziHusarova" 
               target="_blank" 
