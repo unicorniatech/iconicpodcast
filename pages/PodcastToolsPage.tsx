@@ -133,7 +133,8 @@ export const PodcastToolsPage: React.FC = () => {
         {isLoading ? (
           <div className="text-gray-500 text-sm">Loading...</div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="bg-white rounded-3xl shadow-lg border border-gray-200 p-4 sm:p-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Guests column */}
             <div className="bg-white rounded-2xl shadow-md border border-gray-300 p-4 sm:p-6">
               <div className="flex items-center justify-between mb-4">
