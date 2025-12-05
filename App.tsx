@@ -32,6 +32,7 @@ import { ProfilePage } from './pages/ProfilePage';
 import { AnalyticsDashboard } from './pages/AnalyticsDashboard';
 import { YouTubeLandingPage, InstagramLandingPage, SocialLandingPage } from './pages/LandingPage';
 import { FAQPage } from './pages/FAQPage';
+import { PodcastToolsPage } from './pages/PodcastToolsPage';
 
 // Services & Data
 import { TRANSLATIONS, PODCAST_EPISODES, PRICING_PLANS } from './constants';
@@ -1152,8 +1153,14 @@ function AppContent() {
               <AdminDashboard />
             </AuthGuard>
           } />
-          {/* Legacy podcast tools path - redirect into CRM for now */}
-          <Route path="/crm/podcast" element={<Navigate to="/crm" replace />} />
+          {/* Podcast tools workspace - admin only */}
+          <Route path="/crm/podcast-tools" element={
+            <AuthGuard requireAdmin fallbackPath="/login">
+              <PodcastToolsPage />
+            </AuthGuard>
+          } />
+          {/* Legacy podcast tools path - redirect to new tools page */}
+          <Route path="/crm/podcast" element={<Navigate to="/crm/podcast-tools" replace />} />
           
           {/* Analytics Dashboard - Admin only */}
           <Route path="/analytics" element={
