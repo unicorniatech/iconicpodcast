@@ -5,7 +5,7 @@
  * Data is stored in Supabase for the admin dashboard.
  */
 
-import { supabase } from './supabaseClient';
+import { supabase, isSupabaseConfigured } from './supabaseClient';
 
 // Generate or retrieve session ID
 const getSessionId = (): string => {
@@ -57,6 +57,11 @@ const getCountryFromTimezone = (): string | null => {
 let analyticsTablesExist: boolean | null = null;
 
 const checkAnalyticsTables = async (): Promise<boolean> => {
+  // Skip completely when Supabase is not configured
+  if (!isSupabaseConfigured()) {
+    analyticsTablesExist = false;
+    return false;
+  }
   // Return cached result if we've already checked
   if (analyticsTablesExist !== null) return analyticsTablesExist;
   
@@ -79,6 +84,7 @@ const checkAnalyticsTables = async (): Promise<boolean> => {
 // Track page view
 export const trackPageView = async (path: string): Promise<void> => {
   try {
+    if (!isSupabaseConfigured()) return;
     // Skip if tables don't exist
     if (!(await checkAnalyticsTables())) return;
     
@@ -110,6 +116,7 @@ export const trackPageView = async (path: string): Promise<void> => {
 // Update page view duration when leaving
 export const trackPageLeave = async (): Promise<void> => {
   try {
+    if (!isSupabaseConfigured()) return;
     if (!(await checkAnalyticsTables())) return;
     
     const startTime = sessionStorage.getItem('iconic_page_start');
@@ -141,7 +148,7 @@ export const trackWebVital = async (metric: {
   rating: string;
 }): Promise<void> => {
   try {
-    if (!(await checkAnalyticsTables())) return;
+    if (!isSupabaseConfigured() || !(await checkAnalyticsTables())) return;
     
     const sessionId = getSessionId();
     
@@ -163,7 +170,7 @@ export const trackEvent = async (
   properties?: Record<string, any>
 ): Promise<void> => {
   try {
-    if (!(await checkAnalyticsTables())) return;
+    if (!isSupabaseConfigured() || !(await checkAnalyticsTables())) return;
     
     const sessionId = getSessionId();
     

@@ -13,6 +13,7 @@ export type ErrorCode =
   | 'NOT_FOUND'
   | 'PERMISSION_DENIED'
   | 'SUPABASE_ERROR'
+  | 'SUPABASE_NOT_CONFIGURED'
   | 'GEMINI_ERROR'
   | 'UNKNOWN_ERROR';
 
@@ -59,6 +60,11 @@ const ERROR_MESSAGES: Record<ErrorCode, Record<string, string>> = {
     'cs-CZ': 'Chyba databáze. Zkuste to prosím později.',
     'en-US': 'Database error. Please try again later.',
     'es-MX': 'Error de base de datos. Por favor, intenta más tarde.'
+  },
+  SUPABASE_NOT_CONFIGURED: {
+    'cs-CZ': 'Služba přihlášení není plně nakonfigurována. Kontaktujte prosím správce webu.',
+    'en-US': 'Sign-in service is not fully configured. Please contact the site administrator.',
+    'es-MX': 'El servicio de inicio de sesión no está completamente configurado. Contacta al administrador del sitio.'
   },
   GEMINI_ERROR: {
     'cs-CZ': 'AI asistent je momentálně nedostupný. Zkuste to prosím později.',

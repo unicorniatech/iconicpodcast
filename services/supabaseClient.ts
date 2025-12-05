@@ -12,33 +12,31 @@
 import { createClient, SupabaseClient, User, Session } from '@supabase/supabase-js';
 import type { Database } from '../types/database';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
-
-// Validate configuration
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn(
-    'Supabase credentials not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY environment variables.'
-  );
-}
-
-// Create Supabase client
-export const supabase: SupabaseClient<Database> = createClient<Database>(
-  supabaseUrl || 'https://placeholder.supabase.co',
-  supabaseAnonKey || 'placeholder-key',
-  {
-    auth: {
-      autoRefreshToken: true,
-      persistSession: true,
-      detectSessionInUrl: true
-    }
-  }
-);
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 // Check if Supabase is properly configured
 export const isSupabaseConfigured = (): boolean => {
   return Boolean(supabaseUrl && supabaseAnonKey);
 };
+
+if (!isSupabaseConfigured()) {
+  console.warn(
+    'Supabase credentials not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY environment variables.'
+  );
+}
+
+// Create Supabase client only when configured
+export const supabase: SupabaseClient<Database> = isSupabaseConfigured()
+  ? createClient<Database>(supabaseUrl as string, supabaseAnonKey as string, {
+      auth: {
+        autoRefreshToken: true,
+        persistSession: true,
+        detectSessionInUrl: true
+      }
+    })
+  // In development without configuration, this will be guarded by isSupabaseConfigured checks
+  : ({} as SupabaseClient<Database>);
 
 // Auth helpers
 export const signUp = async (email: string, password: string) => {

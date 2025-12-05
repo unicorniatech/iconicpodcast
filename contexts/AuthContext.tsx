@@ -98,6 +98,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (email: string, password: string): Promise<{ error: string | null }> => {
     try {
+      if (!isSupabaseConfigured()) {
+        const appError = createAppError(
+          new Error('Supabase is not configured'),
+          'SUPABASE_NOT_CONFIGURED',
+          { action: 'login' }
+        );
+        logError(appError);
+        return { error: appError.message };
+      }
       await signIn(email, password);
       return { error: null };
     } catch (error) {
@@ -109,6 +118,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const register = async (email: string, password: string): Promise<{ error: string | null }> => {
     try {
+      if (!isSupabaseConfigured()) {
+        const appError = createAppError(
+          new Error('Supabase is not configured'),
+          'SUPABASE_NOT_CONFIGURED',
+          { action: 'register' }
+        );
+        logError(appError);
+        return { error: appError.message };
+      }
       await signUp(email, password);
       return { error: null };
     } catch (error) {
