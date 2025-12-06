@@ -358,7 +358,7 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
         )}
       </div>
       <div className="flex-1">
-        <div className="bg-gray-50 rounded-2xl px-3 py-2 sm:px-4 sm:py-3">
+        <div className="bg-gray-50 rounded-2xl px-3 py-2 sm:px-4 sm:py-3 transition-shadow duration-300">
           <div className="flex items-center gap-2 mb-1">
             <span className="font-bold text-sm text-iconic-black">
               {comment.user_profile?.display_name || 'Anonymous'}
@@ -403,7 +403,7 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
             onClick={() => handleLikeComment(comment.id, comment.user_liked)}
             className={`group flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full border transition-all duration-300 ease-out ${
               comment.user_liked 
-                ? 'text-iconic-pink bg-iconic-pink/15 border-iconic-pink/30 shadow-sm' 
+                ? 'text-iconic-pink bg-iconic-pink/15 border-iconic-pink/30 shadow-sm ring-1 ring-iconic-pink/40' 
                 : 'text-gray-500 bg-gray-50 border-gray-200 hover:text-iconic-pink hover:bg-iconic-pink/10 hover:border-iconic-pink/30 hover:shadow-md'
             }`}
             disabled={!user}
@@ -417,7 +417,13 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
                   : 'group-hover:scale-125 group-hover:-rotate-12 group-active:scale-75'
               }`}
             />
-            <span className="transition-all duration-200">{comment.like_count > 0 ? comment.like_count : ''}</span>
+            <span
+              className={`min-w-[0.75rem] text-center transition-all duration-200 ${
+                comment.user_liked ? 'scale-110 translate-y-[-1px]' : 'scale-100'
+              }`}
+            >
+              {comment.like_count}
+            </span>
           </button>
 
           {/* Reply Button */}
