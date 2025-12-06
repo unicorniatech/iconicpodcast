@@ -135,6 +135,51 @@ const NewsletterToast: React.FC<NewsletterToastProps> = ({ isOpen, onClose }) =>
 };
 
 // ============================================================================
+// INTRO OVERLAY (Full-screen intro animation + Enter button)
+// ============================================================================
+interface IntroOverlayProps {
+  onEnter: () => void;
+}
+
+const IntroOverlay: React.FC<IntroOverlayProps> = ({ onEnter }) => {
+  const { lang } = useLanguage();
+  const [showButton, setShowButton] = useState(false);
+
+  const buttonLabel =
+    lang === 'cs-CZ'
+      ? 'Vstoupit do podcastu'
+      : lang === 'es-MX'
+      ? 'Entrar al podcast'
+      : 'Enter the Podcast';
+
+  return (
+    <div className="fixed inset-0 z-[80] flex items-center justify-center bg-black">
+      <div className="absolute inset-0">
+        <video
+          src="/intro-animation.mp4"
+          autoPlay
+          muted
+          playsInline
+          className="w-full h-full object-cover"
+          onEnded={() => setShowButton(true)}
+        />
+        <div className="absolute inset-0 bg-black/40" />
+      </div>
+      {showButton && (
+        <div className="relative z-10 flex flex-col items-center gap-6 px-4 text-center animate-fade-in-up">
+          <button
+            onClick={onEnter}
+            className="px-10 py-3 rounded-full bg-iconic-pink text-white font-semibold text-lg tracking-wide shadow-xl hover:bg-pink-600 transition-colors border border-iconic-pink/70"
+          >
+            {buttonLabel}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ============================================================================
 // GUEST INVITATION MODAL
 // ============================================================================
 interface GuestInvitationModalProps {
@@ -206,7 +251,7 @@ const GuestInvitationModal: React.FC<GuestInvitationModalProps> = ({ onClose }) 
                ) : (
                    <>
                        <div className="w-16 sm:w-20 h-16 sm:h-20 bg-gradient-to-br from-iconic-pink to-iconic-blue rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-lg border border-white/20">
-                            <Mic size={28} className="sm:w-9 sm:h-9 text-white drop-shadow-md" />
+                           <Mic size={28} className="sm:w-9 sm:h-9 text-white drop-shadow-md" />
                        </div>
                        <h2 className="text-2xl sm:text-3xl font-serif font-black mb-3 sm:mb-4 leading-tight drop-shadow-sm">{t.guest_modal_title}</h2>
                        <p className="text-white/80 mb-6 sm:mb-8 leading-relaxed text-sm font-light max-w-sm mx-auto">{t.guest_modal_desc}</p>
@@ -1168,6 +1213,7 @@ const AdminDashboard: React.FC = () => {
 function AppContent() {
   const [isBannerOpen, setIsBannerOpen] = useState(false);
   const [isGuestModalOpen, setIsGuestModalOpen] = useState(false);
+  const [showIntroOverlay, setShowIntroOverlay] = useState(false);
 
   // Initialize analytics tracking
   useEffect(() => {
@@ -1187,20 +1233,47 @@ function AppContent() {
     }
   }, []);
 
+  // Show intro overlay only on first visit
   useEffect(() => {
-    const guestSignedUp = localStorage.getItem('iconic_guest_signed_up');
-    const guestDismissed = sessionStorage.getItem('iconic_guest_dismissed');
-    
-    if (!guestSignedUp && !guestDismissed) {
-        const timer = setTimeout(() => setIsGuestModalOpen(true), 4000);
-        return () => clearTimeout(timer);
+    const introSeen = localStorage.getItem('iconic_intro_seen');
+    if (!introSeen) {
+      setShowIntroOverlay(true);
     }
   }, []);
+
+  // Exit-intent logic for guest modal (only when intro is not showing)
+  useEffect(() => {
+    if (showIntroOverlay) return;
+
+    const guestSignedUp = localStorage.getItem('iconic_guest_signed_up');
+    const guestDismissed = sessionStorage.getItem('iconic_guest_dismissed');
+    if (guestSignedUp || guestDismissed) return;
+
+    const handleMouseLeave = (event: MouseEvent) => {
+      if (event.clientY <= 0) {
+        setIsGuestModalOpen(true);
+        window.removeEventListener('mouseout', handleMouseLeave);
+      }
+    };
+
+    window.addEventListener('mouseout', handleMouseLeave);
+    return () => {
+      window.removeEventListener('mouseout', handleMouseLeave);
+    };
+  }, [showIntroOverlay]);
 
   return (
     <div className="flex flex-col min-h-screen relative overflow-x-hidden bg-white">
       <AnimatedBackground />
       <CursorSpotlight />
+      {showIntroOverlay && (
+        <IntroOverlay
+          onEnter={() => {
+            localStorage.setItem('iconic_intro_seen', 'true');
+            setShowIntroOverlay(false);
+          }}
+        />
+      )}
       <NewsletterToast isOpen={isBannerOpen} onClose={() => setIsBannerOpen(false)} />
       {isGuestModalOpen && <GuestInvitationModal onClose={() => setIsGuestModalOpen(false)} />}
       <Header isBannerOpen={isBannerOpen} />

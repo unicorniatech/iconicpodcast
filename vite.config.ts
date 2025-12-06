@@ -44,6 +44,10 @@ export default defineConfig(({ mode }) => {
           routes: [...staticRoutes, ...episodeRoutes],
         }),
       ],
+      build: {
+        // Increase default 500 KiB warning threshold to reduce noisy warnings in CI/hosting logs
+        chunkSizeWarningLimit: 1500,
+      },
       // NOTE: API keys are NO LONGER injected into the frontend bundle
       // All sensitive keys (GEMINI_API_KEY) must be accessed server-side only
       // Use VITE_* prefixed env vars for public config only
