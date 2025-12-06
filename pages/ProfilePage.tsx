@@ -21,6 +21,8 @@ export const ProfilePage: React.FC = () => {
   const [bio, setBio] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
@@ -78,6 +80,76 @@ export const ProfilePage: React.FC = () => {
     back: '← Back',
   };
 
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+    if (!isSupabaseConfigured()) {
+      const appError = createAppError(
+        new Error('Supabase is not configured'),
+        'SUPABASE_NOT_CONFIGURED',
+        { action: 'uploadAvatar' }
+      );
+      logError(appError);
+      setError(appError.message || t.error);
+      return;
+    }
+
+    setError(null);
+    setIsUploadingAvatar(true);
+
+    try {
+      const fileExt = file.name.split('.').pop();
+      const filePath = `${user.id}-${Date.now()}.${fileExt || 'png'}`;
+
+      const { error: uploadError } = await (supabase as any).storage
+        .from('avatars')
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: true,
+        });
+
+      if (uploadError) {
+        const appError = createAppError(uploadError, 'SUPABASE_ERROR', { action: 'uploadAvatar' });
+        logError(appError);
+        const friendly = getErrorMessage(appError.code, lang) || t.error;
+        setError(friendly);
+        return;
+      }
+
+      const { data: publicUrlData } = (supabase as any).storage
+        .from('avatars')
+        .getPublicUrl(filePath);
+
+      const publicUrl = publicUrlData?.publicUrl || null;
+      setAvatarUrl(publicUrl);
+
+      const { error: profileError } = await (supabase as any)
+        .from('user_profiles')
+        .upsert({
+          id: user.id,
+          display_name: displayName || user.email?.split('@')[0] || 'User',
+          bio: bio,
+          avatar_url: publicUrl,
+          updated_at: new Date().toISOString(),
+        });
+
+      if (profileError) {
+        const appError = createAppError(profileError, 'SUPABASE_ERROR', { action: 'saveAvatarProfile' });
+        logError(appError);
+        const friendly = getErrorMessage(appError.code, lang) || t.error;
+        setError(friendly);
+      }
+    } catch (err) {
+      const appError = createAppError(err, 'SUPABASE_ERROR', { action: 'uploadAvatar' });
+      logError(appError);
+      const friendly = getErrorMessage(appError.code, lang) || t.error;
+      setError(friendly);
+    } finally {
+      setIsUploadingAvatar(false);
+      e.target.value = '';
+    }
+  };
+
   useEffect(() => {
     if (!user) {
       navigate('/login');
@@ -103,6 +175,7 @@ export const ProfilePage: React.FC = () => {
       if (data) {
         setDisplayName(data.display_name || '');
         setBio(data.bio || '');
+        setAvatarUrl(data.avatar_url || null);
       } else if (error && error.code !== 'PGRST116') {
         // PGRST116 = no rows returned, which is fine for new users
         logError(createAppError(error, 'SUPABASE_ERROR', { action: 'fetchProfile', page: 'profile' }));
@@ -139,6 +212,7 @@ export const ProfilePage: React.FC = () => {
           id: user.id,
           display_name: displayName || user.email?.split('@')[0] || 'User',
           bio: bio,
+          avatar_url: avatarUrl,
           updated_at: new Date().toISOString(),
         });
 
@@ -188,11 +262,33 @@ export const ProfilePage: React.FC = () => {
             
             {/* Avatar */}
             <div className="relative inline-block">
-              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-iconic-pink/20 flex items-center justify-center border-4 border-white/20 mx-auto">
-                <span className="text-3xl sm:text-4xl font-bold text-white">
-                  {displayName?.charAt(0).toUpperCase() || user.email?.charAt(0).toUpperCase() || '?'}
-                </span>
+              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-iconic-pink/20 flex items-center justify-center border-4 border-white/20 mx-auto overflow-hidden">
+                {avatarUrl ? (
+                  <img
+                    src={avatarUrl}
+                    alt="User avatar"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span className="text-3xl sm:text-4xl font-bold text-white">
+                    {displayName?.charAt(0).toUpperCase() || user.email?.charAt(0).toUpperCase() || '?'}
+                  </span>
+                )}
               </div>
+              <label
+                htmlFor="avatar-upload"
+                className="absolute -bottom-2 -right-2 w-9 h-9 rounded-full bg-iconic-pink flex items-center justify-center border-2 border-white text-white cursor-pointer hover:bg-pink-600 transition-colors shadow-lg"
+              >
+                <Camera size={16} />
+              </label>
+              <input
+                id="avatar-upload"
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleAvatarChange}
+                disabled={isUploadingAvatar || isSaving}
+              />
             </div>
             
             <h1 id="profile-heading" className="text-xl sm:text-2xl font-bold text-white mt-4">{t.title}</h1>

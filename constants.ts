@@ -3,7 +3,7 @@ import { PodcastEpisode, Translation, Language } from './types';
 
 export const SITE_URL = 'https://iconic-podcast.com';
 
-export const ZUZZI_HERO_IMAGE = "/mainhero.jpg"; 
+export const ZUZZI_HERO_IMAGE = "/mainhero.webp"; 
 
 export const TRANSLATIONS: Record<Language, Translation> = {
   'cs-CZ': {
@@ -262,7 +262,7 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
     },
     duration: '47 min',
     date: '2024-11-04',
-    imageUrl: '/ep11.jpg',
+    imageUrl: '/ep11.webp',
     videoUrl: 'q56HTl3R1n4',
     tags: ['Business', 'Lifestyle', 'Jiri Cernota', 'Jiri', 'Cernota', 'BEWIT', 'byznys', 'business', 'empresa', 'emprendimiento'],
     platformLinks: { 
@@ -282,7 +282,7 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
     },
     duration: '32 min',
     date: '2024-12-03',
-    imageUrl: '/ep15.jpg',
+    imageUrl: '/ep15.webp',
     videoUrl: 'sCIGYzgfXNA',
     tags: ['Lifestyle', 'Mindset', 'Tereza Vesela', 'Tereza', 'Matcast', 'rodicovstvi', 'parenting', 'maternidad', 'emociones'],
     platformLinks: { 
@@ -302,7 +302,7 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
     },
     duration: '45 min',
     date: '2024-11-26',
-    imageUrl: '/ep14.jpg',
+    imageUrl: '/ep14.webp',
     videoUrl: 'aabzcOd88H8',
     tags: ['Mindset', 'Lifestyle', 'Josef Joska Salek', 'Josef', 'Joska', 'Salek', 'longevity', 'dlouhovekost', 'longividad', 'mindset'],
     platformLinks: { 
@@ -322,7 +322,7 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
     },
     duration: '93 min',
     date: '2024-11-18',
-    imageUrl: '/ep13.jpg',
+    imageUrl: '/ep13.webp',
     videoUrl: 'GfSEf8PSbno',
     tags: ['Mindset', 'Lifestyle'],
     platformLinks: { 
@@ -342,7 +342,7 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
     },
     duration: '38 min',
     date: '2024-11-11',
-    imageUrl: '/ep12.jpg',
+    imageUrl: '/ep12.webp',
     videoUrl: 'uuLGEwd7n9s',
     tags: ['Mindset', 'Lifestyle'],
     platformLinks: { 
@@ -362,7 +362,7 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
     },
     duration: '45 min',
     date: '2024-10-28',
-    imageUrl: '/ep10.jpg',
+    imageUrl: '/ep10.webp',
     videoUrl: 'N-NK0fPKzE8',
     tags: ['Mindset', 'Lifestyle'],
     platformLinks: { 
@@ -382,7 +382,7 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
     },
     duration: '45 min',
     date: '2024-10-21',
-    imageUrl: '/ep09.jpg',
+    imageUrl: '/ep09.webp',
     videoUrl: 'vAphua6yLak',
     tags: ['Mindset', 'Lifestyle'],
     platformLinks: { 
@@ -402,7 +402,7 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
     },
     duration: '42 min',
     date: '2024-10-14',
-    imageUrl: '/ep08.jpg',
+    imageUrl: '/ep08.webp',
     videoUrl: '6D8j2PTK9Ls',
     tags: ['Business', 'Lifestyle'],
     platformLinks: { 
@@ -422,7 +422,7 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
     },
     duration: '48 min',
     date: '2024-10-07',
-    imageUrl: '/ep07.jpg',
+    imageUrl: '/ep07.webp',
     videoUrl: '6mq80ttk-80',
     tags: ['Mindset', 'Lifestyle'],
     platformLinks: { 
@@ -442,7 +442,7 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
     },
     duration: '52 min',
     date: '2024-09-30',
-    imageUrl: '/ep06.jpg',
+    imageUrl: '/ep06.webp',
     videoUrl: 'JnXjnL1VmGE',
     tags: ['Mindset', 'Lifestyle'],
     platformLinks: { 
@@ -462,7 +462,7 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
     },
     duration: '50 min',
     date: '2024-09-23',
-    imageUrl: '/ep05.jpg',
+    imageUrl: '/ep05.webp',
     videoUrl: 'erztWsFfKr4',
     tags: ['Mindset', 'Lifestyle'],
     platformLinks: { 
@@ -482,7 +482,7 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
     },
     duration: '55 min',
     date: '2024-09-16',
-    imageUrl: '/ep04.jpg',
+    imageUrl: '/ep04.webp',
     videoUrl: 'cJvSbLb1288',
     tags: ['Business', 'Finance', 'Tomas Suchomel', 'Tomas', 'Suchomel', 'firma', 'company', 'empresa', 'team', 'equipo'],
     platformLinks: { 
@@ -502,7 +502,7 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
     },
     duration: '48 min',
     date: '2024-09-09',
-    imageUrl: '/ep03.jpg',
+    imageUrl: '/ep03.webp',
     videoUrl: 'jxtFGL8DzWY',
     tags: ['Lifestyle', 'Mindset'],
     platformLinks: { 
@@ -522,7 +522,7 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
     },
     duration: '52 min',
     date: '2024-09-02',
-    imageUrl: '/ep02.jpg',
+    imageUrl: '/ep02.webp',
     videoUrl: '08CmroVRQc0',
     tags: ['Lifestyle', 'Business', 'Matous Vins', 'Matous', 'Vins', 'longevity', 'longividad', 'zivot naplno', 'vida plena'],
     platformLinks: { 
@@ -542,7 +542,7 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
     },
     duration: '45 min',
     date: '2024-08-26',
-    imageUrl: '/ep01.jpg',
+    imageUrl: '/ep01.webp',
     videoUrl: 'flfqIvAVHwA',
     tags: ['Lifestyle', 'Business'],
     platformLinks: { 
