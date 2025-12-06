@@ -8,7 +8,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase, isSupabaseConfigured } from '../services/supabaseClient';
-import { logError, createAppError } from '../services/errorService';
+import { logError, createAppError, getErrorMessage } from '../services/errorService';
 import { User, Mail, Camera, LogOut, Save, AlertCircle, CheckCircle } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 
@@ -145,7 +145,8 @@ export const ProfilePage: React.FC = () => {
       if (error) {
         const appError = createAppError(error, 'SUPABASE_ERROR', { action: 'saveProfile' });
         logError(appError);
-        setError(appError.message || t.error);
+        const friendly = getErrorMessage(appError.code, lang) || t.error;
+        setError(friendly);
       } else {
         setSuccess(t.success);
         setTimeout(() => setSuccess(null), 3000);
@@ -153,7 +154,8 @@ export const ProfilePage: React.FC = () => {
     } catch (err) {
       const appError = createAppError(err, 'SUPABASE_ERROR', { action: 'saveProfile' });
       logError(appError);
-      setError(appError.message || t.error);
+      const friendly = getErrorMessage(appError.code, lang) || t.error;
+      setError(friendly);
     } finally {
       setIsSaving(false);
     }
