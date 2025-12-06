@@ -33,6 +33,8 @@ import { AnalyticsDashboard } from './pages/AnalyticsDashboard';
 import { YouTubeLandingPage, InstagramLandingPage, SocialLandingPage } from './pages/LandingPage';
 import { FAQPage } from './pages/FAQPage';
 import { PodcastToolsPage } from './pages/PodcastToolsPage';
+import PodcastGuestDetailPage from './pages/PodcastGuestDetailPage';
+import EpisodePlanDetailPage from './pages/EpisodePlanDetailPage';
 
 // Services & Data
 import { TRANSLATIONS, PODCAST_EPISODES, PRICING_PLANS } from './constants';
@@ -1202,6 +1204,16 @@ function AppContent() {
           <Route path="/crm/podcast-tools" element={
             <AuthGuard requireAdmin fallbackPath="/login">
               <PodcastToolsPage />
+            </AuthGuard>
+          } />
+          <Route path="/crm/podcast-tools/guests/:id" element={
+            <AuthGuard requireAdmin fallbackPath="/login">
+              <PodcastGuestDetailPage />
+            </AuthGuard>
+          } />
+          <Route path="/crm/podcast-tools/episodes/:id" element={
+            <AuthGuard requireAdmin fallbackPath="/login">
+              <EpisodePlanDetailPage />
             </AuthGuard>
           } />
           {/* Legacy podcast tools path - redirect to new tools page */}

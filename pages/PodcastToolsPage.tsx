@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { CalendarDays, UserPlus, FileText, Plus, Trash2, Edit2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { PodcastGuest, EpisodePlan, EpisodePlanStatus, getGuests, getEpisodePlans, upsertGuest, upsertEpisodePlan, deleteGuest, deleteEpisodePlan } from '../services/podcastToolsService';
 
@@ -208,7 +209,12 @@ export const PodcastToolsPage: React.FC = () => {
                     className="flex items-start justify-between gap-2 border border-gray-400 rounded-xl px-3 py-2 text-xs bg-white"
                   >
                     <div>
-                      <div className="font-semibold text-iconic-black">{g.full_name}</div>
+                      <Link
+                        to={`/crm/podcast-tools/guests/${g.id}`}
+                        className="font-semibold text-iconic-black hover:text-iconic-pink"
+                      >
+                        {g.full_name}
+                      </Link>
                       {g.expertise && <div className="text-gray-700">{g.expertise}</div>}
                       {g.email && <div className="text-gray-700">{g.email}</div>}
                       {g.instagram_handle && <div className="text-gray-600">@{g.instagram_handle}</div>}
@@ -320,7 +326,12 @@ export const PodcastToolsPage: React.FC = () => {
                     className="border border-gray-400 rounded-xl px-3 py-2 text-xs flex items-start justify-between gap-2 bg-white"
                   >
                     <div>
-                      <div className="font-semibold text-iconic-black">{p.title}</div>
+                      <Link
+                        to={`/crm/podcast-tools/episodes/${p.id}`}
+                        className="font-semibold text-iconic-black hover:text-iconic-pink"
+                      >
+                        {p.title}
+                      </Link>
                       <div className="text-gray-700 flex gap-2">
                         <span>{t.status}: {p.status}</span>
                         {p.planned_date && <span>{t.date}: {p.planned_date}</span>}
