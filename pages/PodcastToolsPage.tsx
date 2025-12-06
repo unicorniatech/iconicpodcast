@@ -149,10 +149,10 @@ export const PodcastToolsPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-3xl shadow-lg border border-gray-200 p-4 sm:p-6">
+        <div className="bg-white rounded-3xl shadow-xl border border-gray-300 p-4 sm:p-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Guests column */}
-            <div className="bg-white rounded-2xl shadow-md border border-gray-300 p-4 sm:p-6">
+            <div className="bg-white rounded-2xl shadow-md border border-gray-400 p-4 sm:p-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="flex items-center gap-2 font-semibold text-iconic-black">
                   <UserPlus size={18} /> {t.guests}
@@ -161,7 +161,7 @@ export const PodcastToolsPage: React.FC = () => {
 
               <form onSubmit={handleSaveGuest} className="space-y-2 mb-4">
                 <input
-                  className="w-full px-3 py-2 border rounded-lg text-sm"
+                  className="w-full px-3 py-2 border border-gray-400 rounded-lg text-sm bg-white text-gray-900 placeholder-gray-400"
                   placeholder={t.name}
                   value={guestForm.full_name || ''}
                   onChange={(e) => setGuestForm({ ...guestForm, full_name: e.target.value })}
@@ -185,7 +185,7 @@ export const PodcastToolsPage: React.FC = () => {
                   onChange={(e) => setGuestForm({ ...guestForm, expertise: e.target.value })}
                 />
                 <textarea
-                  className="w-full px-3 py-2 border rounded-lg text-sm resize-none"
+                  className="w-full px-3 py-2 border border-gray-400 rounded-lg text-sm resize-none bg-white text-gray-900 placeholder-gray-400"
                   rows={2}
                   placeholder={t.notes}
                   value={guestForm.notes || ''}
@@ -203,7 +203,7 @@ export const PodcastToolsPage: React.FC = () => {
                 {guests.map((g) => (
                   <div
                     key={g.id}
-                    className="flex items-start justify-between gap-2 border border-gray-200 rounded-xl px-3 py-2 text-xs bg-white"
+                    className="flex items-start justify-between gap-2 border border-gray-400 rounded-xl px-3 py-2 text-xs bg-white"
                   >
                     <div>
                       <div className="font-semibold text-iconic-black">{g.full_name}</div>
@@ -237,7 +237,7 @@ export const PodcastToolsPage: React.FC = () => {
             </div>
 
             {/* Episode planner column */}
-            <div className="bg-white rounded-2xl shadow-md border border-gray-300 p-4 sm:p-6">
+            <div className="bg-white rounded-2xl shadow-md border border-gray-400 p-4 sm:p-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="flex items-center gap-2 font-semibold text-iconic-black">
                   <FileText size={18} /> {t.episodes}
@@ -253,7 +253,7 @@ export const PodcastToolsPage: React.FC = () => {
                 />
                 <div className="flex gap-2">
                   <select
-                    className="w-1/2 px-3 py-2 border rounded-lg text-sm"
+                    className="w-1/2 px-3 py-2 border border-gray-400 rounded-lg text-sm bg-white text-gray-900"
                     value={planForm.status || 'idea'}
                     onChange={(e) => setPlanForm({ ...planForm, status: e.target.value as EpisodePlanStatus })}
                   >
@@ -264,7 +264,7 @@ export const PodcastToolsPage: React.FC = () => {
                   </select>
                   <input
                     type="date"
-                    className="w-1/2 px-3 py-2 border rounded-lg text-sm"
+                    className="w-1/2 px-3 py-2 border border-gray-400 rounded-lg text-sm bg-white text-gray-900"
                     value={planForm.planned_date || ''}
                     onChange={(e) => setPlanForm({ ...planForm, planned_date: e.target.value })}
                   />
@@ -315,7 +315,7 @@ export const PodcastToolsPage: React.FC = () => {
                 {plans.map((p) => (
                   <div
                     key={p.id}
-                    className="border border-gray-200 rounded-xl px-3 py-2 text-xs flex items-start justify-between gap-2 bg-white"
+                    className="border border-gray-400 rounded-xl px-3 py-2 text-xs flex items-start justify-between gap-2 bg-white"
                   >
                     <div>
                       <div className="font-semibold text-iconic-black">{p.title}</div>
