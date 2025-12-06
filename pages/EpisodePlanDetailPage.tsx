@@ -83,8 +83,8 @@ const EpisodePlanDetailPage: React.FC = () => {
   const selectedGuest = plan.guest_id ? guests.find((g) => g.id === plan.guest_id) || null : null;
 
   return (
-    <div className="min-h-screen bg-white pt-32 px-4 pb-12">
-      <div className="max-w-5xl mx-auto bg-white rounded-3xl shadow-lg border border-gray-200 px-5 py-6 sm:px-7 sm:py-7">
+    <div className="min-h-screen bg-gray-100 pt-32 px-4 pb-12">
+      <div className="max-w-5xl mx-auto bg-white rounded-3xl shadow-xl border border-gray-300 px-5 py-6 sm:px-7 sm:py-7">
         <div className="flex items-center justify-between mb-6">
           <div>
             <Link to="/crm/podcast-tools" className="inline-flex items-center text-sm text-gray-500 hover:text-iconic-pink mb-2">
@@ -94,7 +94,7 @@ const EpisodePlanDetailPage: React.FC = () => {
               <FileText size={20} className="text-iconic-pink" />
               {plan.title}
             </h1>
-            <div className="mt-1 text-xs text-gray-700 flex gap-3">
+            <div className="mt-2 text-xs text-gray-800 flex gap-4">
               <span className="font-medium">Status: <span className="font-normal">{plan.status}</span></span>
               {plan.planned_date && (
                 <span className="flex items-center gap-1">
@@ -113,12 +113,12 @@ const EpisodePlanDetailPage: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-1 bg-white rounded-2xl shadow-md border border-gray-300 p-4">
+          <div className="lg:col-span-1 bg-white rounded-2xl shadow-md border border-gray-400 p-4">
             <h2 className="font-semibold text-iconic-black mb-3 flex items-center gap-2">
               <UserPlus size={16} /> {t.guest_label}
             </h2>
             <select
-              className="w-full px-3 py-2 border border-gray-400 rounded-lg text-sm bg-white text-gray-900 mb-3 focus:outline-none focus:ring-2 focus:ring-iconic-pink/40 focus:border-iconic-pink/60"
+              className="w-full px-3 py-2 border border-gray-500 rounded-lg text-sm bg-white text-gray-900 mb-3 focus:outline-none focus:ring-2 focus:ring-iconic-pink/60 focus:border-iconic-pink"
               value={plan.guest_id || ''}
               onChange={(e) => handleUpdate({ guest_id: e.target.value || null })}
             >
@@ -130,7 +130,7 @@ const EpisodePlanDetailPage: React.FC = () => {
               ))}
             </select>
             {selectedGuest && (
-              <div className="text-sm text-gray-800 space-y-1">
+              <div className="text-sm text-gray-900 space-y-1">
                 <div className="font-semibold">{selectedGuest.full_name}</div>
                 {selectedGuest.email && (
                   <a
@@ -141,7 +141,7 @@ const EpisodePlanDetailPage: React.FC = () => {
                   </a>
                 )}
                 {selectedGuest.instagram_handle && (
-                  <div>
+                  <div className="text-gray-700">
                     @{selectedGuest.instagram_handle}
                   </div>
                 )}
@@ -149,20 +149,20 @@ const EpisodePlanDetailPage: React.FC = () => {
             )}
           </div>
 
-          <div className="lg:col-span-2 bg-white rounded-2xl shadow-md border border-gray-300 p-4 space-y-4">
+          <div className="lg:col-span-2 bg-white rounded-2xl shadow-md border border-gray-400 p-4 space-y-5">
             <div>
-              <div className="text-xs uppercase tracking-wide text-gray-600 mb-1">{t.outline}</div>
+              <div className="text-xs font-semibold uppercase tracking-wide text-gray-700 mb-1">{t.outline}</div>
               <textarea
-                className="w-full px-3 py-2 border border-gray-400 rounded-lg text-sm resize-none bg-white text-gray-900 min-h-[120px] focus:outline-none focus:ring-2 focus:ring-iconic-pink/40 focus:border-iconic-pink/60"
+                className="w-full px-3 py-2 border border-gray-500 rounded-lg text-sm resize-none bg-white text-gray-900 min-h-[120px] focus:outline-none focus:ring-2 focus:ring-iconic-pink/60 focus:border-iconic-pink"
                 value={plan.outline || ''}
                 onChange={(e) => handleUpdate({ outline: e.target.value })}
               />
             </div>
 
             <div>
-              <div className="text-xs uppercase tracking-wide text-gray-600 mb-1">{t.resources}</div>
+              <div className="text-xs font-semibold uppercase tracking-wide text-gray-700 mb-1">{t.resources}</div>
               <textarea
-                className="w-full px-3 py-2 border border-gray-400 rounded-lg text-sm resize-none bg-white text-gray-900 min-h-[100px] focus:outline-none focus:ring-2 focus:ring-iconic-pink/40 focus:border-iconic-pink/60"
+                className="w-full px-3 py-2 border border-gray-500 rounded-lg text-sm resize-none bg-white text-gray-900 min-h-[100px] focus:outline-none focus:ring-2 focus:ring-iconic-pink/60 focus:border-iconic-pink"
                 value={(plan.resources || []).map((r) => `${r.label}|${r.url}`).join('\n')}
                 onChange={(e) => {
                   const lines = e.target.value.split(/\n/).map((l) => l.trim()).filter(Boolean);
@@ -174,7 +174,7 @@ const EpisodePlanDetailPage: React.FC = () => {
                 }}
               />
               {plan.resources && plan.resources.length > 0 && (
-                <div className="mt-2 space-y-1 text-xs text-gray-800">
+                <div className="mt-2 space-y-1 text-xs text-gray-900">
                   {plan.resources.map((r, idx) => (
                     <a
                       key={idx}
@@ -191,9 +191,9 @@ const EpisodePlanDetailPage: React.FC = () => {
             </div>
 
             <div>
-              <div className="text-xs uppercase tracking-wide text-gray-600 mb-1">{t.notes}</div>
+              <div className="text-xs font-semibold uppercase tracking-wide text-gray-700 mb-1">{t.notes}</div>
               <textarea
-                className="w-full px-3 py-2 border border-gray-400 rounded-lg text-sm resize-none bg-white text-gray-900 min-h-[100px] focus:outline-none focus:ring-2 focus:ring-iconic-pink/40 focus:border-iconic-pink/60"
+                className="w-full px-3 py-2 border border-gray-500 rounded-lg text-sm resize-none bg-white text-gray-900 min-h-[100px] focus:outline-none focus:ring-2 focus:ring-iconic-pink/60 focus:border-iconic-pink"
                 value={plan.notes || ''}
                 onChange={(e) => handleUpdate({ notes: e.target.value })}
               />
