@@ -137,8 +137,10 @@ export const PodcastToolsPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white pt-32 px-4 pb-12">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-white pt-32 px-4 pb-12 relative">
+      {/* Solid white overlay to kill any global gradients/overlays */}
+      <div className="fixed inset-0 bg-white pointer-events-none -z-10" />
+      <div className="max-w-7xl mx-auto relative z-10">
         <div className="mb-8 flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-gradient-to-br from-iconic-pink to-iconic-blue flex items-center justify-center text-white shadow-md">
             <CalendarDays size={20} />
@@ -152,7 +154,7 @@ export const PodcastToolsPage: React.FC = () => {
         <div className="bg-white rounded-3xl shadow-xl border border-gray-300 p-4 sm:p-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Guests column */}
-            <div className="bg-white rounded-2xl shadow-md border border-gray-400 p-4 sm:p-6">
+            <div className="bg-white rounded-2xl shadow-md border border-gray-500 p-4 sm:p-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="flex items-center gap-2 font-semibold text-iconic-black">
                   <UserPlus size={18} /> {t.guests}
@@ -161,13 +163,13 @@ export const PodcastToolsPage: React.FC = () => {
 
               <form onSubmit={handleSaveGuest} className="space-y-2 mb-4">
                 <input
-                  className="w-full px-3 py-2 border border-gray-400 rounded-lg text-sm bg-white text-gray-900 placeholder-gray-400"
+                  className="w-full px-3 py-2 border border-gray-500 rounded-lg text-sm bg-white text-gray-900 placeholder-gray-400"
                   placeholder={t.name}
                   value={guestForm.full_name || ''}
                   onChange={(e) => setGuestForm({ ...guestForm, full_name: e.target.value })}
                 />
                 <input
-                  className="w-full px-3 py-2 border rounded-lg text-sm"
+                  className="w-full px-3 py-2 border border-gray-500 rounded-lg text-sm bg-white text-gray-900 placeholder-gray-400"
                   placeholder={t.email}
                   value={guestForm.email || ''}
                   onChange={(e) => setGuestForm({ ...guestForm, email: e.target.value })}
@@ -185,7 +187,7 @@ export const PodcastToolsPage: React.FC = () => {
                   onChange={(e) => setGuestForm({ ...guestForm, expertise: e.target.value })}
                 />
                 <textarea
-                  className="w-full px-3 py-2 border border-gray-400 rounded-lg text-sm resize-none bg-white text-gray-900 placeholder-gray-400"
+                  className="w-full px-3 py-2 border border-gray-500 rounded-lg text-sm resize-none bg-white text-gray-900 placeholder-gray-400"
                   rows={2}
                   placeholder={t.notes}
                   value={guestForm.notes || ''}
@@ -264,7 +266,7 @@ export const PodcastToolsPage: React.FC = () => {
                   </select>
                   <input
                     type="date"
-                    className="w-1/2 px-3 py-2 border border-gray-400 rounded-lg text-sm bg-white text-gray-900"
+                    className="w-1/2 px-3 py-2 border border-gray-500 rounded-lg text-sm bg-white text-gray-900"
                     value={planForm.planned_date || ''}
                     onChange={(e) => setPlanForm({ ...planForm, planned_date: e.target.value })}
                   />
@@ -276,7 +278,7 @@ export const PodcastToolsPage: React.FC = () => {
                   onChange={(e) => setPlanForm({ ...planForm, recording_link: e.target.value })}
                 />
                 <textarea
-                  className="w-full px-3 py-2 border rounded-lg text-sm resize-none"
+                  className="w-full px-3 py-2 border border-gray-500 rounded-lg text-sm resize-none bg-white text-gray-900 placeholder-gray-400"
                   rows={3}
                   placeholder={t.outline}
                   value={planForm.outline || ''}
