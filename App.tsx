@@ -241,11 +241,16 @@ const GuestInvitationModal: React.FC<GuestInvitationModalProps> = ({ onClose }) 
 // ============================================================================
 const PodcastCard: React.FC<{ episode: PodcastEpisode }> = ({ episode }) => {
   const { lang } = useLanguage();
-  const summary = episode.summaries?.[lang] || episode.description;
+  const translatedSummary = episode.summaries?.[lang];
+  const summary = translatedSummary || episode.description;
+  const showHelperSummary = lang !== 'cs-CZ' && translatedSummary;
   const [imageLoaded, setImageLoaded] = React.useState(false);
 
   return (
-    <div className="group relative bg-white/70 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden border border-white/50 flex flex-col h-full z-20">
+    <div
+      className="group relative bg-white/70 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden border border-white/50 flex flex-col h-full z-20"
+      title={showHelperSummary || undefined}
+    >
       {/* Subtle gradient glow on hover */}
       <div className="absolute inset-0 bg-gradient-to-br from-iconic-pink/5 via-transparent to-iconic-blue/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl sm:rounded-3xl"></div>
       
@@ -269,9 +274,17 @@ const PodcastCard: React.FC<{ episode: PodcastEpisode }> = ({ episode }) => {
       </div>
       <div className="p-4 sm:p-6 flex-1 flex flex-col relative">
         <div className="text-xs font-bold text-iconic-blue uppercase tracking-wider mb-2">{episode.date} • {episode.duration}</div>
-        <h3 className="text-lg sm:text-xl font-serif font-bold text-iconic-black mb-2 sm:mb-3 group-hover:text-iconic-pink transition-colors line-clamp-2">
+        <h3
+          className="text-lg sm:text-xl font-serif font-bold text-iconic-black mb-1 sm:mb-2 group-hover:text-iconic-pink transition-colors line-clamp-2"
+          title={showHelperSummary || undefined}
+        >
             <Link to={`/episodes/${episode.id}`}>{episode.title}</Link>
         </h3>
+        {showHelperSummary && (
+          <p className="text-xs text-gray-500 mb-1 line-clamp-2">
+            {translatedSummary}
+          </p>
+        )}
         <p className="text-gray-600 text-sm line-clamp-2 sm:line-clamp-3 mb-4 flex-1">{summary}</p>
         <div className="flex gap-4 pt-3 sm:pt-4 border-t border-gray-200/50">
              <a href={episode.platformLinks.youtube} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-red-600 hover:scale-125 transition-all p-1"><Youtube size={22} /></a>
@@ -509,17 +522,31 @@ const EpisodeDetail: React.FC = () => {
                                 {lang === 'cs-CZ' ? 'Související epizody' : lang === 'es-MX' ? 'Episodios relacionados' : 'Related episodes'}
                               </h3>
                               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                {relatedEpisodes.map(rel => (
-                                  <Link key={rel.id} to={`/episodes/${rel.id}`} className="group block bg-white rounded-xl border border-gray-200 p-3 hover:border-iconic-pink hover:shadow-md transition-all">
-                                    <div className="aspect-video rounded-lg overflow-hidden mb-2">
-                                      <img src={rel.imageUrl} alt={rel.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
-                                    </div>
-                                    <div className="text-[11px] uppercase tracking-wide text-gray-400 mb-1">{rel.date}</div>
-                                    <div className="text-sm font-semibold text-iconic-black line-clamp-2 group-hover:text-iconic-pink">
-                                      {rel.title}
-                                    </div>
-                                  </Link>
-                                ))}
+                                {relatedEpisodes.map(rel => {
+                                  const relTranslatedSummary = rel.summaries?.[lang];
+                                  const relShowHelperSummary = lang !== 'cs-CZ' && relTranslatedSummary;
+                                  return (
+                                    <Link
+                                      key={rel.id}
+                                      to={`/episodes/${rel.id}`}
+                                      className="group block bg-white rounded-xl border border-gray-200 p-3 hover:border-iconic-pink hover:shadow-md transition-all"
+                                      title={relShowHelperSummary || undefined}
+                                    >
+                                      <div className="aspect-video rounded-lg overflow-hidden mb-2">
+                                        <img src={rel.imageUrl} alt={rel.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
+                                      </div>
+                                      <div className="text-[11px] uppercase tracking-wide text-gray-400 mb-1">{rel.date}</div>
+                                      <div className="text-sm font-semibold text-iconic-black line-clamp-2 group-hover:text-iconic-pink">
+                                        {rel.title}
+                                      </div>
+                                      {relShowHelperSummary && (
+                                        <div className="text-[11px] text-gray-500 mt-1 line-clamp-2">
+                                          {relTranslatedSummary}
+                                        </div>
+                                      )}
+                                    </Link>
+                                  );
+                                })}
                               </div>
                             </div>
                           </ScrollReveal>

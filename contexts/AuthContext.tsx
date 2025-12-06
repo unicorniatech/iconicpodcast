@@ -8,7 +8,7 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase, isSupabaseConfigured, signIn, signUp, signOut } from '../services/supabaseClient';
-import { logError, createAppError } from '../services/errorService';
+import { logError, createAppError, getErrorMessage } from '../services/errorService';
 
 interface AuthState {
   user: User | null;
@@ -114,40 +114,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (email: string, password: string): Promise<{ error: string | null }> => {
     try {
-      if (!isSupabaseConfigured()) {
-        const appError = createAppError(
-          new Error('Supabase is not configured'),
-          'SUPABASE_NOT_CONFIGURED',
-          { action: 'login' }
-        );
-        logError(appError);
-        return { error: appError.message };
-      }
       await signIn(email, password);
       return { error: null };
     } catch (error) {
       const appError = createAppError(error, 'AUTH_ERROR', { action: 'login' });
       logError(appError);
+      if (appError.code === 'SUPABASE_NOT_CONFIGURED') {
+        const friendly = getErrorMessage('SUPABASE_NOT_CONFIGURED', 'en-US');
+        return { error: friendly };
+      }
       return { error: appError.message };
     }
   };
 
   const register = async (email: string, password: string): Promise<{ error: string | null }> => {
     try {
-      if (!isSupabaseConfigured()) {
-        const appError = createAppError(
-          new Error('Supabase is not configured'),
-          'SUPABASE_NOT_CONFIGURED',
-          { action: 'register' }
-        );
-        logError(appError);
-        return { error: appError.message };
-      }
       await signUp(email, password);
       return { error: null };
     } catch (error) {
       const appError = createAppError(error, 'AUTH_ERROR', { action: 'register' });
       logError(appError);
+      if (appError.code === 'SUPABASE_NOT_CONFIGURED') {
+        const friendly = getErrorMessage('SUPABASE_NOT_CONFIGURED', 'en-US');
+        return { error: friendly };
+      }
       return { error: appError.message };
     }
   };

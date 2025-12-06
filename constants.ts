@@ -1,6 +1,8 @@
 
 import { PodcastEpisode, Translation, Language } from './types';
 
+export const SITE_URL = 'https://iconic-podcast.com';
+
 export const ZUZZI_HERO_IMAGE = "/mainhero.jpg"; 
 
 export const TRANSLATIONS: Record<Language, Translation> = {

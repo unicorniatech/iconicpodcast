@@ -7,6 +7,7 @@
 
 import React, { useEffect } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { SITE_URL } from '../../constants';
 
 interface SEOHeadProps {
   title?: string;
@@ -28,8 +29,7 @@ interface SEOHeadProps {
 const SITE_NAME = 'ICONIC Podcast by Zuzzi Mentor';
 const DEFAULT_TITLE = 'ICONIC Podcast | Buď svá, buď ikonická';
 const DEFAULT_DESCRIPTION = 'Podcast pro ženy, které chtějí víc. Business, mindset a lifestyle bez kompromisů. Zuzana Husarová ti ukáže, jak být svá a ikonická.';
-const DEFAULT_IMAGE = 'https://iconic-podcast.com/og-image.jpg'; // Replace with actual OG image
-const SITE_URL = 'https://iconic-podcast.com';
+const DEFAULT_IMAGE = `${SITE_URL}/og-image.jpg`; // Replace with actual OG image
 const TWITTER_HANDLE = '@zuzzimentor';
 
 export const SEOHead: React.FC<SEOHeadProps> = ({
