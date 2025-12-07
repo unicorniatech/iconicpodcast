@@ -154,27 +154,46 @@ const IntroOverlay: React.FC<IntroOverlayProps> = ({ onEnter }) => {
 
   return (
     <div className="fixed inset-0 z-[80] flex items-center justify-center bg-black">
-      <div className="absolute inset-0">
+      {/* Soft blurred background using the video */}
+      <div className="absolute inset-0 overflow-hidden">
         <video
           src="/intro-animation.mp4"
           autoPlay
           muted
           playsInline
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover opacity-40"
           onEnded={() => setShowButton(true)}
         />
-        <div className="absolute inset-0 bg-black/40" />
+        <div className="absolute inset-0 bg-gradient-to-br from-iconic-black/80 via-black/70 to-iconic-black/90" />
       </div>
-      {showButton && (
-        <div className="relative z-10 flex flex-col items-center gap-6 px-4 text-center animate-fade-in-up">
-          <button
-            onClick={onEnter}
-            className="px-10 py-3 rounded-full bg-iconic-pink text-white font-semibold text-lg tracking-wide shadow-xl hover:bg-pink-600 transition-colors border border-iconic-pink/70"
-          >
-            {buttonLabel}
-          </button>
+
+      {/* Centered framed card with video and button */}
+      <div className="relative z-10 w-full px-4 sm:px-6 flex justify-center">
+        <div className="w-full max-w-md sm:max-w-xl md:max-w-2xl bg-black/40 border border-white/20 rounded-3xl shadow-[0_0_60px_rgba(0,0,0,0.8)] backdrop-blur-xl p-3 sm:p-4 md:p-6 flex flex-col items-center">
+          <div className="w-full rounded-2xl overflow-hidden border border-white/25 shadow-2xl bg-black">
+            <div className="relative w-full" style={{ paddingTop: '56.25%' }}>
+              <video
+                src="/intro-animation.mp4"
+                autoPlay
+                muted
+                playsInline
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            </div>
+          </div>
+
+          {showButton && (
+            <div className="mt-6 sm:mt-8 w-full flex justify-center animate-fade-in-up">
+              <button
+                onClick={onEnter}
+                className="px-8 sm:px-12 py-3 sm:py-3.5 rounded-full bg-iconic-pink text-white font-semibold text-base sm:text-lg tracking-wide shadow-xl hover:bg-pink-600 transition-colors border border-iconic-pink/70"
+              >
+                {buttonLabel}
+              </button>
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 };
