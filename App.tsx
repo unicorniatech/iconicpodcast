@@ -182,12 +182,12 @@ const GuestInvitationModal: React.FC<GuestInvitationModalProps> = ({ onClose }) 
   return (
     <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 sm:p-6">
        {/* Animated gradient background */}
-       <div className="absolute inset-0 bg-gradient-to-br from-iconic-pink via-iconic-blue/80 to-iconic-black bg-[length:300%_300%] animate-gradient-slow opacity-95"></div>
+       <div className="absolute inset-0 bg-gradient-to-br from-iconic-pink via-fuchsia-600/70 to-iconic-black bg-[length:300%_300%] animate-gradient-slow opacity-95"></div>
        <div className="absolute inset-0 bg-black/30 backdrop-blur-sm"></div>
        
        {/* Floating orbs */}
-       <div className="absolute top-1/4 left-1/4 w-48 sm:w-64 h-48 sm:h-64 bg-iconic-pink rounded-full blur-[80px] sm:blur-[100px] animate-blob opacity-50"></div>
-       <div className="absolute bottom-1/4 right-1/4 w-48 sm:w-64 h-48 sm:h-64 bg-iconic-blue rounded-full blur-[80px] sm:blur-[100px] animate-blob animation-delay-2000 opacity-50"></div>
+       <div className="absolute top-1/4 left-1/4 w-48 sm:w-64 h-48 sm:h-64 bg-iconic-pink rounded-full blur-[80px] sm:blur-[100px] animate-blob opacity-60"></div>
+       <div className="absolute bottom-1/4 right-1/4 w-48 sm:w-64 h-48 sm:h-64 bg-fuchsia-500 rounded-full blur-[80px] sm:blur-[100px] animate-blob animation-delay-2000 opacity-50"></div>
 
        {/* Modal container - full screen on mobile */}
        <div className="relative bg-white/10 backdrop-blur-2xl sm:rounded-3xl shadow-[0_0_50px_rgba(0,0,0,0.5)] border-0 sm:border border-white/20 w-full h-full sm:h-auto sm:max-w-md overflow-y-auto sm:overflow-hidden animate-fade-in-up flex flex-col">
@@ -207,7 +207,7 @@ const GuestInvitationModal: React.FC<GuestInvitationModalProps> = ({ onClose }) 
                    </div>
                ) : (
                    <>
-                       <div className="w-16 sm:w-20 h-16 sm:h-20 bg-gradient-to-br from-iconic-pink to-iconic-blue rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-lg border border-white/20">
+                       <div className="w-16 sm:w-20 h-16 sm:h-20 bg-gradient-to-br from-iconic-pink to-fuchsia-500 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-lg border border-white/20">
                            <Mic size={28} className="sm:w-9 sm:h-9 text-white drop-shadow-md" />
                        </div>
                        <h2 className="text-2xl sm:text-3xl font-serif font-black mb-3 sm:mb-4 leading-tight drop-shadow-sm">{t.guest_modal_title}</h2>
@@ -226,7 +226,7 @@ const GuestInvitationModal: React.FC<GuestInvitationModalProps> = ({ onClose }) 
                                <label className="text-[10px] font-bold text-white/70 uppercase tracking-widest pl-1">Tvá Vize</label>
                                <textarea required name="vision" rows={2} className="w-full p-3 sm:p-3.5 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/40 focus:outline-none focus:bg-white/15 focus:border-iconic-pink transition-all resize-none text-base"></textarea>
                            </div>
-                           <button type="submit" disabled={isSubmitting} className="w-full bg-gradient-to-r from-iconic-pink to-iconic-blue text-white font-bold py-4 rounded-xl hover:shadow-[0_0_20px_rgba(183,6,109,0.6)] active:scale-[0.98] transition-all transform mt-2 border border-white/20 disabled:opacity-50 text-base">
+                           <button type="submit" disabled={isSubmitting} className="w-full bg-gradient-to-r from-iconic-pink via-fuchsia-500 to-purple-600 text-white font-bold py-4 rounded-xl hover:shadow-[0_0_20px_rgba(183,6,109,0.6)] active:scale-[0.98] transition-all transform mt-2 border border-white/20 disabled:opacity-50 text-base">
                                {isSubmitting ? '...' : t.guest_modal_btn}
                            </button>
                        </form>
@@ -381,7 +381,7 @@ const EpisodeList: React.FC = () => {
     loadEpisodes();
   }, []);
 
-  const sourceEpisodes = episodes || PODCAST_EPISODES;
+  const sourceEpisodes = !episodes || episodes.length === 0 ? PODCAST_EPISODES : episodes;
 
   const sortedEpisodes = [...sourceEpisodes].sort((a, b) => {
     const dateA = new Date(a.date).getTime();

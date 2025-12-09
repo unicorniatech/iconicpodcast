@@ -14,6 +14,7 @@ interface Comment {
   parent_id: string | null;
   content: string;
   is_edited: boolean;
+  is_hidden: boolean;
   created_at: string;
   user_profile?: {
     display_name: string;
@@ -39,6 +40,7 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
   const [editContent, setEditContent] = useState('');
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [commentError, setCommentError] = useState<string | null>(null);
 
   const t = {
     'cs-CZ': {
@@ -89,7 +91,6 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
     setLoading(true);
     
     try {
-      // Fetch all comments for this episode in one query
       const { data: allComments, error } = await db
         .from('comments')
         .select('*')
@@ -107,9 +108,10 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
         return;
       }
 
-      // Separate parent comments and replies
-      const parentComments = allComments.filter((c: any) => !c.parent_id);
-      const replies = allComments.filter((c: any) => c.parent_id);
+      const visibleComments = allComments.filter((c: any) => !c.is_hidden);
+
+      const parentComments = visibleComments.filter((c: any) => !c.parent_id);
+      const replies = visibleComments.filter((c: any) => c.parent_id);
 
       // Get unique user IDs to batch fetch profiles
       const userIds = [...new Set(allComments.map((c: any) => c.user_id))];
@@ -206,18 +208,42 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
 
     setSubmitting(true);
     try {
-      const { error } = await db.from('comments').insert({
-        episode_id: episodeId,
-        user_id: user.id,
-        content: newComment.trim(),
-      });
+      const { data, error } = await db
+        .from('comments')
+        .insert({
+          episode_id: episodeId,
+          user_id: user.id,
+          content: newComment.trim(),
+        })
+        .select('*')
+        .single();
 
       if (error) throw error;
 
+      if (data) {
+        const newCommentObj: Comment = {
+          ...(data as Comment),
+          user_profile: {
+            display_name: user.email?.split('@')[0] || 'You',
+            avatar_url: null,
+          },
+          like_count: 0,
+          user_liked: false,
+          replies: [],
+        };
+
+        setComments((prev) => [newCommentObj, ...prev]);
+      }
+
       setNewComment('');
-      fetchComments();
     } catch (error) {
       console.error('Error posting comment:', error);
+      setCommentError(
+        lang === 'cs-CZ'
+          ? 'Nepodařilo se odeslat komentář. Zkuste to prosím znovu.'
+          : 'Could not post your comment. Please try again.'
+      );
+      fetchComments();
     } finally {
       setSubmitting(false);
     }
@@ -228,26 +254,68 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
 
     setSubmitting(true);
     try {
-      const { error } = await db.from('comments').insert({
-        episode_id: episodeId,
-        user_id: user.id,
-        parent_id: parentId,
-        content: replyContent.trim(),
-      });
+      const { data, error } = await db
+        .from('comments')
+        .insert({
+          episode_id: episodeId,
+          user_id: user.id,
+          parent_id: parentId,
+          content: replyContent.trim(),
+        })
+        .select('*')
+        .single();
 
       if (error) throw error;
 
+      if (data) {
+        const newReply: Comment = {
+          ...(data as Comment),
+          user_profile: {
+            display_name: user.email?.split('@')[0] || 'You',
+            avatar_url: null,
+          },
+          like_count: 0,
+          user_liked: false,
+          replies: [],
+        };
+
+        setComments((prev) =>
+          prev.map((comment) =>
+            comment.id === parentId
+              ? {
+                  ...comment,
+                  replies: [...(comment.replies || []), newReply],
+                }
+              : comment
+          )
+        );
+      }
+
       setReplyingTo(null);
       setReplyContent('');
-      fetchComments();
     } catch (error) {
       console.error('Error posting reply:', error);
+      setCommentError(
+        lang === 'cs-CZ'
+          ? 'Nepodařilo se odeslat odpověď. Zkuste to prosím znovu.'
+          : 'Could not post your reply. Please try again.'
+      );
+      fetchComments();
     } finally {
       setSubmitting(false);
     }
   };
 
-  const handleEditComment = async (commentId: string) => {
+  const handleEditComment = async (commentId: string, ownerId: string) => {
+    if (!user || user.id !== ownerId) {
+      setCommentError(
+        lang === 'cs-CZ'
+          ? 'Vaše relace vypršela nebo nemáte oprávnění upravit tento komentář.'
+          : 'Your session has expired or you do not have permission to edit this comment.'
+      );
+      return;
+    }
+
     if (!editContent.trim()) return;
 
     try {
@@ -260,14 +328,46 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
 
       setEditingId(null);
       setEditContent('');
-      fetchComments();
+      setComments((prev) =>
+        prev.map((comment) => {
+          if (comment.id === commentId) {
+            return { ...comment, content: editContent.trim(), is_edited: true };
+          }
+          if (comment.replies) {
+            return {
+              ...comment,
+              replies: comment.replies.map((reply) =>
+                reply.id === commentId
+                  ? { ...reply, content: editContent.trim(), is_edited: true }
+                  : reply
+              ),
+            };
+          }
+          return comment;
+        })
+      );
     } catch (error) {
       console.error('Error editing comment:', error);
+      setCommentError(
+        lang === 'cs-CZ'
+          ? 'Nepodařilo se upravit komentář. Zkuste to prosím znovu.'
+          : 'Could not edit the comment. Please try again.'
+      );
+      fetchComments();
     }
   };
 
-  const handleDeleteComment = async (commentId: string) => {
+  const handleDeleteComment = async (commentId: string, ownerId: string) => {
     if (!confirm(lang === 'cs-CZ' ? 'Opravdu chcete smazat tento komentář?' : 'Are you sure you want to delete this comment?')) return;
+
+    if (!user || user.id !== ownerId) {
+      setCommentError(
+        lang === 'cs-CZ'
+          ? 'Vaše relace vypršela nebo nemáte oprávnění smazat tento komentář.'
+          : 'Your session has expired or you do not have permission to delete this comment.'
+      );
+      return;
+    }
 
     try {
       const { error } = await db
@@ -276,10 +376,22 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
         .eq('id', commentId);
 
       if (error) throw error;
-
-      fetchComments();
+      setComments((prev) =>
+        prev
+          .filter((comment) => comment.id !== commentId)
+          .map((comment) => ({
+            ...comment,
+            replies: comment.replies?.filter((reply) => reply.id !== commentId),
+          }))
+      );
     } catch (error) {
       console.error('Error deleting comment:', error);
+      setCommentError(
+        lang === 'cs-CZ'
+          ? 'Nepodařilo se smazat komentář. Zkuste to prosím znovu.'
+          : 'Could not delete the comment. Please try again.'
+      );
+      fetchComments();
     }
   };
 
@@ -326,7 +438,11 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
       }
     } catch (error) {
       console.error('Error toggling like:', error);
-      // Revert on error
+      setCommentError(
+        lang === 'cs-CZ'
+          ? 'Nepodařilo se změnit označení „líbí se mi“. Zkuste to prosím znovu.'
+          : 'Could not update your like. Please try again.'
+      );
       fetchComments();
     }
   };
@@ -400,13 +516,26 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
         <div className="flex items-center gap-2 sm:gap-3 mt-3 ml-1 sm:ml-2 flex-wrap">
           {/* Like Button */}
           <button
-            onClick={() => handleLikeComment(comment.id, comment.user_liked)}
+            onClick={() => {
+              if (!user) {
+                setCommentError(
+                  lang === 'cs-CZ'
+                    ? 'Pro označení komentářů jako „líbí se mi“ se prosím přihlaste.'
+                    : 'Please sign in to like comments.'
+                );
+                window.location.href = '/login';
+                return;
+              }
+              handleLikeComment(comment.id, comment.user_liked);
+            }}
             className={`group flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full border transition-all duration-300 ease-out ${
-              comment.user_liked 
-                ? 'text-iconic-pink bg-iconic-pink/15 border-iconic-pink/30 shadow-sm ring-1 ring-iconic-pink/40' 
+              !user
+                ? 'text-gray-400 bg-gray-50 border-gray-200 hover:text-gray-500'
+                : comment.user_liked
+                ? 'text-iconic-pink bg-iconic-pink/15 border-iconic-pink/30 shadow-sm ring-1 ring-iconic-pink/40'
                 : 'text-gray-500 bg-gray-50 border-gray-200 hover:text-iconic-pink hover:bg-iconic-pink/10 hover:border-iconic-pink/30 hover:shadow-md'
             }`}
-            disabled={!user}
+            title={!user ? (lang === 'cs-CZ' ? 'Přihlaste se pro lajkování komentářů' : 'Sign in to like comments') : undefined}
           >
             <Heart 
               size={15} 
@@ -429,7 +558,14 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
           {/* Reply Button */}
           {user && !isReply && (
             <button
-              onClick={() => { setReplyingTo(comment.id); setReplyContent(''); }}
+              onClick={() => {
+                if (replyingTo && replyingTo !== comment.id) {
+                  setReplyContent('');
+                }
+                setReplyingTo(comment.id);
+                setEditingId(null);
+                setEditContent('');
+              }}
               className="group flex items-center gap-1.5 text-xs font-semibold text-gray-500 bg-gray-50 border border-gray-200 hover:text-iconic-blue hover:bg-iconic-blue/10 hover:border-iconic-blue/30 hover:shadow-md px-3 py-1.5 rounded-full transition-all duration-300 ease-out"
             >
               <MessageCircle 
@@ -444,7 +580,12 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
           {user && user.id === comment.user_id && (
             <>
               <button
-                onClick={() => { setEditingId(comment.id); setEditContent(comment.content); }}
+                onClick={() => {
+                  setReplyingTo(null);
+                  setReplyContent('');
+                  setEditingId(comment.id);
+                  setEditContent(comment.content);
+                }}
                 className="group flex items-center gap-1.5 text-xs font-semibold text-gray-500 bg-gray-50 border border-gray-200 hover:text-amber-600 hover:bg-amber-50 hover:border-amber-200 hover:shadow-md px-3 py-1.5 rounded-full transition-all duration-300 ease-out"
               >
                 <Edit2 
@@ -454,7 +595,7 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
                 <span>{t.edit}</span>
               </button>
               <button
-                onClick={() => handleDeleteComment(comment.id)}
+                onClick={() => handleDeleteComment(comment.id, comment.user_id)}
                 className="group flex items-center gap-1.5 text-xs font-semibold text-gray-500 bg-gray-50 border border-gray-200 hover:text-red-500 hover:bg-red-50 hover:border-red-200 hover:shadow-md px-3 py-1.5 rounded-full transition-all duration-300 ease-out"
               >
                 <Trash2 
@@ -512,6 +653,19 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
         <MessageCircle size={24} className="text-iconic-pink" />
         {t.comments} ({comments.length})
       </h3>
+
+      {commentError && (
+        <div className="mb-4 sm:mb-5 p-3 sm:p-3.5 bg-red-50 border border-red-100 text-red-700 text-xs sm:text-sm rounded-xl flex items-center justify-between gap-3">
+          <span className="flex-1">{commentError}</span>
+          <button
+            type="button"
+            onClick={() => setCommentError(null)}
+            className="text-[11px] sm:text-xs font-semibold text-red-600 hover:text-red-700 hover:underline flex-shrink-0"
+          >
+            {lang === 'cs-CZ' ? 'Zavřít' : 'Dismiss'}
+          </button>
+        </div>
+      )}
 
       {/* Comment input */}
       {user ? (
