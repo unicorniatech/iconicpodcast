@@ -167,8 +167,8 @@ export const Hero: React.FC = () => {
         </div>
       </div>
       
-      {/* Scroll indicator */}
-      <div className={`absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 transition-all duration-700 delay-700 ${mounted ? 'opacity-100' : 'opacity-0'}`}>
+      {/* Scroll indicator - desktop/tablet only to avoid overlapping mobile stats */}
+      <div className={`hidden md:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2 transition-all duration-700 delay-700 ${mounted ? 'opacity-100' : 'opacity-0'}`}>
         <span className="text-white/40 text-xs uppercase tracking-widest">{t.hero_scroll_label}</span>
         <div className="w-6 h-10 border-2 border-white/20 rounded-full flex justify-center pt-2">
           <div className="w-1.5 h-3 bg-white/40 rounded-full animate-bounce"></div>

@@ -37,7 +37,8 @@ export const Header: React.FC<HeaderProps> = ({ isBannerOpen }) => {
 
   useEffect(() => {
     const handleScroll = () => {
-        setScrolled(window.scrollY > 50);
+        // Switch to scrolled style as soon as the user starts scrolling
+        setScrolled(window.scrollY > 0);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
