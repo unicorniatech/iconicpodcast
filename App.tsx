@@ -39,6 +39,8 @@ import EpisodePlanDetailPage from './pages/EpisodePlanDetailPage';
 // Services & Data
 import { TRANSLATIONS, PODCAST_EPISODES, PRICING_PLANS } from './constants';
 import { Lead, PodcastEpisode } from './types';
+import type { Database } from './types/database';
+import supabase, { isSupabaseConfigured } from './services/supabaseClient';
 import { saveLead, getLeads, updateLead, deleteLead, storageService } from './services/storageService';
 import { logError, createAppError } from './services/errorService';
 import { initAnalytics, trackPageView } from './services/analyticsService';
@@ -237,6 +239,31 @@ const GuestInvitationModal: React.FC<GuestInvitationModalProps> = ({ onClose }) 
 };
 
 // ============================================================================
+// Helper: Map DB episode row to PodcastEpisode
+// ============================================================================
+type EpisodeRow = Database['public']['Tables']['episodes']['Row'];
+
+const mapEpisodeRowToPodcastEpisode = (row: EpisodeRow): PodcastEpisode => {
+  return {
+    id: row.id,
+    title: row.title,
+    description: row.description,
+    summaries: undefined,
+    duration: row.duration || '',
+    date: row.published_at,
+    imageUrl: row.image_url,
+    videoUrl: row.video_url || undefined,
+    audioUrl: row.audio_url || undefined,
+    platformLinks: {
+      spotify: row.spotify_url,
+      youtube: row.youtube_url,
+      apple: row.apple_url,
+    },
+    tags: row.tags || [],
+  };
+};
+
+// ============================================================================
 // PODCAST CARD - Glassmorphism Style
 // ============================================================================
 const PodcastCard: React.FC<{ episode: PodcastEpisode }> = ({ episode }) => {
@@ -300,6 +327,8 @@ const PodcastCard: React.FC<{ episode: PodcastEpisode }> = ({ episode }) => {
 // ============================================================================
 const EpisodeList: React.FC = () => {
   const { t } = useLanguage();
+  const [episodes, setEpisodes] = useState<PodcastEpisode[] | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTag, setActiveTag] = useState("All");
 
@@ -320,7 +349,41 @@ const EpisodeList: React.FC = () => {
     return normalize(parts.join(" "));
   };
 
-  const sortedEpisodes = [...PODCAST_EPISODES].sort((a, b) => {
+  useEffect(() => {
+    const loadEpisodes = async () => {
+      if (!isSupabaseConfigured()) {
+        setEpisodes(PODCAST_EPISODES);
+        return;
+      }
+
+      setIsLoading(true);
+      try {
+        const { data, error } = await supabase
+          .from('episodes')
+          .select('*')
+          .eq('is_published', true)
+          .order('published_at', { ascending: false });
+
+        if (error || !data || data.length === 0) {
+          setEpisodes(PODCAST_EPISODES);
+          return;
+        }
+
+        const mapped = data.map(mapEpisodeRowToPodcastEpisode);
+        setEpisodes(mapped);
+      } catch {
+        setEpisodes(PODCAST_EPISODES);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadEpisodes();
+  }, []);
+
+  const sourceEpisodes = episodes || PODCAST_EPISODES;
+
+  const sortedEpisodes = [...sourceEpisodes].sort((a, b) => {
     const dateA = new Date(a.date).getTime();
     const dateB = new Date(b.date).getTime();
     return dateB - dateA;
@@ -416,7 +479,12 @@ const EpisodeList: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12">
-          {filteredEpisodes.length > 0 ? (
+          {isLoading && sourceEpisodes.length === 0 && (
+            <div className="col-span-full text-center py-12 text-gray-500 bg-white/50 backdrop-blur-sm rounded-2xl">
+              {t.placeholder_loading}
+            </div>
+          )}
+          {!isLoading && filteredEpisodes.length > 0 ? (
             filteredEpisodes.map((ep, index) => (
                 <ScrollReveal key={ep.id} delay={index * 150} direction="left">
                     <PodcastCard episode={ep} />
@@ -436,12 +504,36 @@ const EpisodeList: React.FC = () => {
 // ============================================================================
 const EpisodeDetail: React.FC = () => {
     const { id } = useParams();
-    const episode = PODCAST_EPISODES.find(p => p.id === id);
+    const [episode, setEpisode] = useState<PodcastEpisode | null>(
+      () => PODCAST_EPISODES.find(p => p.id === id) || null
+    );
     const { t, lang } = useLanguage();
 
     // Always start at top when opening an episode detail
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, [id]);
+
+    useEffect(() => {
+      const loadEpisode = async () => {
+        if (!id || !isSupabaseConfigured()) return;
+
+        try {
+          const { data, error } = await supabase
+            .from('episodes')
+            .select('*')
+            .eq('id', id)
+            .maybeSingle();
+
+          if (!error && data) {
+            setEpisode(mapEpisodeRowToPodcastEpisode(data as EpisodeRow));
+          }
+        } catch {
+          // Fallback to existing episode state
+        }
+      };
+
+      loadEpisode();
     }, [id]);
 
     if (!episode) return <div className="pt-32 text-center">Episode not found</div>;

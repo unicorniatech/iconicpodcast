@@ -11,8 +11,12 @@ import {
 } from '../services/geminiService';
 import { saveLead, storageService } from '../services/storageService';
 import { PODCAST_EPISODES, PRICING_PLANS } from '../constants';
+import type { Database } from '../types/database';
+import supabase, { isSupabaseConfigured } from '../services/supabaseClient';
 import { ChatMessage } from '../types';
 import { logError, createAppError } from '../services/errorService';
+
+type EpisodeRow = Database['public']['Tables']['episodes']['Row'];
 
 export const Chatbot: React.FC = () => {
     const { lang, t } = useLanguage();
@@ -26,9 +30,11 @@ export const Chatbot: React.FC = () => {
     
     // Chat session stored in React state
     const [chatSession, setChatSession] = useState<ChatSession | null>(null);
+    const [podcastContext, setPodcastContext] = useState<string>(() =>
+      buildPodcastContext(PODCAST_EPISODES)
+    );
     
     const messagesEndRef = useRef<null | HTMLDivElement>(null);
-    const podcastContext = buildPodcastContext(PODCAST_EPISODES);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -42,6 +48,34 @@ export const Chatbot: React.FC = () => {
             setMessages([{ id: '0', role: 'model', text: t.chatbot_welcome }]);
         }
     }, [isOpen, lang, t]);
+
+    useEffect(() => {
+        const loadPodcastContext = async () => {
+            if (!isSupabaseConfigured()) return;
+
+            try {
+                const { data, error } = await supabase
+                    .from('episodes')
+                    .select('id,title,description')
+                    .eq('is_published', true)
+                    .order('published_at', { ascending: false })
+                    .limit(50);
+
+                if (!error && data && data.length) {
+                    const mapped = (data as EpisodeRow[]).map(row => ({
+                        id: row.id,
+                        title: row.title,
+                        description: row.description,
+                    }));
+                    setPodcastContext(buildPodcastContext(mapped));
+                }
+            } catch {
+                // Keep existing fallback context
+            }
+        };
+
+        loadPodcastContext();
+    }, []);
 
     useEffect(() => {
         scrollToBottom();
