@@ -540,6 +540,10 @@ const EpisodeDetail: React.FC = () => {
 
     const localizedDescription = episode.summaries?.[lang] || episode.description;
 
+    const spotifyEpisodeId = episode.platformLinks.spotify
+      ? episode.platformLinks.spotify.split('/episode/')[1]?.split('?')[0] || null
+      : null;
+
     const relatedEpisodes = PODCAST_EPISODES
       .filter(ep => ep.id !== episode.id && ep.tags && episode.tags && ep.tags.some(tag => episode.tags!.includes(tag)))
       .slice(0, 3);
@@ -572,11 +576,12 @@ const EpisodeDetail: React.FC = () => {
                     </ScrollReveal>
                 )}
 
-                <ScrollReveal delay={100}>
+                {spotifyEpisodeId && (
+                  <ScrollReveal delay={100}>
                     <div className="bg-white p-2 rounded-xl border border-gray-200 shadow-lg mb-12">
                          <iframe 
                             style={{borderRadius: '12px'}} 
-                            src={`https://open.spotify.com/embed/episode/${episode.platformLinks.spotify.split('/episode/')[1]?.split('?')[0] || '5TNpvLzycWShFtP0uu39bE'}?utm_source=generator&theme=0`}
+                            src={`https://open.spotify.com/embed/episode/${spotifyEpisodeId}?utm_source=generator&theme=0`}
                             width="100%" 
                             height="152" 
                             frameBorder="0" 
@@ -585,7 +590,8 @@ const EpisodeDetail: React.FC = () => {
                             title={`Spotify Player - ${episode.title}`}
                          ></iframe>
                     </div>
-                </ScrollReveal>
+                  </ScrollReveal>
+                )}
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
                     <div className="md:col-span-2">

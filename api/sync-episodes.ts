@@ -23,6 +23,15 @@ const createServiceClient = () => {
   });
 };
 
+const stripCdata = (value: string | null): string | null => {
+  if (!value) return value;
+  // Remove leading/trailing CDATA markers if present
+  return value
+    .replace(/^<!\[CDATA\[/i, '')
+    .replace(/\]\]>$/i, '')
+    .trim();
+};
+
 const parseRss = (xml: string): EpisodeRow[] => {
   const items: EpisodeRow[] = [];
   const itemRegex = /<item[\s\S]*?<\/item>/g;
@@ -41,9 +50,9 @@ const parseRss = (xml: string): EpisodeRow[] => {
       return m ? m[1].trim() : null;
     };
 
-    const guid = getTag('guid') || getTag('id');
-    const title = getTag('title');
-    const description = getTag('description');
+    const guid = stripCdata(getTag('guid') || getTag('id'));
+    const title = stripCdata(getTag('title'));
+    const description = stripCdata(getTag('description'));
     const pubDate = getTag('pubDate') || getTag('published');
     const enclosureUrl = getAttr('enclosure', 'url');
     const itunesImage = getAttr('itunes:image', 'href');
@@ -111,5 +120,3 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(500).json({ error: 'Unexpected error during sync' });
   }
 }
-
-// placeholder; will be filled by subsequent patch
