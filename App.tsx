@@ -12,7 +12,7 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Link, useParams, useSearchParams, Navigate } from 'react-router-dom';
 import { 
   Play, Video, CheckCircle, ExternalLink, Download, Trash2, Save, Tag, Mail, Phone, Plus, X, 
-  Mic, Youtube, Instagram
+  Mic, Youtube, Instagram, ChevronDown
 } from 'lucide-react';
 
 // Contexts
@@ -243,11 +243,26 @@ const GuestInvitationModal: React.FC<GuestInvitationModalProps> = ({ onClose }) 
 // ============================================================================
 type EpisodeRow = Database['public']['Tables']['episodes']['Row'];
 
+const stripCdata = (value: string | null): string => {
+  if (!value) return '';
+  return value
+    .replace(/^<!\[CDATA\[/i, '')
+    .replace(/\]\]>$/i, '')
+    .trim();
+};
+
+const stripHtml = (value: string): string => {
+  return value.replace(/<[^>]+>/g, '');
+};
+
 const mapEpisodeRowToPodcastEpisode = (row: EpisodeRow): PodcastEpisode => {
+  const cleanTitle = stripCdata(row.title ?? null);
+  const cleanDescription = stripHtml(stripCdata(row.description ?? null));
+
   return {
     id: row.id,
-    title: row.title,
-    description: row.description,
+    title: cleanTitle || row.title,
+    description: cleanDescription || row.description,
     summaries: undefined,
     duration: row.duration || '',
     date: row.published_at,
@@ -507,6 +522,7 @@ const EpisodeDetail: React.FC = () => {
     const [episode, setEpisode] = useState<PodcastEpisode | null>(
       () => PODCAST_EPISODES.find(p => p.id === id) || null
     );
+    const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
     const { t, lang } = useLanguage();
 
     // Always start at top when opening an episode detail
@@ -597,9 +613,27 @@ const EpisodeDetail: React.FC = () => {
                     <div className="md:col-span-2">
                         <ScrollReveal delay={200}>
                             <h3 className="text-2xl sm:text-3xl font-serif font-bold mb-4 sm:mb-6 text-iconic-black">{t.episode_about_title}</h3>
+                            <div className="prose prose-lg text-gray-600 leading-relaxed mb-4">
+                                <p className={`font-medium text-black ${isDescriptionExpanded ? '' : 'line-clamp-4'}`}>
+                                  {localizedDescription}
+                                </p>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => setIsDescriptionExpanded(prev => !prev)}
+                              className="inline-flex items-center text-sm font-semibold text-iconic-pink hover:text-pink-700 mb-4"
+                            >
+                              <span className="mr-1">
+                                {isDescriptionExpanded
+                                  ? (lang === 'cs-CZ' ? 'Zobrazit méně' : 'Show less')
+                                  : (lang === 'cs-CZ' ? 'Zobrazit více' : 'Show more')}
+                              </span>
+                              <ChevronDown
+                                className={`w-4 h-4 transition-transform ${isDescriptionExpanded ? 'rotate-180' : ''}`}
+                              />
+                            </button>
                             <div className="prose prose-lg text-gray-600 leading-relaxed mb-6">
-                                <p className="font-medium text-black">{localizedDescription}</p>
-                                <p>{t.episode_description_suffix}</p>
+                              <p>{t.episode_description_suffix}</p>
                             </div>
                             
                             {/* Share & Like buttons */}
