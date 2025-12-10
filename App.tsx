@@ -542,7 +542,23 @@ const EpisodeDetail: React.FC = () => {
             .maybeSingle();
 
           if (!error && data) {
-            setEpisode(mapEpisodeRowToPodcastEpisode(data as EpisodeRow));
+            const dbEpisode = mapEpisodeRowToPodcastEpisode(data as EpisodeRow);
+            const staticEpisode = PODCAST_EPISODES.find(p => p.id === id) || null;
+
+            const merged: PodcastEpisode = {
+              ...(staticEpisode || dbEpisode),
+              ...dbEpisode,
+              videoUrl: dbEpisode.videoUrl || staticEpisode?.videoUrl,
+              imageUrl: dbEpisode.imageUrl || staticEpisode?.imageUrl,
+              duration: dbEpisode.duration || staticEpisode?.duration || '',
+              platformLinks: {
+                spotify: dbEpisode.platformLinks.spotify || staticEpisode?.platformLinks.spotify,
+                youtube: dbEpisode.platformLinks.youtube || staticEpisode?.platformLinks.youtube,
+                apple: dbEpisode.platformLinks.apple || staticEpisode?.platformLinks.apple,
+              },
+            };
+
+            setEpisode(merged);
           }
         } catch {
           // Fallback to existing episode state
