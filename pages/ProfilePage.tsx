@@ -1,29 +1,23 @@
 /**
- * User Profile Page
- * 
- * Allows users to view and edit their profile.
+ * User Profile Page (local-only)
+ *
+ * Simplified profile page that keeps data in browser state/localStorage only.
+ * No Supabase calls are made here to avoid noisy failing requests in production.
  */
 
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { supabase, isSupabaseConfigured } from '../services/supabaseClient';
-import { logError, createAppError, getErrorMessage } from '../services/errorService';
-import { User, Mail, Camera, LogOut, Save, AlertCircle, CheckCircle } from 'lucide-react';
+import { User, Mail, LogOut, Save } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 
 export const ProfilePage: React.FC = () => {
   const { user, logout } = useAuth();
-  const navigate = useNavigate();
   const { lang } = useLanguage();
   
   const [displayName, setDisplayName] = useState('');
   const [bio, setBio] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
   const t = {
@@ -80,156 +74,35 @@ export const ProfilePage: React.FC = () => {
     back: '← Back',
   };
 
-  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file || !user) return;
-    if (!isSupabaseConfigured()) {
-      const appError = createAppError(
-        new Error('Supabase is not configured'),
-        'SUPABASE_NOT_CONFIGURED',
-        { action: 'uploadAvatar' }
-      );
-      logError(appError);
-      setError(appError.message || t.error);
-      return;
-    }
-
-    setError(null);
-    setIsUploadingAvatar(true);
-
-    try {
-      const fileExt = file.name.split('.').pop();
-      const filePath = `${user.id}-${Date.now()}.${fileExt || 'png'}`;
-
-      const { error: uploadError } = await (supabase as any).storage
-        .from('avatars')
-        .upload(filePath, file, {
-          cacheControl: '3600',
-          upsert: true,
-        });
-
-      if (uploadError) {
-        const appError = createAppError(uploadError, 'SUPABASE_ERROR', { action: 'uploadAvatar' });
-        logError(appError);
-        const friendly = getErrorMessage(appError.code, lang) || t.error;
-        setError(friendly);
-        return;
-      }
-
-      const { data: publicUrlData } = (supabase as any).storage
-        .from('avatars')
-        .getPublicUrl(filePath);
-
-      const publicUrl = publicUrlData?.publicUrl || null;
-      setAvatarUrl(publicUrl);
-
-      const { error: profileError } = await (supabase as any)
-        .from('user_profiles')
-        .upsert({
-          id: user.id,
-          display_name: displayName || user.email?.split('@')[0] || 'User',
-          bio: bio,
-          avatar_url: publicUrl,
-          updated_at: new Date().toISOString(),
-        });
-
-      if (profileError) {
-        const appError = createAppError(profileError, 'SUPABASE_ERROR', { action: 'saveAvatarProfile' });
-        logError(appError);
-        const friendly = getErrorMessage(appError.code, lang) || t.error;
-        setError(friendly);
-      }
-    } catch (err) {
-      const appError = createAppError(err, 'SUPABASE_ERROR', { action: 'uploadAvatar' });
-      logError(appError);
-      const friendly = getErrorMessage(appError.code, lang) || t.error;
-      setError(friendly);
-    } finally {
-      setIsUploadingAvatar(false);
-      e.target.value = '';
-    }
-  };
-
+  // Seed from localStorage so profile feels persistent without touching the DB
   useEffect(() => {
-    if (!user) {
-      navigate('/login');
-      return;
+    if (!user) return;
+    const stored = window.localStorage.getItem('iconic_profile_' + user.id);
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored) as { displayName?: string; bio?: string };
+        if (parsed.displayName) setDisplayName(parsed.displayName);
+        if (parsed.bio) setBio(parsed.bio);
+      } catch {
+        // ignore invalid JSON
+      }
+    } else {
+      setDisplayName(user.email?.split('@')[0] || '');
     }
-    fetchProfile();
   }, [user]);
 
-  const fetchProfile = async () => {
-    if (!user) return;
-    if (!isSupabaseConfigured()) {
-      return;
-    }
-    setIsLoading(true);
-    
-    try {
-      const { data, error } = await (supabase as any)
-        .from('user_profiles')
-        .select('*')
-        .eq('id', user.id)
-        .single();
-
-      if (data) {
-        setDisplayName(data.display_name || '');
-        setBio(data.bio || '');
-        setAvatarUrl(data.avatar_url || null);
-      } else if (error && error.code !== 'PGRST116') {
-        // PGRST116 = no rows returned, which is fine for new users
-        logError(createAppError(error, 'SUPABASE_ERROR', { action: 'fetchProfile', page: 'profile' }));
-      }
-    } catch (err) {
-      logError(createAppError(err, 'SUPABASE_ERROR', { action: 'fetchProfile', page: 'profile' }));
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleSave = async (e: React.FormEvent) => {
+  const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user || isSaving || isLoading) return;
-    if (!isSupabaseConfigured()) {
-      const appError = createAppError(
-        new Error('Supabase is not configured'),
-        'SUPABASE_NOT_CONFIGURED',
-        { action: 'saveProfile' }
-      );
-      logError(appError);
-      setError(appError.message || t.error);
-      return;
-    }
-    
-    setError(null);
-    setSuccess(null);
+    if (!user || isSaving) return;
+
     setIsSaving(true);
+    setSuccess(null);
 
+    const payload = { displayName, bio };
     try {
-      const { error } = await (supabase as any)
-        .from('user_profiles')
-        .upsert({
-          id: user.id,
-          display_name: displayName || user.email?.split('@')[0] || 'User',
-          bio: bio,
-          avatar_url: avatarUrl,
-          updated_at: new Date().toISOString(),
-        });
-
-      if (error) {
-        const appError = createAppError(error, 'SUPABASE_ERROR', { action: 'saveProfile' });
-        logError(appError);
-        const friendly = getErrorMessage(appError.code, lang) || t.error;
-        setError(friendly);
-      } else {
-        setSuccess(t.success);
-        setTimeout(() => setSuccess(null), 3000);
-      }
-    } catch (err) {
-      const appError = createAppError(err, 'SUPABASE_ERROR', { action: 'saveProfile' });
-      logError(appError);
-      const friendly = getErrorMessage(appError.code, lang) || t.error;
-      setError(friendly);
+      window.localStorage.setItem('iconic_profile_' + user.id, JSON.stringify(payload));
+      setSuccess(t.success);
+      setTimeout(() => setSuccess(null), 2500);
     } finally {
       setIsSaving(false);
     }
@@ -237,7 +110,6 @@ export const ProfilePage: React.FC = () => {
 
   const handleLogout = async () => {
     await logout();
-    navigate('/');
   };
 
   if (!user) return null;
@@ -254,26 +126,18 @@ export const ProfilePage: React.FC = () => {
           {t.back}
         </Link>
 
-        {/* Profile Card */}
+        {/* Profile Card (local-only, no DB dependencies) */}
         <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
           {/* Header */}
           <div className="bg-gradient-to-r from-iconic-black to-gray-800 px-6 py-8 sm:px-8 sm:py-10 text-center relative">
             <div className="absolute top-0 right-0 w-32 h-32 bg-iconic-pink/20 rounded-full blur-[60px]"></div>
             
-            {/* Avatar - uploads temporarily disabled in production */}
+            {/* Avatar circle with initials only (no upload) */}
             <div className="relative inline-block">
               <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-iconic-pink/20 flex items-center justify-center border-4 border-white/20 mx-auto overflow-hidden">
-                {avatarUrl ? (
-                  <img
-                    src={avatarUrl}
-                    alt="User avatar"
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <span className="text-3xl sm:text-4xl font-bold text-white">
-                    {displayName?.charAt(0).toUpperCase() || user.email?.charAt(0).toUpperCase() || '?'}
-                  </span>
-                )}
+                <span className="text-3xl sm:text-4xl font-bold text-white">
+                  {displayName?.charAt(0).toUpperCase() || user.email?.charAt(0).toUpperCase() || '?'}
+                </span>
               </div>
             </div>
             
@@ -281,21 +145,9 @@ export const ProfilePage: React.FC = () => {
             <p className="text-gray-300 text-sm mt-1">{user.email}</p>
           </div>
 
-          {/* Form */}
+          {/* Form (local-only) */}
           <form onSubmit={handleSave} className="p-6 sm:p-8 space-y-6">
-            {/* Messages */}
-            {error && (
-              <div
-                id="profile-error"
-                role="alert"
-                aria-live="polite"
-                className="p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3"
-              >
-                <AlertCircle className="text-red-500 flex-shrink-0 mt-0.5" size={20} />
-                <p className="text-red-700 text-sm">{error}</p>
-              </div>
-            )}
-            
+            {/* Success message */}
             {success && (
               <div
                 id="profile-success"
@@ -303,7 +155,6 @@ export const ProfilePage: React.FC = () => {
                 aria-live="polite"
                 className="p-4 bg-green-50 border border-green-200 rounded-xl flex items-start gap-3"
               >
-                <CheckCircle className="text-green-500 flex-shrink-0 mt-0.5" size={20} />
                 <p className="text-green-700 text-sm">{success}</p>
               </div>
             )}
@@ -391,28 +242,7 @@ export const ProfilePage: React.FC = () => {
         </div>
       </div>
 
-      {/* Toast notifications */}
-      {(error || success) && (
-        <div className="fixed inset-x-4 bottom-6 sm:inset-x-auto sm:right-6 sm:left-auto z-50">
-          <div
-            id={error ? 'profile-error' : 'profile-success'}
-            role={error ? 'alert' : 'status'}
-            aria-live="polite"
-            className={`max-w-sm mx-auto rounded-xl shadow-lg border px-4 py-3 flex items-center gap-3 text-sm ${
-              error
-                ? 'bg-red-600 text-white border-red-400'
-                : 'bg-emerald-600 text-white border-emerald-400'
-            }`}
-          >
-            {error ? (
-              <AlertCircle className="flex-shrink-0" size={20} />
-            ) : (
-              <CheckCircle className="flex-shrink-0" size={20} />
-            )}
-            <p className="flex-1">{error || success}</p>
-          </div>
-        </div>
-      )}
+      {/* Simple inline success toast only; no error toast because there are no network calls */}
     </div>
   );
 };

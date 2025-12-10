@@ -208,6 +208,19 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
 
     setSubmitting(true);
     try {
+      let localDisplayName: string | null = null;
+      try {
+        if (typeof window !== 'undefined') {
+          const byId = window.localStorage.getItem(`iconic_display_name_${user.id}`);
+          const byEmail = user.email ? window.localStorage.getItem(`iconic_display_name_email_${user.email}`) : null;
+          localDisplayName = byId || byEmail;
+        }
+      } catch {
+        // ignore storage errors
+      }
+
+      const effectiveDisplayName = localDisplayName || user.email?.split('@')[0] || 'You';
+
       const { data, error } = await db
         .from('comments')
         .insert({
@@ -224,7 +237,7 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
         const newCommentObj: Comment = {
           ...(data as Comment),
           user_profile: {
-            display_name: user.email?.split('@')[0] || 'You',
+            display_name: effectiveDisplayName,
             avatar_url: null,
           },
           like_count: 0,
@@ -254,6 +267,19 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
 
     setSubmitting(true);
     try {
+      let localDisplayName: string | null = null;
+      try {
+        if (typeof window !== 'undefined') {
+          const byId = window.localStorage.getItem(`iconic_display_name_${user.id}`);
+          const byEmail = user.email ? window.localStorage.getItem(`iconic_display_name_email_${user.email}`) : null;
+          localDisplayName = byId || byEmail;
+        }
+      } catch {
+        // ignore storage errors
+      }
+
+      const effectiveDisplayName = localDisplayName || user.email?.split('@')[0] || 'You';
+
       const { data, error } = await db
         .from('comments')
         .insert({
@@ -271,7 +297,7 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
         const newReply: Comment = {
           ...(data as Comment),
           user_profile: {
-            display_name: user.email?.split('@')[0] || 'You',
+            display_name: effectiveDisplayName,
             avatar_url: null,
           },
           like_count: 0,

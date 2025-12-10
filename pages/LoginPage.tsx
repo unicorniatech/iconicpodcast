@@ -20,6 +20,7 @@ export const LoginPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [displayName, setDisplayName] = useState('');
 
   const { login, register } = useAuth();
   const navigate = useNavigate();
@@ -34,6 +35,8 @@ export const LoginPage: React.FC = () => {
       title_register: 'Vytvoř si účet',
       subtitle_login: 'Přihlas se ke svému účtu',
       subtitle_register: 'Přidej se ke komunitě ICONIC',
+      name_label: 'Jméno (zobrazované)',
+      name_placeholder: 'Jak ti máme říkat?',
       email_label: 'Email',
       email_placeholder: 'ty@example.com',
       password_label: 'Heslo',
@@ -80,6 +83,8 @@ export const LoginPage: React.FC = () => {
       title_register: 'Crea tu cuenta',
       subtitle_login: 'Inicia sesión para acceder a tu cuenta',
       subtitle_register: 'Únete a la comunidad ICONIC',
+      name_label: 'Nombre para mostrar',
+      name_placeholder: '¿Cómo quieres que te llamemos?',
       email_label: 'Correo',
       email_placeholder: 'tu@ejemplo.com',
       password_label: 'Contraseña',
@@ -137,6 +142,14 @@ export const LoginPage: React.FC = () => {
           navigate(from, { replace: true });
         }
       } else {
+        // Store chosen display name locally so comments can use it once the user is registered
+        if (displayName.trim()) {
+          try {
+            window.localStorage.setItem(`iconic_display_name_email_${email}`, displayName.trim());
+          } catch {
+            // ignore storage errors
+          }
+        }
         const { error } = await register(email, password);
         if (error) {
           setError(error);
@@ -206,6 +219,25 @@ export const LoginPage: React.FC = () => {
             )}
 
             <div className="space-y-5">
+              {/* Display Name (register only) */}
+              {mode === 'register' && (
+                <div>
+                  <label htmlFor="displayName" className="block text-xs font-bold text-white/70 uppercase tracking-widest mb-2">
+                    {t.name_label}
+                  </label>
+                  <div className="relative">
+                    <input
+                      id="displayName"
+                      name="displayName"
+                      type="text"
+                      value={displayName}
+                      onChange={(e) => setDisplayName(e.target.value)}
+                      className="w-full px-4 py-3 sm:py-4 bg-white/5 border border-white/20 rounded-xl text-white placeholder-white/60 focus:outline-none focus:bg-white/10 focus:border-iconic-pink transition-all text-base"
+                      placeholder={t.name_placeholder}
+                    />
+                  </div>
+                </div>
+              )}
               {/* Email */}
               <div>
                 <label htmlFor="email" className="block text-xs font-bold text-white/70 uppercase tracking-widest mb-2">

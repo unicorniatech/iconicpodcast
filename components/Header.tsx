@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { Link, useLocation } from 'react-router-dom';
-import { Globe, Menu, X, Mic, ChevronDown, User, LogOut } from 'lucide-react';
+import { Globe, Menu, X, Mic, ChevronDown, LogOut, User } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -136,32 +136,26 @@ export const Header: React.FC<HeaderProps> = ({ isBannerOpen }) => {
                   </div>
                 )}
              </div>
-             
-             {/* User Auth Buttons */}
+             {/* Auth: sign in / sign out (no profile page) */}
              {user ? (
-               <div className="flex items-center gap-2">
-                 <Link to="/profile" className={`${textColor} hover:text-iconic-pink p-2`} title="Profile">
-                   <User size={20} />
-                 </Link>
-                 <button 
-                   onClick={handleSignOut} 
-                   disabled={isLoggingOut}
-                   className={`${textColor} hover:text-red-500 p-2 disabled:opacity-50`}
-                   title="Sign Out"
-                 >
-                   {isLoggingOut ? (
-                     <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                   ) : (
-                     <LogOut size={20} />
-                   )}
-                 </button>
-               </div>
+               <button
+                 onClick={handleSignOut}
+                 disabled={isLoggingOut}
+                 className={`${textColor} hover:text-red-500 p-2 disabled:opacity-50 flex items-center gap-1 text-sm`}
+                 title="Sign Out"
+               >
+                 {isLoggingOut ? (
+                   <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                 ) : (
+                   <LogOut size={18} />
+                 )}
+               </button>
              ) : (
                <Link to="/login" className={`${textColor} hover:text-iconic-pink font-bold text-sm`}>
                  {t.menu_sign_in}
                </Link>
              )}
-             
+
              <a href="https://www.youtube.com/@ZuzziHusarova" target="_blank" rel="noopener noreferrer" className="bg-iconic-pink text-white px-5 py-2.5 rounded-full font-bold text-sm hover:bg-pink-600 transition-colors shadow-lg shadow-pink-500/30 flex items-center gap-2">
                  <Mic size={16} /> {t.header_subscribe_cta}
              </a>
@@ -251,72 +245,54 @@ export const Header: React.FC<HeaderProps> = ({ isBannerOpen }) => {
               >
                 {t.nav_contact}
               </Link>
-              
-              {/* User section */}
+              {isAdmin && (
+                <Link
+                  to="/crm"
+                  onClick={() => {
+                    setIsOpen(false);
+                    if (typeof window !== 'undefined') {
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                  }}
+                  className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-200 hover:text-iconic-pink hover:bg-white/10 rounded-xl transition-colors"
+                >
+                  {t.nav_crm}
+                </Link>
+              )}
+
+              {/* Auth section (mobile, no profile page) */}
+              <div className="border-t border-white/10 my-4"></div>
               {user ? (
-                <>
-                  <div className="border-t border-white/10 my-4"></div>
-                  <Link
-                    to="/profile"
-                    onClick={() => {
-                      setIsOpen(false);
-                      if (typeof window !== 'undefined') {
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                      }
-                    }}
-                    className="flex items-center gap-3 px-4 py-4 text-white hover:text-iconic-pink hover:bg-white/10 rounded-xl text-lg font-bold transition-colors"
-                  >
-                    <User size={20} />
-                    {t.menu_profile}
-                  </Link>
-                  {isAdmin && (
-                    <Link
-                      to="/crm"
-                      onClick={() => {
-                        setIsOpen(false);
-                        if (typeof window !== 'undefined') {
-                          window.scrollTo({ top: 0, behavior: 'smooth' });
-                        }
-                      }}
-                      className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-200 hover:text-iconic-pink hover:bg-white/10 rounded-xl transition-colors"
-                    >
-                      {t.nav_crm}
-                    </Link>
+                <button
+                  onClick={async () => {
+                    if (isLoggingOut) return;
+                    await handleSignOut();
+                    setIsOpen(false);
+                  }}
+                  disabled={isLoggingOut}
+                  className="flex items-center gap-3 w-full px-4 py-4 text-gray-300 hover:text-red-400 hover:bg-red-500/10 rounded-xl text-lg font-medium transition-colors disabled:opacity-50"
+                >
+                  {isLoggingOut ? (
+                    <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <LogOut size={20} />
                   )}
-                  <button 
-                    onClick={async () => {
-                      if (isLoggingOut) return;
-                      await handleSignOut();
-                      setIsOpen(false);
-                    }} 
-                    disabled={isLoggingOut}
-                    className="flex items-center gap-3 w-full px-4 py-4 text-gray-300 hover:text-red-400 hover:bg-red-500/10 rounded-xl text-lg font-medium transition-colors disabled:opacity-50"
-                  >
-                    {isLoggingOut ? (
-                      <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                    ) : (
-                      <LogOut size={20} />
-                    )}
-                    {t.menu_sign_out}
-                  </button>
-                </>
+                  {t.menu_sign_out}
+                </button>
               ) : (
-                <>
-                  <div className="border-t border-white/10 my-4"></div>
-                  <Link
-                    to="/login"
-                    onClick={() => {
-                      setIsOpen(false);
-                      if (typeof window !== 'undefined') {
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                      }
-                    }}
-                    className="flex items-center gap-3 px-4 py-4 text-iconic-pink hover:bg-pink-500/10 rounded-xl text-lg font-bold transition-colors"
-                  >
-                    <User size={20} />
-                    {t.menu_sign_in}
-                  </Link>
-                </>
+                <Link
+                  to="/login"
+                  onClick={() => {
+                    setIsOpen(false);
+                    if (typeof window !== 'undefined') {
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                  }}
+                  className="flex items-center gap-3 px-4 py-4 text-iconic-pink hover:bg-pink-500/10 rounded-xl text-lg font-bold transition-colors"
+                >
+                  <User size={20} />
+                  {t.menu_sign_in}
+                </Link>
               )}
 
               {/* Language Switcher */}

@@ -28,7 +28,6 @@ import { ShareButtons } from './components/ShareButtons';
 import { LoginPage } from './pages/LoginPage';
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { ResetPasswordPage } from './pages/ResetPasswordPage';
-import { ProfilePage } from './pages/ProfilePage';
 import { AnalyticsDashboard } from './pages/AnalyticsDashboard';
 import { YouTubeLandingPage, InstagramLandingPage, SocialLandingPage } from './pages/LandingPage';
 import { FAQPage } from './pages/FAQPage';
@@ -1384,31 +1383,25 @@ function AppContent() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
-          <Route path="/profile" element={
-            <AuthGuard fallbackPath="/login">
-              <ProfilePage />
-            </AuthGuard>
-          } />
-          
           {/* Protected CRM route (Comment 2) */}
           <Route path="/crm" element={
-            <AuthGuard requireAdmin fallbackPath="/login">
+            <AuthGuard requireAdmin fallbackPath="/">
               <AdminDashboard />
             </AuthGuard>
           } />
           {/* Podcast tools workspace - admin only */}
           <Route path="/crm/podcast-tools" element={
-            <AuthGuard requireAdmin fallbackPath="/login">
+            <AuthGuard requireAdmin fallbackPath="/">
               <PodcastToolsPage />
             </AuthGuard>
           } />
           <Route path="/crm/podcast-tools/guests/:id" element={
-            <AuthGuard requireAdmin fallbackPath="/login">
+            <AuthGuard requireAdmin fallbackPath="/">
               <PodcastGuestDetailPage />
             </AuthGuard>
           } />
           <Route path="/crm/podcast-tools/episodes/:id" element={
-            <AuthGuard requireAdmin fallbackPath="/login">
+            <AuthGuard requireAdmin fallbackPath="/">
               <EpisodePlanDetailPage />
             </AuthGuard>
           } />
@@ -1417,7 +1410,7 @@ function AppContent() {
           
           {/* Analytics Dashboard - Admin only */}
           <Route path="/analytics" element={
-            <AuthGuard requireAdmin fallbackPath="/login">
+            <AuthGuard requireAdmin fallbackPath="/">
               <AnalyticsDashboard />
             </AuthGuard>
           } />
