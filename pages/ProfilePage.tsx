@@ -260,7 +260,7 @@ export const ProfilePage: React.FC = () => {
           <div className="bg-gradient-to-r from-iconic-black to-gray-800 px-6 py-8 sm:px-8 sm:py-10 text-center relative">
             <div className="absolute top-0 right-0 w-32 h-32 bg-iconic-pink/20 rounded-full blur-[60px]"></div>
             
-            {/* Avatar */}
+            {/* Avatar - uploads temporarily disabled in production */}
             <div className="relative inline-block">
               <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-iconic-pink/20 flex items-center justify-center border-4 border-white/20 mx-auto overflow-hidden">
                 {avatarUrl ? (
@@ -275,20 +275,6 @@ export const ProfilePage: React.FC = () => {
                   </span>
                 )}
               </div>
-              <label
-                htmlFor="avatar-upload"
-                className="absolute -bottom-2 -right-2 w-9 h-9 rounded-full bg-iconic-pink flex items-center justify-center border-2 border-white text-white cursor-pointer hover:bg-pink-600 transition-colors shadow-lg"
-              >
-                <Camera size={16} />
-              </label>
-              <input
-                id="avatar-upload"
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={handleAvatarChange}
-                disabled={isUploadingAvatar || isSaving}
-              />
             </div>
             
             <h1 id="profile-heading" className="text-xl sm:text-2xl font-bold text-white mt-4">{t.title}</h1>
