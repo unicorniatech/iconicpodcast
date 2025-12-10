@@ -543,7 +543,19 @@ const EpisodeDetail: React.FC = () => {
 
           if (!error && data) {
             const dbEpisode = mapEpisodeRowToPodcastEpisode(data as EpisodeRow);
-            const staticEpisode = PODCAST_EPISODES.find(p => p.id === id) || null;
+
+            // Try to resolve static metadata in two ways:
+            // 1) Direct id match (for older static-only episodes)
+            // 2) Match by episode number parsed from the title (e.g. "#15: ..." -> id "15")
+            let staticEpisode = PODCAST_EPISODES.find(p => p.id === id) || null;
+
+            if (!staticEpisode) {
+              const match = dbEpisode.title.match(/#(\d+)/);
+              if (match) {
+                const episodeNumberId = match[1];
+                staticEpisode = PODCAST_EPISODES.find(p => p.id === episodeNumberId) || null;
+              }
+            }
 
             const merged: PodcastEpisode = {
               ...(staticEpisode || dbEpisode),
