@@ -306,17 +306,8 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
     }
   };
 
-  const handleEditComment = async (commentId: string, ownerId: string) => {
-    if (!user || user.id !== ownerId) {
-      setCommentError(
-        lang === 'cs-CZ'
-          ? 'Vaše relace vypršela nebo nemáte oprávnění upravit tento komentář.'
-          : 'Your session has expired or you do not have permission to edit this comment.'
-      );
-      return;
-    }
-
-    if (!editContent.trim()) return;
+  const handleEditComment = async (commentId: string) => {
+    if (!user || !editContent.trim()) return;
 
     try {
       const { error } = await db
@@ -512,128 +503,6 @@ export const Comments: React.FC<CommentsProps> = ({ episodeId }) => {
             <p className="text-sm text-gray-700 whitespace-pre-wrap">{comment.content}</p>
           )}
         </div>
-
-        <div className="flex items-center gap-2 sm:gap-3 mt-3 ml-1 sm:ml-2 flex-wrap">
-          {/* Like Button */}
-          <button
-            onClick={() => {
-              if (!user) {
-                setCommentError(
-                  lang === 'cs-CZ'
-                    ? 'Pro označení komentářů jako „líbí se mi“ se prosím přihlaste.'
-                    : 'Please sign in to like comments.'
-                );
-                window.location.href = '/login';
-                return;
-              }
-              handleLikeComment(comment.id, comment.user_liked);
-            }}
-            className={`group flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full border transition-all duration-300 ease-out ${
-              !user
-                ? 'text-gray-400 bg-gray-50 border-gray-200 hover:text-gray-500'
-                : comment.user_liked
-                ? 'text-iconic-pink bg-iconic-pink/15 border-iconic-pink/30 shadow-sm ring-1 ring-iconic-pink/40'
-                : 'text-gray-500 bg-gray-50 border-gray-200 hover:text-iconic-pink hover:bg-iconic-pink/10 hover:border-iconic-pink/30 hover:shadow-md'
-            }`}
-            title={!user ? (lang === 'cs-CZ' ? 'Přihlaste se pro lajkování komentářů' : 'Sign in to like comments') : undefined}
-          >
-            <Heart 
-              size={15} 
-              fill={comment.user_liked ? 'currentColor' : 'none'} 
-              className={`transition-all duration-300 ${
-                comment.user_liked 
-                  ? 'scale-110 animate-pulse' 
-                  : 'group-hover:scale-125 group-hover:-rotate-12 group-active:scale-75'
-              }`}
-            />
-            <span
-              className={`min-w-[0.75rem] text-center transition-all duration-200 ${
-                comment.user_liked ? 'scale-110 translate-y-[-1px]' : 'scale-100'
-              }`}
-            >
-              {comment.like_count}
-            </span>
-          </button>
-
-          {/* Reply Button */}
-          {user && !isReply && (
-            <button
-              onClick={() => {
-                if (replyingTo && replyingTo !== comment.id) {
-                  setReplyContent('');
-                }
-                setReplyingTo(comment.id);
-                setEditingId(null);
-                setEditContent('');
-              }}
-              className="group flex items-center gap-1.5 text-xs font-semibold text-gray-500 bg-gray-50 border border-gray-200 hover:text-iconic-blue hover:bg-iconic-blue/10 hover:border-iconic-blue/30 hover:shadow-md px-3 py-1.5 rounded-full transition-all duration-300 ease-out"
-            >
-              <MessageCircle 
-                size={15} 
-                className="transition-all duration-300 group-hover:scale-110 group-hover:rotate-12 group-active:scale-75" 
-              />
-              <span>{t.reply}</span>
-            </button>
-          )}
-
-          {/* Edit & Delete Buttons */}
-          {user && user.id === comment.user_id && (
-            <>
-              <button
-                onClick={() => {
-                  setReplyingTo(null);
-                  setReplyContent('');
-                  setEditingId(comment.id);
-                  setEditContent(comment.content);
-                }}
-                className="group flex items-center gap-1.5 text-xs font-semibold text-gray-500 bg-gray-50 border border-gray-200 hover:text-amber-600 hover:bg-amber-50 hover:border-amber-200 hover:shadow-md px-3 py-1.5 rounded-full transition-all duration-300 ease-out"
-              >
-                <Edit2 
-                  size={15} 
-                  className="transition-all duration-300 group-hover:scale-110 group-hover:-rotate-12 group-active:scale-75" 
-                />
-                <span>{t.edit}</span>
-              </button>
-              <button
-                onClick={() => handleDeleteComment(comment.id, comment.user_id)}
-                className="group flex items-center gap-1.5 text-xs font-semibold text-gray-500 bg-gray-50 border border-gray-200 hover:text-red-500 hover:bg-red-50 hover:border-red-200 hover:shadow-md px-3 py-1.5 rounded-full transition-all duration-300 ease-out"
-              >
-                <Trash2 
-                  size={15} 
-                  className="transition-all duration-300 group-hover:scale-110 group-hover:rotate-12 group-active:scale-75" 
-                />
-                <span>{t.delete}</span>
-              </button>
-            </>
-          )}
-        </div>
-
-        {/* Reply input */}
-        {replyingTo === comment.id && (
-          <div className="mt-4 flex gap-2 animate-fade-in-up">
-            <input
-              type="text"
-              value={replyContent}
-              onChange={(e) => setReplyContent(e.target.value)}
-              placeholder={t.write_comment}
-              className="flex-1 px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-iconic-blue/30 focus:border-iconic-blue/50 focus:bg-white transition-all duration-300"
-              autoFocus
-            />
-            <button
-              onClick={() => handleSubmitReply(comment.id)}
-              disabled={!replyContent.trim() || submitting}
-              className="group p-2.5 bg-iconic-blue text-white rounded-full hover:bg-blue-600 hover:shadow-lg hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 transition-all duration-300"
-            >
-              <Send size={16} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </button>
-            <button
-              onClick={() => setReplyingTo(null)}
-              className="p-2.5 bg-gray-100 text-gray-500 rounded-full hover:bg-gray-200 hover:text-gray-700 hover:scale-105 active:scale-95 transition-all duration-300"
-            >
-              ✕
-            </button>
-          </div>
-        )}
 
         {/* Replies */}
         {comment.replies && comment.replies.length > 0 && (
