@@ -268,7 +268,9 @@ const mapEpisodeRowToPodcastEpisode = (row: EpisodeRow): PodcastEpisode => {
     summaries: undefined,
     duration: row.duration || '',
     date: row.published_at,
-    imageUrl: row.image_url || staticEpisode?.imageUrl || `/ep${row.id}.webp`,
+    // Prefer Supabase image_url so UUID-based episodes can still have thumbnails,
+    // then fall back to static/public images, then to a generic hero image.
+    imageUrl: row.image_url || staticEpisode?.imageUrl || '/mainhero.webp',
     videoUrl: row.video_url || undefined,
     audioUrl: row.audio_url || undefined,
     platformLinks: {
