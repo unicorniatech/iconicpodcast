@@ -252,6 +252,31 @@ export const PRICING_PLANS = [
 
 export const PODCAST_EPISODES: PodcastEpisode[] = [
   {
+    id: '16',
+    title: 'EP 16: Jak ověřit, že o tvůj nápad bude zájem | Martin Krejčíř (HitHit)',
+    description:
+      'Máš v hlavě nápad na knihu, produkt nebo službu, ale bojíš se, že o něj nebude zájem? Nebo už podnikáš, ale chybí ti parťák, který by tě kopl do zadku a posunul dál? Martin Krejčíř, jednatel HitHitu a Smart Networku, otevřeně mluví o tom, proč je crowdfunding nejlevnější a nejbezpečnější způsob, jak v podnikání zkoušet nové věci.',
+    summaries: {
+      'cs-CZ':
+        'Martin Krejčíř z HitHitu o tom, jak pomocí crowdfundingu ověřit zájem o produkt, překonat efekt prázdné hospody a propojit online svět s offline komunitou.',
+      'en-US':
+        'Martin Krejčíř, CEO of HitHit, shares how crowdfunding is the safest, cheapest way to validate new products and why you need both online reach and offline community.',
+      'es-MX':
+        'Martin Krejčíř, director de HitHit, explica cómo el crowdfunding es la forma más segura y económica de validar nuevas ideas y por qué necesitas comunidad además de presencia online.',
+    },
+    duration: '≈ 60 min',
+    date: '2024-12-10',
+    imageUrl: '/ep16.webp',
+    // YouTube ID for the embedded player
+    videoUrl: 'CLK6EEcdeE4',
+    tags: ['Business', 'Mindset', 'Crowdfunding', 'HitHit', 'Martin Krejčíř'],
+    platformLinks: {
+      spotify: 'https://open.spotify.com/episode/0bx7kEpWhSWJSjX72NRsvd',
+      youtube: 'https://youtu.be/CLK6EEcdeE4',
+      apple: LINKS.apple,
+    },
+  },
+  {
     id: '11',
     title: 'EP 11: Jak vybudovat impérium na 0% chemie | Jiří Černota (BEWIT)',
     description: 'Může být majitel firmy tím nejdůležitějším "motorem", který nelze nahradit? Jiří Černota, vizionář a zakladatel BEWIT, opustil byznys ve stavebnictví, aby následoval svůj koníček a vytvořil jednu z největších evropských značek esenciálních olejů a superpotravin.',

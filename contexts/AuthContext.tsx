@@ -54,9 +54,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .from('admin_users')
         .select('role')
         .eq('user_id', state.user.id)
-        .single();
+        .maybeSingle();
 
-      if (error || !data) return false;
+      if (error) {
+        // If the table is missing or no row is found, just treat as non-admin without spamming errors
+        return false;
+      }
+
+      if (!data) return false;
       return true;
     } catch (error) {
       logError(createAppError(error, 'SUPABASE_ERROR', { action: 'checkAdminStatus' }));

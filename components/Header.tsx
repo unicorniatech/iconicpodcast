@@ -136,20 +136,29 @@ export const Header: React.FC<HeaderProps> = ({ isBannerOpen }) => {
                   </div>
                 )}
              </div>
-             {/* Auth: sign in / sign out (no profile page) */}
+             {/* Auth: profile + sign in / sign out */}
              {user ? (
-               <button
-                 onClick={handleSignOut}
-                 disabled={isLoggingOut}
-                 className={`${textColor} hover:text-red-500 p-2 disabled:opacity-50 flex items-center gap-1 text-sm`}
-                 title="Sign Out"
-               >
-                 {isLoggingOut ? (
-                   <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                 ) : (
-                   <LogOut size={18} />
-                 )}
-               </button>
+               <>
+                 <Link
+                   to="/profile"
+                   className={`${textColor} hover:text-iconic-pink p-2 flex items-center gap-1 text-sm`}
+                   title={t.menu_profile}
+                 >
+                   <User size={18} />
+                 </Link>
+                 <button
+                   onClick={handleSignOut}
+                   disabled={isLoggingOut}
+                   className={`${textColor} hover:text-red-500 p-2 disabled:opacity-50 flex items-center gap-1 text-sm`}
+                   title={t.menu_sign_out}
+                 >
+                   {isLoggingOut ? (
+                     <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                   ) : (
+                     <LogOut size={18} />
+                   )}
+                 </button>
+               </>
              ) : (
                <Link to="/login" className={`${textColor} hover:text-iconic-pink font-bold text-sm`}>
                  {t.menu_sign_in}
@@ -260,25 +269,40 @@ export const Header: React.FC<HeaderProps> = ({ isBannerOpen }) => {
                 </Link>
               )}
 
-              {/* Auth section (mobile, no profile page) */}
+              {/* Auth section (mobile) */}
               <div className="border-t border-white/10 my-4"></div>
               {user ? (
-                <button
-                  onClick={async () => {
-                    if (isLoggingOut) return;
-                    await handleSignOut();
-                    setIsOpen(false);
-                  }}
-                  disabled={isLoggingOut}
-                  className="flex items-center gap-3 w-full px-4 py-4 text-gray-300 hover:text-red-400 hover:bg-red-500/10 rounded-xl text-lg font-medium transition-colors disabled:opacity-50"
-                >
-                  {isLoggingOut ? (
-                    <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                  ) : (
-                    <LogOut size={20} />
-                  )}
-                  {t.menu_sign_out}
-                </button>
+                <>
+                  <Link
+                    to="/profile"
+                    onClick={() => {
+                      setIsOpen(false);
+                      if (typeof window !== 'undefined') {
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }
+                    }}
+                    className="flex items-center gap-3 w-full px-4 py-4 text-white hover:text-iconic-pink hover:bg-white/10 rounded-xl text-lg font-medium transition-colors"
+                  >
+                    <User size={20} />
+                    {t.menu_profile}
+                  </Link>
+                  <button
+                    onClick={async () => {
+                      if (isLoggingOut) return;
+                      await handleSignOut();
+                      setIsOpen(false);
+                    }}
+                    disabled={isLoggingOut}
+                    className="flex items-center gap-3 w-full px-4 py-4 text-gray-300 hover:text-red-400 hover:bg-red-500/10 rounded-xl text-lg font-medium transition-colors disabled:opacity-50"
+                  >
+                    {isLoggingOut ? (
+                      <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      <LogOut size={20} />
+                    )}
+                    {t.menu_sign_out}
+                  </button>
+                </>
               ) : (
                 <Link
                   to="/login"

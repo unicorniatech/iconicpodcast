@@ -34,6 +34,7 @@ import { FAQPage } from './pages/FAQPage';
 import { PodcastToolsPage } from './pages/PodcastToolsPage';
 import PodcastGuestDetailPage from './pages/PodcastGuestDetailPage';
 import EpisodePlanDetailPage from './pages/EpisodePlanDetailPage';
+import { ProfilePage } from './pages/ProfilePage';
 
 // Services & Data
 import { TRANSLATIONS, PODCAST_EPISODES, PRICING_PLANS } from './constants';
@@ -258,6 +259,8 @@ const mapEpisodeRowToPodcastEpisode = (row: EpisodeRow): PodcastEpisode => {
   const cleanTitle = stripCdata(row.title ?? null);
   const cleanDescription = stripHtml(stripCdata(row.description ?? null));
 
+  const staticEpisode = PODCAST_EPISODES.find((ep) => ep.id === row.id) || null;
+
   return {
     id: row.id,
     title: cleanTitle || row.title,
@@ -265,7 +268,7 @@ const mapEpisodeRowToPodcastEpisode = (row: EpisodeRow): PodcastEpisode => {
     summaries: undefined,
     duration: row.duration || '',
     date: row.published_at,
-    imageUrl: row.image_url,
+    imageUrl: row.image_url || staticEpisode?.imageUrl || `/ep${row.id}.webp`,
     videoUrl: row.video_url || undefined,
     audioUrl: row.audio_url || undefined,
     platformLinks: {
@@ -1383,6 +1386,14 @@ function AppContent() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route
+            path="/profile"
+            element={
+              <AuthGuard fallbackPath="/login">
+                <ProfilePage />
+              </AuthGuard>
+            }
+          />
           {/* Protected CRM route (Comment 2) */}
           <Route path="/crm" element={
             <AuthGuard requireAdmin fallbackPath="/">

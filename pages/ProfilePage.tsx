@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { User, Mail, LogOut, Save } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { supabase, isSupabaseConfigured } from '../services/supabaseClient';
 
 export const ProfilePage: React.FC = () => {
   const { user, logout } = useAuth();
@@ -17,8 +18,11 @@ export const ProfilePage: React.FC = () => {
   
   const [displayName, setDisplayName] = useState('');
   const [bio, setBio] = useState('');
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [success, setSuccess] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const t = {
     'cs-CZ': {
@@ -74,35 +78,144 @@ export const ProfilePage: React.FC = () => {
     back: '← Back',
   };
 
-  // Seed from localStorage so profile feels persistent without touching the DB
   useEffect(() => {
-    if (!user) return;
-    const stored = window.localStorage.getItem('iconic_profile_' + user.id);
-    if (stored) {
-      try {
-        const parsed = JSON.parse(stored) as { displayName?: string; bio?: string };
-        if (parsed.displayName) setDisplayName(parsed.displayName);
-        if (parsed.bio) setBio(parsed.bio);
-      } catch {
-        // ignore invalid JSON
+    const loadProfile = async () => {
+      if (!user) return;
+
+      const fallbackFromLocalStorage = () => {
+        try {
+          const stored = window.localStorage.getItem('iconic_profile_' + user.id);
+          if (stored) {
+            const parsed = JSON.parse(stored) as { displayName?: string; bio?: string; avatarUrl?: string | null };
+            if (parsed.displayName) setDisplayName(parsed.displayName);
+            if (parsed.bio) setBio(parsed.bio);
+            if (parsed.avatarUrl) {
+              setAvatarUrl(parsed.avatarUrl);
+              setAvatarPreview(parsed.avatarUrl);
+            }
+          } else {
+            setDisplayName(user.email?.split('@')[0] || '');
+          }
+        } catch {
+          setDisplayName(user.email?.split('@')[0] || '');
+        }
+      };
+
+      if (!isSupabaseConfigured()) {
+        fallbackFromLocalStorage();
+        return;
       }
-    } else {
-      setDisplayName(user.email?.split('@')[0] || '');
-    }
+
+      try {
+        const { data, error: dbError } = await supabase
+          .from('user_profiles')
+          .select('display_name, bio, avatar_url')
+          .eq('id', user.id)
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          .maybeSingle<any>();
+
+        if (dbError) {
+          fallbackFromLocalStorage();
+          return;
+        }
+
+        if (!data) {
+          fallbackFromLocalStorage();
+          return;
+        }
+
+        if (data.display_name) setDisplayName(data.display_name as string);
+        if (data.bio) setBio(data.bio as string);
+        if (data.avatar_url) {
+          const url = data.avatar_url as string;
+          setAvatarUrl(url);
+          setAvatarPreview(url);
+        }
+      } catch {
+        fallbackFromLocalStorage();
+      }
+    };
+
+    loadProfile();
   }, [user]);
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!user) return;
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const localUrl = URL.createObjectURL(file);
+    setAvatarPreview(localUrl);
+
+    if (!isSupabaseConfigured()) {
+      return;
+    }
+
+    try {
+      setError(null);
+      const fileExt = file.name.split('.').pop();
+      const filePath = `public/${user.id}-${Date.now()}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(filePath, file, { upsert: true });
+
+      if (uploadError) {
+        setError(t.error);
+        return;
+      }
+
+      const { data } = supabase.storage.from('avatars').getPublicUrl(filePath);
+      if (data?.publicUrl) {
+        setAvatarUrl(data.publicUrl);
+      }
+    } catch {
+      setError(t.error);
+    }
+  };
+
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user || isSaving) return;
 
     setIsSaving(true);
     setSuccess(null);
+    setError(null);
 
-    const payload = { displayName, bio };
+    const effectiveDisplayName = displayName || user.email?.split('@')[0] || '';
+
+    const payload = { displayName: effectiveDisplayName, bio, avatarUrl };
+
     try {
-      window.localStorage.setItem('iconic_profile_' + user.id, JSON.stringify(payload));
+      if (isSupabaseConfigured()) {
+        const { error: upsertError } = await supabase
+          .from('user_profiles')
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          .upsert(
+            {
+              id: user.id,
+              display_name: effectiveDisplayName,
+              bio,
+              avatar_url: avatarUrl,
+            } as any,
+            { onConflict: 'id' }
+          );
+
+        if (upsertError) {
+          setError(t.error);
+          return;
+        }
+      }
+
+      try {
+        window.localStorage.setItem('iconic_profile_' + user.id, JSON.stringify(payload));
+      } catch {
+      }
+
       setSuccess(t.success);
       setTimeout(() => setSuccess(null), 2500);
+    } catch {
+      setError(t.error);
     } finally {
       setIsSaving(false);
     }
@@ -135,9 +248,13 @@ export const ProfilePage: React.FC = () => {
             {/* Avatar circle with initials only (no upload) */}
             <div className="relative inline-block">
               <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-iconic-pink/20 flex items-center justify-center border-4 border-white/20 mx-auto overflow-hidden">
-                <span className="text-3xl sm:text-4xl font-bold text-white">
-                  {displayName?.charAt(0).toUpperCase() || user.email?.charAt(0).toUpperCase() || '?'}
-                </span>
+                {avatarPreview ? (
+                  <img src={avatarPreview} alt="" className="w-full h-full object-cover" />
+                ) : (
+                  <span className="text-3xl sm:text-4xl font-bold text-white">
+                    {displayName?.charAt(0).toUpperCase() || user.email?.charAt(0).toUpperCase() || '?'}
+                  </span>
+                )}
               </div>
             </div>
             
@@ -156,6 +273,16 @@ export const ProfilePage: React.FC = () => {
                 className="p-4 bg-green-50 border border-green-200 rounded-xl flex items-start gap-3"
               >
                 <p className="text-green-700 text-sm">{success}</p>
+              </div>
+            )}
+
+            {error && (
+              <div
+                role="alert"
+                aria-live="polite"
+                className="p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3"
+              >
+                <p className="text-red-700 text-sm">{error}</p>
               </div>
             )}
 
