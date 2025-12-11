@@ -137,7 +137,7 @@ export const ProfilePage: React.FC = () => {
     };
 
     loadProfile();
-  }, [user]);
+  }, [user?.id]);
 
   const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!user) return;
