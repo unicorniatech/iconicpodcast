@@ -15,7 +15,7 @@ export const Hero: React.FC = () => {
   }, []);
 
   return (
-    <div className="relative bg-iconic-black min-h-screen flex items-center pt-24 sm:pt-32 pb-12 overflow-hidden z-10">
+    <div className="relative bg-iconic-black min-h-screen flex items-start md:items-center pt-32 sm:pt-40 pb-12 overflow-hidden z-10">
       {/* Animated gradient background */}
       <div className="absolute inset-0 bg-gradient-to-br from-iconic-black via-iconic-pink/10 to-iconic-black"></div>
       
