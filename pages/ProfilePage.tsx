@@ -10,7 +10,6 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { User, Mail, LogOut, Save } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { supabase, isSupabaseConfigured } from '../services/supabaseClient';
 
 export const ProfilePage: React.FC = () => {
   const { user, logout } = useAuth();
@@ -79,100 +78,25 @@ export const ProfilePage: React.FC = () => {
   };
 
   useEffect(() => {
-    const loadProfile = async () => {
-      if (!user) return;
-
-      const fallbackFromLocalStorage = () => {
-        try {
-          const stored = window.localStorage.getItem('iconic_profile_' + user.id);
-          if (stored) {
-            const parsed = JSON.parse(stored) as { displayName?: string; bio?: string; avatarUrl?: string | null };
-            if (parsed.displayName) setDisplayName(parsed.displayName);
-            if (parsed.bio) setBio(parsed.bio);
-            if (parsed.avatarUrl) {
-              setAvatarUrl(parsed.avatarUrl);
-              setAvatarPreview(parsed.avatarUrl);
-            }
-          } else {
-            setDisplayName(user.email?.split('@')[0] || '');
-          }
-        } catch {
-          setDisplayName(user.email?.split('@')[0] || '');
-        }
-      };
-
-      if (!isSupabaseConfigured()) {
-        fallbackFromLocalStorage();
-        return;
-      }
-
-      try {
-        const { data, error: dbError } = await supabase
-          .from('user_profiles')
-          .select('display_name, bio, avatar_url')
-          .eq('id', user.id)
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          .maybeSingle<any>();
-
-        if (dbError) {
-          fallbackFromLocalStorage();
-          return;
-        }
-
-        if (!data) {
-          fallbackFromLocalStorage();
-          return;
-        }
-
-        if (data.display_name) setDisplayName(data.display_name as string);
-        if (data.bio) setBio(data.bio as string);
-        if (data.avatar_url) {
-          const url = data.avatar_url as string;
-          setAvatarUrl(url);
-          setAvatarPreview(url);
-        }
-      } catch {
-        fallbackFromLocalStorage();
-      }
-    };
-
-    loadProfile();
-  }, [user?.id]);
-
-  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!user) return;
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const localUrl = URL.createObjectURL(file);
-    setAvatarPreview(localUrl);
-
-    if (!isSupabaseConfigured()) {
-      return;
-    }
 
     try {
-      setError(null);
-      const fileExt = file.name.split('.').pop();
-      const filePath = `public/${user.id}-${Date.now()}.${fileExt}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from('avatars')
-        .upload(filePath, file, { upsert: true });
-
-      if (uploadError) {
-        setError(t.error);
-        return;
-      }
-
-      const { data } = supabase.storage.from('avatars').getPublicUrl(filePath);
-      if (data?.publicUrl) {
-        setAvatarUrl(data.publicUrl);
+      const stored = window.localStorage.getItem('iconic_profile_' + user.id);
+      if (stored) {
+        const parsed = JSON.parse(stored) as { displayName?: string; bio?: string; avatarUrl?: string | null };
+        if (parsed.displayName) setDisplayName(parsed.displayName);
+        if (parsed.bio) setBio(parsed.bio);
+        if (parsed.avatarUrl) {
+          setAvatarUrl(parsed.avatarUrl);
+          setAvatarPreview(parsed.avatarUrl);
+        }
+      } else {
+        setDisplayName(user.email?.split('@')[0] || '');
       }
     } catch {
-      setError(t.error);
+      setDisplayName(user.email?.split('@')[0] || '');
     }
-  };
+  }, [user?.id]);
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -187,26 +111,6 @@ export const ProfilePage: React.FC = () => {
     const payload = { displayName: effectiveDisplayName, bio, avatarUrl };
 
     try {
-      if (isSupabaseConfigured()) {
-        const { error: upsertError } = await supabase
-          .from('user_profiles')
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          .upsert(
-            {
-              id: user.id,
-              display_name: effectiveDisplayName,
-              bio,
-              avatar_url: avatarUrl,
-            } as any,
-            { onConflict: 'id' }
-          );
-
-        if (upsertError) {
-          setError(t.error);
-          return;
-        }
-      }
-
       try {
         window.localStorage.setItem('iconic_profile_' + user.id, JSON.stringify(payload));
       } catch {
