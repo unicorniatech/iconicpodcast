@@ -857,14 +857,14 @@ const ContactPage: React.FC = () => {
                              <div className="space-y-8 relative z-10">
                                 <div className="flex items-center gap-4 group">
                                     <a
-                                      href="mailto:hello@iconic-podcast.com"
+                                      href="mailto:holaamore@iconicpodcast.eu"
                                       className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center group-hover:bg-iconic-pink transition-colors cursor-pointer"
                                     >
                                        <Mail className="text-white" />
                                     </a>
                                     <div>
                                         <div className="font-bold text-sm text-gray-400 uppercase tracking-widest">{t.contact_email}</div>
-                                        <div className="text-lg">hello@iconic-podcast.com</div>
+                                        <div className="text-lg">holaamore@iconicpodcast.eu</div>
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-4 group">
