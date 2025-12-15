@@ -12,8 +12,8 @@ export const Footer: React.FC = () => {
                     <span className="text-2xl sm:text-3xl font-serif font-black tracking-widest block mb-4 sm:mb-6">I<span className="text-iconic-pink">|</span>CONIC</span>
                     <p className="text-gray-300 text-sm sm:text-base max-w-sm mb-4 sm:mb-6">{t.footer_desc}</p>
                     <div className="flex space-x-3">
-                        <a href="https://www.instagram.com/zuzzimentor/?hl=es" target="_blank" rel="noopener noreferrer" className="w-11 h-11 sm:w-10 sm:h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-iconic-pink transition-colors"><Instagram size={22} /></a>
-                        <a href="https://www.youtube.com/@ZuzziHusarova" target="_blank" rel="noopener noreferrer" className="w-11 h-11 sm:w-10 sm:h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-red-600 transition-colors"><Youtube size={22} /></a>
+                        <a href="https://www.instagram.com/zuzzimentor/?hl=es" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="w-11 h-11 sm:w-10 sm:h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-iconic-pink transition-colors"><Instagram size={22} /></a>
+                        <a href="https://www.youtube.com/@ZuzziHusarova" target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="w-11 h-11 sm:w-10 sm:h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-red-600 transition-colors"><Youtube size={22} /></a>
                     </div>
                 </div>
                 <div>

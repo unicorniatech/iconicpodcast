@@ -201,6 +201,7 @@ export const ShareButtons: React.FC<ShareButtonsProps> = ({ episodeId, title, ur
               href={link.url}
               target="_blank"
               rel="noopener noreferrer"
+              aria-label={link.name}
               className={`p-2.5 sm:p-2 rounded-full border border-gray-200 text-gray-500 transition-all ${link.color}`}
               title={link.name}
             >
@@ -211,6 +212,7 @@ export const ShareButtons: React.FC<ShareButtonsProps> = ({ episodeId, title, ur
           {/* Copy link button */}
           <button
             onClick={handleCopyLink}
+            aria-label={t.copy_link}
             className={`p-2.5 sm:p-2 rounded-full border transition-all ${
               copied
                 ? 'bg-green-500 text-white border-green-500'

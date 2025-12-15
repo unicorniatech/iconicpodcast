@@ -122,6 +122,7 @@ export const Header: React.FC<HeaderProps> = ({ isBannerOpen }) => {
              <div className="relative" ref={langMenuRef}>
                 <button 
                   onClick={() => setLangMenuOpen(!langMenuOpen)}
+                  aria-label={t.menu_language}
                   className={`flex items-center gap-1 ${textColor} font-bold hover:text-iconic-pink transition-colors px-3 py-2 rounded-full hover:bg-white/10`}
                 >
                     <Globe size={18} /> 
@@ -143,12 +144,14 @@ export const Header: React.FC<HeaderProps> = ({ isBannerOpen }) => {
                    to="/profile"
                    className={`${textColor} hover:text-iconic-pink p-2 flex items-center gap-1 text-sm`}
                    title={t.menu_profile}
+                   aria-label={t.menu_profile}
                  >
                    <User size={18} />
                  </Link>
                  <button
                    onClick={handleSignOut}
                    disabled={isLoggingOut}
+                   aria-label={t.menu_sign_out}
                    className={`${textColor} hover:text-red-500 p-2 disabled:opacity-50 flex items-center gap-1 text-sm`}
                    title={t.menu_sign_out}
                  >
@@ -174,13 +177,14 @@ export const Header: React.FC<HeaderProps> = ({ isBannerOpen }) => {
             {/* Mobile language button */}
             <button 
               onClick={() => setLangMenuOpen(!langMenuOpen)}
+              aria-label={t.menu_language}
               className={`${textColor} hover:text-iconic-pink p-2 flex items-center gap-1`}
             >
               <Globe size={20} />
               <span className="text-xs font-bold">{lang.split('-')[0].toUpperCase()}</span>
             </button>
             {/* Hamburger */}
-            <button onClick={() => setIsOpen(!isOpen)} className={`${textColor} hover:text-iconic-pink p-2`}>
+            <button onClick={() => setIsOpen(!isOpen)} aria-label={isOpen ? 'Close menu' : 'Open menu'} className={`${textColor} hover:text-iconic-pink p-2`}>
               {isOpen ? <X size={28} /> : <Menu size={28} />}
             </button>
           </div>
@@ -211,7 +215,7 @@ export const Header: React.FC<HeaderProps> = ({ isBannerOpen }) => {
             {/* Close button / header */}
             <div className="flex justify-between items-center p-4 border-b border-white/10">
               <span className="text-xl font-serif font-black">I<span className="text-iconic-pink">|</span>CONIC</span>
-              <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-white/10 rounded-full">
+              <button onClick={() => setIsOpen(false)} aria-label="Close menu" className="p-2 hover:bg-white/10 rounded-full">
                 <X size={24} />
               </button>
             </div>

@@ -26,6 +26,9 @@
     "@types/react-dom": "^19.0.0",
     "@vercel/node": "^5.5.14",
     "@vitejs/plugin-react": "^5.0.0",
+    "autoprefixer": "^10.4.23",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.19",
     "typescript": "~5.8.2",
     "vite": "^6.2.0",
     "vite-plugin-sitemap": "^0.7.1"
