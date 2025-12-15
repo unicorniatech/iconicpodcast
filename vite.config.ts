@@ -41,7 +41,7 @@ export default defineConfig(({ mode }) => {
         react(),
         sitemap({
           hostname,
-          routes: [...staticRoutes, ...episodeRoutes],
+          dynamicRoutes: [...staticRoutes, ...episodeRoutes],
         }),
       ],
       build: {

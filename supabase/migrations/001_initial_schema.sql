@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS leads (
   phone TEXT,
   interest TEXT NOT NULL,
   source TEXT NOT NULL CHECK (source IN (
-    'chatbot', 'contact_form', 'manual', 'newsletter', 'guest_popup',
+    'chatbot', 'contact_form', 'manual', 'newsletter', 'ebook', 'guest_popup',
     'youtube_description', 'instagram_bio', 'paid_social',
     'landing_youtube', 'landing_instagram', 'landing_social'
   )),

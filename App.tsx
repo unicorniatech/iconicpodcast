@@ -77,10 +77,10 @@ const NewsletterToast: React.FC<NewsletterToastProps> = ({ isOpen, onClose }) =>
         await saveLead({
           name: name.trim() || 'Newsletter Subscriber',
           email: email,
-          interest: 'Newsletter Signup',
-          source: 'newsletter',
-          notes: 'Captured via Massive Toast',
-          tags: ['Newsletter', 'Web']
+          interest: 'Ebook Signup',
+          source: 'ebook',
+          notes: 'Captured via ebook popup',
+          tags: ['Ebook', 'Web']
         });
         setIsSubscribed(true);
         localStorage.setItem('iconic_newsletter_status', 'subscribed');
@@ -121,7 +121,7 @@ const NewsletterToast: React.FC<NewsletterToastProps> = ({ isOpen, onClose }) =>
               <div className="sm:col-span-2">
                 <div className="w-full flex items-center justify-center">
                   <img
-                    src="/pop-up-image.png"
+                    src="/pop-up-image.webp"
                     alt=""
                     className="w-full max-w-[320px] sm:max-w-none sm:w-full h-auto object-contain"
                     loading="lazy"

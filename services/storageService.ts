@@ -50,7 +50,7 @@ export const saveLead = async (leadData: LeadInput): Promise<{ data: Lead | null
   // Try Supabase first
   if (isSupabaseConfigured()) {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('leads')
         .insert({
           name: leadData.name,
@@ -70,6 +70,10 @@ export const saveLead = async (leadData: LeadInput): Promise<{ data: Lead | null
 
       if (error) {
         throw error;
+      }
+
+      if (!data) {
+        throw new Error('No data returned from insert');
       }
 
       const lead: Lead = {
@@ -92,7 +96,9 @@ export const saveLead = async (leadData: LeadInput): Promise<{ data: Lead | null
     } catch (error) {
       const appError = createAppError(error, 'SUPABASE_ERROR', { action: 'saveLead' });
       logError(appError);
-      // Fall through to localStorage
+      // If Supabase is configured, do not silently fall back to localStorage.
+      // The CRM dashboard reads from Supabase, so a local fallback would make signups appear missing.
+      return { data: null, error: appError };
     }
   }
 
@@ -125,7 +131,7 @@ export const saveLead = async (leadData: LeadInput): Promise<{ data: Lead | null
 export const getLeads = async (): Promise<{ data: Lead[]; error: AppError | null }> => {
   if (isSupabaseConfigured()) {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('leads')
         .select('*')
         .order('created_at', { ascending: false });
@@ -173,17 +179,10 @@ export const updateLead = async (
 
   if (isSupabaseConfigured()) {
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('leads')
         .update({
-          ...(updates.name && { name: updates.name }),
-          ...(updates.email && { email: updates.email }),
-          ...(updates.phone !== undefined && { phone: updates.phone || null }),
-          ...(updates.interest && { interest: updates.interest }),
-          ...(updates.notes !== undefined && { notes: updates.notes || null }),
-          ...(updates.tags && { tags: updates.tags }),
-          ...(updates.status && { status: updates.status }),
-          ...(updates.userId && { user_id: updates.userId }),
+          ...updates,
           updated_at: now
         })
         .eq('id', id);
@@ -223,7 +222,7 @@ export const updateLead = async (
 export const deleteLead = async (id: string): Promise<{ data: Lead[] | null; error: AppError | null }> => {
   if (isSupabaseConfigured()) {
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('leads')
         .delete()
         .eq('id', id);
@@ -261,7 +260,7 @@ export const deleteLead = async (id: string): Promise<{ data: Lead[] | null; err
 export const getLeadsBySource = async (source: LeadSource): Promise<{ data: Lead[]; error: AppError | null }> => {
   if (isSupabaseConfigured()) {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('leads')
         .select('*')
         .eq('source', source)

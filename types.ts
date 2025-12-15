@@ -26,6 +26,7 @@ export type LeadSource =
   | 'contact_form' 
   | 'manual' 
   | 'newsletter' 
+  | 'ebook'
   | 'guest_popup'
   | 'youtube_description'
   | 'instagram_bio'
