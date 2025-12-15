@@ -67,12 +67,13 @@ const NewsletterToast: React.FC<NewsletterToastProps> = ({ isOpen, onClose }) =>
     e.preventDefault();
     setIsSubmitting(true);
     const formData = new FormData(e.target as HTMLFormElement);
+    const name = (formData.get('name') as string) || '';
     const email = formData.get('email') as string;
 
     if (email) {
       try {
         await saveLead({
-          name: 'Newsletter Subscriber',
+          name: name.trim() || 'Newsletter Subscriber',
           email: email,
           interest: 'Newsletter Signup',
           source: 'newsletter',
@@ -93,44 +94,82 @@ const NewsletterToast: React.FC<NewsletterToastProps> = ({ isOpen, onClose }) =>
   if (!isOpen) return null;
 
   return (
-    <div className="fixed top-0 left-0 w-full z-[60] bg-iconic-black shadow-2xl animate-fade-in-down border-b border-iconic-pink/20 h-12 flex items-center">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative">
-        <button onClick={handleDismiss} className="absolute right-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white p-1">
-          <X size={18} />
-        </button>
-        
-        {isSubscribed ? (
-          <div className="flex items-center justify-center text-white font-bold text-sm sm:text-base gap-2 animate-pulse w-full">
-            <CheckCircle size={20} className="text-iconic-pink" /> {t.newsletter_success}
-          </div>
-        ) : (
-          <div className="flex items-center justify-between w-full pr-8">
-            <div className="text-white flex items-center gap-3 overflow-hidden">
-              <span className="bg-iconic-pink text-white text-[10px] uppercase font-bold px-1.5 py-0.5 rounded flex-shrink-0">New</span>
-              <div className="truncate text-xs sm:text-sm">
-                 <span className="font-bold hidden sm:inline">{t.newsletter_title}: </span>
-                 <span className="text-white/90">{t.newsletter_desc}</span>
+    <div className="fixed inset-0 z-[60] flex items-end justify-center">
+      <button
+        aria-label="Close"
+        onClick={handleDismiss}
+        className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"
+      />
+      <div className="relative w-full max-w-2xl animate-fade-in-up">
+        <div className="bg-iconic-black text-white rounded-t-3xl shadow-2xl border-t border-iconic-pink/20 px-5 sm:px-8 pt-6 pb-7">
+          <button
+            onClick={handleDismiss}
+            className="absolute right-4 top-4 text-white/70 hover:text-white p-2"
+            aria-label="Close"
+          >
+            <X size={20} />
+          </button>
+
+          {isSubscribed ? (
+            <div className="flex items-center justify-center text-white font-bold text-base sm:text-lg gap-2 animate-pulse w-full py-6">
+              <CheckCircle size={22} className="text-iconic-pink" /> {t.newsletter_success}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-5 gap-5 items-center">
+              <div className="sm:col-span-2">
+                <div className="w-full aspect-[4/3] bg-white/10 rounded-2xl overflow-hidden border border-white/10">
+                  <img
+                    src="/pop-up-image.png"
+                    alt=""
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+
+              <div className="sm:col-span-3">
+                <h3 className="text-2xl sm:text-3xl font-serif font-black leading-tight">
+                  Odemkni si schopnost získat to, po čem toužíš.
+                </h3>
+                <p className="text-white/85 mt-2 text-sm sm:text-base leading-relaxed">
+                  Stáhni si ZDARMA exkluzivní e-book od Zuzzi a objev 3 věty s mocí okamžitě změnit tvůj život i business.
+                </p>
+
+                <form onSubmit={handleSubscribe} className="mt-5 space-y-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <input
+                      name="name"
+                      type="text"
+                      placeholder="Jméno"
+                      className="w-full px-4 py-3 rounded-xl bg-white text-iconic-black placeholder-gray-500 focus:ring-2 focus:ring-iconic-pink"
+                    />
+                    <input
+                      type="email"
+                      name="email"
+                      required
+                      placeholder={t.newsletter_placeholder}
+                      className="w-full px-4 py-3 rounded-xl bg-white text-iconic-black placeholder-gray-500 focus:ring-2 focus:ring-iconic-pink"
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full bg-iconic-pink text-white font-extrabold py-3.5 rounded-full hover:bg-pink-600 transition-colors disabled:opacity-50"
+                  >
+                    {isSubmitting ? '...' : 'ZÍSKAT OKAMŽITÝ PŘÍSTUP'}
+                  </button>
+
+                  <div className="text-[11px] sm:text-xs text-white/70 leading-relaxed">
+                    Zadáním svých údajů se staneš Zuzzi Followerem – získáš ZDARMA přístup k exkluzivním vhledům, soukromým Q+A a inspirativním epizodám Iconic, které ti budou s láskou chodit do e-mailu. (Odhlásit se můžeš kdykoli jedním klikem.)
+                    <br />
+                    Zároveň souhlasíš s našimi Podmínkami užití a Zásadami ochrany osobních údajů.
+                  </div>
+                </form>
               </div>
             </div>
-            
-            <form onSubmit={handleSubscribe} className="flex gap-2 flex-shrink-0 ml-4">
-              <input 
-                type="email" 
-                name="email"
-                required
-                placeholder={t.newsletter_placeholder}
-                className="w-32 sm:w-48 px-3 py-1 text-xs sm:text-sm rounded border-none focus:ring-2 focus:ring-iconic-pink text-iconic-black placeholder-gray-500"
-              />
-              <button 
-                type="submit" 
-                disabled={isSubmitting}
-                className="px-3 py-1 bg-iconic-pink text-white text-xs sm:text-sm font-bold rounded hover:bg-pink-600 transition-colors whitespace-nowrap disabled:opacity-50"
-              >
-                {isSubmitting ? '...' : t.newsletter_btn}
-              </button>
-            </form>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );
@@ -1376,7 +1415,7 @@ function AppContent() {
       <CursorSpotlight />
       <NewsletterToast isOpen={isBannerOpen} onClose={() => setIsBannerOpen(false)} />
       {isGuestModalOpen && <GuestInvitationModal onClose={() => setIsGuestModalOpen(false)} />}
-      <Header isBannerOpen={isBannerOpen} />
+      <Header isBannerOpen={false} />
       <main className="flex-grow">
         <Routes>
           <Route path="/" element={<><SEOHead /><Hero /><EpisodeList /></>} />
