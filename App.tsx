@@ -8,7 +8,7 @@
  * - HelmetProvider for dynamic metadata (Comment 8)
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Link, useParams, useSearchParams, Navigate } from 'react-router-dom';
 import { 
   Play, Video, CheckCircle, ExternalLink, Download, Trash2, Save, Tag, Mail, Phone, Plus, X, 
@@ -20,7 +20,7 @@ import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 
 // Components
-import { Header, Footer, Hero, Chatbot, AnimatedBackground, CursorSpotlight, ScrollReveal, AuthGuard, SEOHead, LazyYouTubePlayer } from './components';
+import { Header, Footer, Hero, AnimatedBackground, ScrollReveal, AuthGuard, SEOHead, LazyYouTubePlayer } from './components';
 import { Comments } from './components/Comments';
 import { ShareButtons } from './components/ShareButtons';
 
@@ -44,6 +44,8 @@ import supabase, { isSupabaseConfigured } from './services/supabaseClient';
 import { saveLead, getLeads, updateLead, deleteLead, storageService } from './services/storageService';
 import { logError, createAppError } from './services/errorService';
 import { initAnalytics, trackPageView } from './services/analyticsService';
+
+const LazyChatbot = React.lazy(() => import('./components/Chatbot'));
 
 // ============================================================================
 // NEWSLETTER TOAST
@@ -1308,7 +1310,6 @@ function AppContent() {
   return (
     <div className="flex flex-col min-h-screen relative overflow-x-hidden bg-white">
       <AnimatedBackground />
-      <CursorSpotlight />
       <NewsletterToast isOpen={isBannerOpen} onClose={() => setIsBannerOpen(false)} />
       <Header isBannerOpen={false} />
       <main className="flex-grow">
@@ -1369,7 +1370,9 @@ function AppContent() {
         </Routes>
       </main>
       <Footer />
-      <Chatbot />
+      <Suspense fallback={null}>
+        <LazyChatbot />
+      </Suspense>
     </div>
   );
 }
