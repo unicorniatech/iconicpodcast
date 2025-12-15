@@ -123,6 +123,8 @@ const NewsletterToast: React.FC<NewsletterToastProps> = ({ isOpen, onClose }) =>
                   <img
                     src="/pop-up-image.webp"
                     alt=""
+                    width={320}
+                    height={427}
                     className="w-full max-w-[320px] sm:max-w-none sm:w-full h-auto object-contain"
                     loading="lazy"
                   />

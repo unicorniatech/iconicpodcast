@@ -130,6 +130,8 @@ export const Hero: React.FC = () => {
                         <img 
                             src={ZUZZI_HERO_IMAGE} 
                             alt="Zuzana Husarova" 
+                            width={600}
+                            height={800}
                             className={`w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-1000 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
                             loading="eager"
                             decoding="async"
