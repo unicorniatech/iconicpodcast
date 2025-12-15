@@ -117,11 +117,11 @@ const NewsletterToast: React.FC<NewsletterToastProps> = ({ isOpen, onClose }) =>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-5 gap-5 items-center">
               <div className="sm:col-span-2">
-                <div className="w-full aspect-[4/3] bg-white/10 rounded-2xl overflow-hidden border border-white/10">
+                <div className="w-full flex items-center justify-center">
                   <img
                     src="/pop-up-image.png"
                     alt=""
-                    className="w-full h-full object-cover"
+                    className="w-full max-w-[320px] sm:max-w-none sm:w-full h-auto object-contain"
                     loading="lazy"
                   />
                 </div>
@@ -1370,7 +1370,6 @@ const AdminDashboard: React.FC = () => {
 // ============================================================================
 function AppContent() {
   const [isBannerOpen, setIsBannerOpen] = useState(false);
-  const [isGuestModalOpen, setIsGuestModalOpen] = useState(false);
 
   // Initialize analytics tracking
   useEffect(() => {
@@ -1390,15 +1389,14 @@ function AppContent() {
     }
   }, []);
 
-  // Exit-intent logic for guest modal (only when intro is not showing)
+  // Exit-intent logic: show the new lead magnet popup when cursor goes to the URL bar
   useEffect(() => {
-    const guestSignedUp = localStorage.getItem('iconic_guest_signed_up');
-    const guestDismissed = sessionStorage.getItem('iconic_guest_dismissed');
-    if (guestSignedUp || guestDismissed) return;
+    const newsletterStatus = localStorage.getItem('iconic_newsletter_status');
+    if (newsletterStatus === 'dismissed' || newsletterStatus === 'subscribed') return;
 
     const handleMouseLeave = (event: MouseEvent) => {
       if (event.clientY <= 0) {
-        setIsGuestModalOpen(true);
+        setIsBannerOpen(true);
         window.removeEventListener('mouseout', handleMouseLeave);
       }
     };
@@ -1414,7 +1412,6 @@ function AppContent() {
       <AnimatedBackground />
       <CursorSpotlight />
       <NewsletterToast isOpen={isBannerOpen} onClose={() => setIsBannerOpen(false)} />
-      {isGuestModalOpen && <GuestInvitationModal onClose={() => setIsGuestModalOpen(false)} />}
       <Header isBannerOpen={false} />
       <main className="flex-grow">
         <Routes>
