@@ -3,6 +3,7 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')
 const EBOOK_URL = Deno.env.get('EBOOK_URL') || 'https://your-domain.com/ebook.pdf'
 const FROM_EMAIL = Deno.env.get('FROM_EMAIL') || 'ICONIC Podcast <info@iconicpodcast.eu>'
+const ADMIN_EMAIL = Deno.env.get('ADMIN_EMAIL') || 'info@iconicpodcast.eu'
 
 interface LeadPayload {
   type: 'INSERT'
@@ -141,6 +142,73 @@ serve(async (req) => {
     }
 
     console.log('Email sent successfully to:', email)
+
+    // Send admin notification email
+    const adminRes = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${RESEND_API_KEY}`,
+      },
+      body: JSON.stringify({
+        from: FROM_EMAIL,
+        to: [ADMIN_EMAIL],
+        subject: `🆕 Nový lead: ${name} | ICONIC Podcast`,
+        html: `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+</head>
+<body style="margin: 0; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f5f5f5;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+    <tr>
+      <td style="padding: 20px; background-color: #1a1a1a;">
+        <h1 style="color: #ec4899; font-size: 20px; margin: 0;">🆕 Nový Lead z Ebook Popup</h1>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding: 20px;">
+        <table width="100%" cellpadding="8" cellspacing="0" style="border-collapse: collapse;">
+          <tr>
+            <td style="border-bottom: 1px solid #eee; font-weight: bold; width: 120px;">Jméno:</td>
+            <td style="border-bottom: 1px solid #eee;">${name}</td>
+          </tr>
+          <tr>
+            <td style="border-bottom: 1px solid #eee; font-weight: bold;">Email:</td>
+            <td style="border-bottom: 1px solid #eee;"><a href="mailto:${email}" style="color: #ec4899;">${email}</a></td>
+          </tr>
+          <tr>
+            <td style="border-bottom: 1px solid #eee; font-weight: bold;">Zdroj:</td>
+            <td style="border-bottom: 1px solid #eee;">${payload.record.source}</td>
+          </tr>
+          <tr>
+            <td style="border-bottom: 1px solid #eee; font-weight: bold;">Zájem:</td>
+            <td style="border-bottom: 1px solid #eee;">${payload.record.interest}</td>
+          </tr>
+          <tr>
+            <td style="font-weight: bold;">Čas:</td>
+            <td>${new Date().toLocaleString('cs-CZ', { timeZone: 'Europe/Prague' })}</td>
+          </tr>
+        </table>
+        <p style="margin-top: 20px; padding: 15px; background-color: #f0fdf4; border-radius: 8px; color: #166534;">
+          ✅ Uživateli byl automaticky odeslán e-book.
+        </p>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+        `,
+      }),
+    })
+
+    if (!adminRes.ok) {
+      console.error('Failed to send admin notification')
+    } else {
+      console.log('Admin notification sent to:', ADMIN_EMAIL)
+    }
+
     return new Response(
       JSON.stringify({ message: 'Email sent successfully', id: data.id }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
