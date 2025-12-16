@@ -234,6 +234,7 @@ const PodcastCard: React.FC<{ episode: PodcastEpisode }> = ({ episode }) => {
   const summary = translatedSummary || episode.description;
   const showHelperSummary = lang !== 'cs-CZ' && translatedSummary;
   const [imageLoaded, setImageLoaded] = React.useState(false);
+  const isEp16Image = episode.imageUrl.endsWith('ep16.webp');
 
   return (
     <div
@@ -248,7 +249,11 @@ const PodcastCard: React.FC<{ episode: PodcastEpisode }> = ({ episode }) => {
           <div className="absolute inset-0 bg-gray-200 animate-pulse" />
         )}
         <img
-          src={episode.imageUrl}
+          src={isEp16Image ? '/ep16-800.webp' : episode.imageUrl}
+          srcSet={
+            isEp16Image ? '/ep16-400.webp 400w, /ep16-800.webp 800w' : undefined
+          }
+          sizes={isEp16Image ? '(max-width: 640px) 100vw, 400px' : undefined}
           alt={episode.title}
           className={`w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
           loading="lazy"
@@ -640,7 +645,22 @@ const EpisodeDetail: React.FC = () => {
                                       title={relShowHelperSummary || undefined}
                                     >
                                       <div className="aspect-video rounded-lg overflow-hidden mb-2">
-                                        <img src={rel.imageUrl} alt={rel.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
+                                        <img
+                                          src={rel.imageUrl.endsWith('ep16.webp') ? '/ep16-800.webp' : rel.imageUrl}
+                                          srcSet={
+                                            rel.imageUrl.endsWith('ep16.webp')
+                                              ? '/ep16-400.webp 400w, /ep16-800.webp 800w'
+                                              : undefined
+                                          }
+                                          sizes={
+                                            rel.imageUrl.endsWith('ep16.webp')
+                                              ? '(max-width: 768px) 100vw, 240px'
+                                              : undefined
+                                          }
+                                          alt={rel.title}
+                                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                          loading="lazy"
+                                        />
                                       </div>
                                       <div className="text-[11px] uppercase tracking-wide text-gray-400 mb-1">{rel.date}</div>
                                       <div className="text-sm font-semibold text-iconic-black line-clamp-2 group-hover:text-iconic-pink">

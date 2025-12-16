@@ -309,9 +309,22 @@ export const Chatbot: React.FC = () => {
                                             {(() => {
                                                 const ep = PODCAST_EPISODES.find(p => p.id === msg.data.episodeId);
                                                 if (!ep) return null;
+                                                const isEp16Image = ep.imageUrl.endsWith('ep16.webp');
                                                 return (
                                                     <div className="bg-white rounded-xl overflow-hidden border border-gray-200 shadow-md">
-                                                        <img src={ep.imageUrl} alt={ep.title} className="w-full h-32 object-cover" />
+                                                        <img
+                                                          src={isEp16Image ? '/ep16-800.webp' : ep.imageUrl}
+                                                          srcSet={
+                                                            isEp16Image
+                                                              ? '/ep16-400.webp 400w, /ep16-800.webp 800w'
+                                                              : undefined
+                                                          }
+                                                          sizes={isEp16Image ? '100vw' : undefined}
+                                                          alt={ep.title}
+                                                          className="w-full h-32 object-cover"
+                                                          loading="lazy"
+                                                          decoding="async"
+                                                        />
                                                         <div className="p-3">
                                                             <div className="font-bold text-sm leading-tight mb-2">{ep.title}</div>
                                                             <Link to={`/episodes/${ep.id}`} className="text-xs text-iconic-pink font-bold flex items-center">{t.chatbot_listen_cta} <ChevronRight size={12} /></Link>
