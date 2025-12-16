@@ -63,7 +63,7 @@ PLATFORM LINKS (Share these when asked where to listen):
 
 CONTACT INFO:
 - Phone: +420 775 152 006
-- Email: holaamore@iconicpodcast.eu
+- Email: info@iconicpodcast.eu
 
 AVAILABLE EPISODES CONTEXT:
 ${podcastContext}

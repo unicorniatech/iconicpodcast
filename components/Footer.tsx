@@ -62,7 +62,7 @@ export const Footer: React.FC = () => {
                 </div>
                 <div>
                     <h4 className="font-bold text-base sm:text-lg mb-3 sm:mb-4">{t.footer_contact}</h4>
-                    <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">holaamore@iconicpodcast.eu<br/>+420 775 152 006<br/>{t.footer_location}</p>
+                    <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">info@iconicpodcast.eu<br/>+420 775 152 006<br/>{t.footer_location}</p>
                 </div>
             </div>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-white/10 text-center text-gray-600 text-xs sm:text-sm">&copy; {new Date().getFullYear()} Zuzana Husarova. {t.footer_rights}</div>

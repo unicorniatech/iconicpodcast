@@ -67,19 +67,19 @@ const getDevFallbackResponse = (message: string, language: string): ChatResponse
       default: '🎙️ Ahoj! Jsem AI asistentka ICONIC podcastu. V produkčním prostředí ti pomohu s dotazy o podcastu, mentoringu a Zuzaně Husarové. Prozatím si můžeš prohlédnout naše epizody!',
       pricing: '💰 Informace o cenách najdeš na stránce kontakt nebo mi napiš v produkční verzi webu.',
       podcast: '🎧 Máme skvělé epizody! Podívej se na sekci Epizody a vyber si téma, které tě zajímá.',
-      contact: '📧 Kontaktuj nás na holaamore@iconicpodcast.eu nebo +420 775 152 006',
+      contact: '📧 Kontaktuj nás na info@iconicpodcast.eu nebo +420 775 152 006',
     },
     'en-US': {
       default: '🎙️ Hi! I\'m the ICONIC podcast AI assistant. In production, I\'ll help you with questions about the podcast, mentoring, and Zuzana Husarova. For now, check out our episodes!',
       pricing: '💰 You can find pricing information on the contact page or ask me in the production version.',
       podcast: '🎧 We have great episodes! Check out the Episodes section and pick a topic that interests you.',
-      contact: '📧 Contact us at holaamore@iconicpodcast.eu or +420 775 152 006',
+      contact: '📧 Contact us at info@iconicpodcast.eu or +420 775 152 006',
     },
     'es-MX': {
       default: '🎙️ ¡Hola! Soy la asistente IA del podcast ICONIC. En producción, te ayudaré con preguntas sobre el podcast, mentoría y Zuzana Husarova. ¡Por ahora, mira nuestros episodios!',
       pricing: '💰 Puedes encontrar información de precios en la página de contacto o pregúntame en la versión de producción.',
       podcast: '🎧 ¡Tenemos episodios geniales! Mira la sección de Episodios y elige un tema que te interese.',
-      contact: '📧 Contáctanos en holaamore@iconicpodcast.eu o +420 775 152 006',
+      contact: '📧 Contáctanos en info@iconicpodcast.eu o +420 775 152 006',
     }
   };
 
