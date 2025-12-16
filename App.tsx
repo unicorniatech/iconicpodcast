@@ -76,6 +76,24 @@ const NewsletterToast: React.FC<NewsletterToastProps> = ({ isOpen, onClose }) =>
     if (email) {
       setErrorMessage(null);
       try {
+        // Create Supabase Auth user to trigger verification email
+        const { error: authError } = await supabase.auth.signUp({
+          email: email,
+          password: crypto.randomUUID(), // Random password - user won't need it for ebook
+          options: {
+            data: {
+              name: name.trim() || 'Ebook Subscriber',
+              source: 'ebook'
+            }
+          }
+        });
+
+        // Auth error is not critical - user might already exist
+        if (authError && !authError.message.includes('already registered')) {
+          console.warn('Auth signup warning:', authError.message);
+        }
+
+        // Save lead to leads table
         const { data, error } = await saveLead({
           name: name.trim() || 'Newsletter Subscriber',
           email: email,
