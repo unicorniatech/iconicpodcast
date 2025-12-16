@@ -59,6 +59,7 @@ const NewsletterToast: React.FC<NewsletterToastProps> = ({ isOpen, onClose }) =>
   const { t } = useLanguage();
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleDismiss = () => {
     onClose();
@@ -73,8 +74,9 @@ const NewsletterToast: React.FC<NewsletterToastProps> = ({ isOpen, onClose }) =>
     const email = formData.get('email') as string;
 
     if (email) {
+      setErrorMessage(null);
       try {
-        await saveLead({
+        const { data, error } = await saveLead({
           name: name.trim() || 'Newsletter Subscriber',
           email: email,
           interest: 'Ebook Signup',
@@ -82,11 +84,19 @@ const NewsletterToast: React.FC<NewsletterToastProps> = ({ isOpen, onClose }) =>
           notes: 'Captured via ebook popup',
           tags: ['Ebook', 'Web']
         });
+        
+        if (error || !data) {
+          logError(error || createAppError(new Error('No data returned'), 'UNKNOWN_ERROR', { action: 'newsletterSubscribe' }));
+          setErrorMessage('Něco se pokazilo. Zkuste to prosím znovu.');
+          return;
+        }
+        
         setIsSubscribed(true);
         localStorage.setItem('iconic_newsletter_status', 'subscribed');
         setTimeout(() => onClose(), 3000);
       } catch (error) {
         logError(createAppError(error, 'UNKNOWN_ERROR', { action: 'newsletterSubscribe' }));
+        setErrorMessage('Něco se pokazilo. Zkuste to prosím znovu.');
       } finally {
         setIsSubmitting(false);
       }
@@ -165,6 +175,12 @@ const NewsletterToast: React.FC<NewsletterToastProps> = ({ isOpen, onClose }) =>
                   >
                     {isSubmitting ? '...' : 'ZÍSKAT OKAMŽITÝ PŘÍSTUP'}
                   </button>
+
+                  {errorMessage && (
+                    <div className="text-red-400 text-sm font-medium text-center">
+                      {errorMessage}
+                    </div>
+                  )}
 
                   <div className="text-[11px] sm:text-xs text-white/70 leading-relaxed">
                     Zadáním svých údajů se staneš Zuzzi Followerem – získáš ZDARMA přístup k exkluzivním vhledům, soukromým Q+A a inspirativním epizodám Iconic, které ti budou s láskou chodit do e-mailu. (Odhlásit se můžeš kdykoli jedním klikem.)
