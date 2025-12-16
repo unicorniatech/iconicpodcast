@@ -33,3 +33,5 @@ lighthouse-*.json
 *.njsproj
 *.sln
 *.sw?
+.vercel
+.env*.local
