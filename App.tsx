@@ -251,7 +251,9 @@ const PodcastCard: React.FC<{ episode: PodcastEpisode }> = ({ episode }) => {
         <img
           src={isEp16Image ? '/ep16-800.webp' : episode.imageUrl}
           srcSet={
-            isEp16Image ? '/ep16-400.webp 400w, /ep16-800.webp 800w' : undefined
+            isEp16Image
+              ? '/ep16-400.webp 400w, /ep16-600.webp 600w, /ep16-800.webp 800w'
+              : undefined
           }
           sizes={isEp16Image ? '(max-width: 640px) 100vw, 400px' : undefined}
           alt={episode.title}
@@ -649,7 +651,7 @@ const EpisodeDetail: React.FC = () => {
                                           src={rel.imageUrl.endsWith('ep16.webp') ? '/ep16-800.webp' : rel.imageUrl}
                                           srcSet={
                                             rel.imageUrl.endsWith('ep16.webp')
-                                              ? '/ep16-400.webp 400w, /ep16-800.webp 800w'
+                                              ? '/ep16-400.webp 400w, /ep16-600.webp 600w, /ep16-800.webp 800w'
                                               : undefined
                                           }
                                           sizes={

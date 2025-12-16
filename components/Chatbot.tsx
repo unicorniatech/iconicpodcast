@@ -316,7 +316,7 @@ export const Chatbot: React.FC = () => {
                                                           src={isEp16Image ? '/ep16-800.webp' : ep.imageUrl}
                                                           srcSet={
                                                             isEp16Image
-                                                              ? '/ep16-400.webp 400w, /ep16-800.webp 800w'
+                                                              ? '/ep16-400.webp 400w, /ep16-600.webp 600w, /ep16-800.webp 800w'
                                                               : undefined
                                                           }
                                                           sizes={isEp16Image ? '100vw' : undefined}
