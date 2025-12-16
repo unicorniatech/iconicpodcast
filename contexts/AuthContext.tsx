@@ -22,7 +22,7 @@ interface AuthContextType extends AuthState {
   login: (email: string, password: string) => Promise<{ error: string | null }>;
   register: (email: string, password: string) => Promise<{ error: string | null }>;
   logout: () => Promise<void>;
-  checkAdminStatus: () => Promise<boolean>;
+  checkAdminStatus: (user: User | null) => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -39,11 +39,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     isAuthenticated: false
   });
 
-  const checkAdminStatus = useCallback(async (): Promise<boolean> => {
-    if (!state.user) return false;
+  const checkAdminStatus = useCallback(async (user: User | null): Promise<boolean> => {
+    if (!user) return false;
 
     // Email-based fallback so key accounts always see CRM
-    if (state.user.email && ADMIN_EMAILS_FALLBACK.includes(state.user.email)) {
+    if (user.email && ADMIN_EMAILS_FALLBACK.includes(user.email)) {
       return true;
     }
 
@@ -53,7 +53,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const { data, error } = await supabase
         .from('admin_users')
         .select('role')
-        .eq('user_id', state.user.id)
+        .eq('user_id', user.id)
         .maybeSingle();
 
       if (error) {
@@ -67,7 +67,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       logError(createAppError(error, 'SUPABASE_ERROR', { action: 'checkAdminStatus' }));
       return false;
     }
-  }, [state.user]);
+  }, []);
 
   useEffect(() => {
     if (!isSupabaseConfigured()) {
@@ -87,7 +87,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       // Ensure isAdmin is correctly set on page reload for existing sessions
       if (session?.user) {
-        const isAdminFlag = await checkAdminStatus();
+        const isAdminFlag = await checkAdminStatus(session.user);
         setState(prev => ({ ...prev, isAdmin: isAdminFlag }));
       }
     });
@@ -104,7 +104,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         // Check admin status on sign in
         if (event === 'SIGNED_IN' && session?.user) {
-          const isAdmin = await checkAdminStatus();
+          const isAdmin = await checkAdminStatus(session.user);
           setState(prev => ({ ...prev, isAdmin }));
         } else if (event === 'SIGNED_OUT') {
           setState(prev => ({ ...prev, isAdmin: false }));
