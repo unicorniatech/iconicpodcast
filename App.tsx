@@ -122,7 +122,7 @@ const NewsletterToast: React.FC<NewsletterToastProps> = ({ isOpen, onClose }) =>
                 <div className="w-full flex items-center justify-center">
                   <img
                     src="/pop-up-image-640.webp"
-                    srcSet="/pop-up-image-320.webp 320w, /pop-up-image-640.webp 640w"
+                    srcSet="/pop-up-image-320.webp 320w, /pop-up-image-480.webp 480w, /pop-up-image-640.webp 640w"
                     sizes="(max-width: 640px) 320px, 400px"
                     alt=""
                     width={320}
