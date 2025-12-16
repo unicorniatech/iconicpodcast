@@ -255,7 +255,7 @@ const PodcastCard: React.FC<{ episode: PodcastEpisode }> = ({ episode }) => {
               ? '/ep16-400.webp 400w, /ep16-600.webp 600w, /ep16-800.webp 800w'
               : undefined
           }
-          sizes={isEp16Image ? '(max-width: 640px) 100vw, 400px' : undefined}
+          sizes={isEp16Image ? '(max-width: 640px) 380px, 400px' : undefined}
           alt={episode.title}
           className={`w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
           loading="lazy"
@@ -656,7 +656,7 @@ const EpisodeDetail: React.FC = () => {
                                           }
                                           sizes={
                                             rel.imageUrl.endsWith('ep16.webp')
-                                              ? '(max-width: 768px) 100vw, 240px'
+                                              ? '(max-width: 768px) 320px, 240px'
                                               : undefined
                                           }
                                           alt={rel.title}
@@ -1296,6 +1296,7 @@ const AdminDashboard: React.FC = () => {
 // ============================================================================
 function AppContent() {
   const [isBannerOpen, setIsBannerOpen] = useState(false);
+  const [shouldRenderChatbot, setShouldRenderChatbot] = useState(false);
 
   // Initialize analytics tracking
   useEffect(() => {
@@ -1327,6 +1328,23 @@ function AppContent() {
       const timer = scheduleOpen();
       return () => clearTimeout(timer);
     }
+  }, []);
+
+  useEffect(() => {
+    const requestIdle = (window as any).requestIdleCallback as
+      | ((cb: () => void, opts?: { timeout?: number }) => number)
+      | undefined;
+    const cancelIdle = (window as any).cancelIdleCallback as ((id: number) => void) | undefined;
+
+    if (requestIdle) {
+      const idleId = requestIdle(() => setShouldRenderChatbot(true), { timeout: 8000 });
+      return () => {
+        if (cancelIdle) cancelIdle(idleId);
+      };
+    }
+
+    const timer = setTimeout(() => setShouldRenderChatbot(true), 8000);
+    return () => clearTimeout(timer);
   }, []);
 
   // Exit-intent logic: show the new lead magnet popup when cursor goes to the URL bar
@@ -1410,9 +1428,11 @@ function AppContent() {
         </Routes>
       </main>
       <Footer />
-      <Suspense fallback={null}>
-        <LazyChatbot />
-      </Suspense>
+      {shouldRenderChatbot && (
+        <Suspense fallback={null}>
+          <LazyChatbot />
+        </Suspense>
+      )}
     </div>
   );
 }
