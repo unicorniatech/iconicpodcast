@@ -72,14 +72,15 @@ const NewsletterToast: React.FC<NewsletterToastProps> = ({ isOpen, onClose }) =>
     const formData = new FormData(e.target as HTMLFormElement);
     const name = (formData.get('name') as string) || '';
     const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
 
-    if (email) {
+    if (email && password) {
       setErrorMessage(null);
       try {
         // Create Supabase Auth user to trigger verification email
         const { error: authError } = await supabase.auth.signUp({
           email: email,
-          password: crypto.randomUUID(), // Random password - user won't need it for ebook
+          password: password,
           options: {
             data: {
               name: name.trim() || 'Ebook Subscriber',
@@ -185,6 +186,14 @@ const NewsletterToast: React.FC<NewsletterToastProps> = ({ isOpen, onClose }) =>
                       className="w-full px-4 py-3 rounded-xl bg-white text-iconic-black placeholder-gray-500 focus:ring-2 focus:ring-iconic-pink"
                     />
                   </div>
+                  <input
+                    type="password"
+                    name="password"
+                    required
+                    minLength={6}
+                    placeholder="Heslo (min. 6 znaků)"
+                    className="w-full px-4 py-3 rounded-xl bg-white text-iconic-black placeholder-gray-500 focus:ring-2 focus:ring-iconic-pink"
+                  />
 
                   <button
                     type="submit"
