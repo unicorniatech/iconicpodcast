@@ -2,7 +2,7 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 
 const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')
 const EBOOK_URL = Deno.env.get('EBOOK_URL') || 'https://your-domain.com/ebook.pdf'
-const FROM_EMAIL = Deno.env.get('FROM_EMAIL') || 'ICONIC Podcast <noreply@iconicpodcast.cz>'
+const FROM_EMAIL = Deno.env.get('FROM_EMAIL') || 'ICONIC Podcast <info@iconicpodcast.eu>'
 
 interface LeadPayload {
   type: 'INSERT'

@@ -15,7 +15,7 @@ SETUP INSTRUCTIONS:
 2. Set the Edge Function secrets:
    supabase secrets set RESEND_API_KEY=re_your_api_key
    supabase secrets set EBOOK_URL=https://your-project.supabase.co/storage/v1/object/public/assets/ebook/iconic-ebook.pdf
-   supabase secrets set FROM_EMAIL="ICONIC Podcast <noreply@iconicpodcast.cz>"
+   supabase secrets set FROM_EMAIL="ICONIC Podcast <info@iconicpodcast.eu>"
 
 3. Create Database Webhook in Supabase Dashboard:
    - Go to Database > Webhooks
