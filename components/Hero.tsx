@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { Mic, ArrowRight, Play, Sparkles } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { ScrollReveal } from './common/ScrollReveal';
-import { ZUZZI_HERO_IMAGE } from '../constants';
 
 export const Hero: React.FC = () => {
   const { t } = useLanguage();
@@ -128,7 +127,9 @@ export const Hero: React.FC = () => {
                           <div className="absolute inset-0 bg-gray-700 animate-pulse" />
                         )}
                         <img 
-                            src={ZUZZI_HERO_IMAGE} 
+                            src="/mainhero-760.webp"
+                            srcSet="/mainhero-380.webp 380w, /mainhero-760.webp 760w"
+                            sizes="(max-width: 1024px) 380px, 600px"
                             alt="Zuzana Husarova" 
                             width={600}
                             height={800}

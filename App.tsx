@@ -121,7 +121,9 @@ const NewsletterToast: React.FC<NewsletterToastProps> = ({ isOpen, onClose }) =>
               <div className="sm:col-span-2">
                 <div className="w-full flex items-center justify-center">
                   <img
-                    src="/pop-up-image.webp"
+                    src="/pop-up-image-640.webp"
+                    srcSet="/pop-up-image-320.webp 320w, /pop-up-image-640.webp 640w"
+                    sizes="(max-width: 640px) 320px, 400px"
                     alt=""
                     width={320}
                     height={427}
@@ -1286,7 +1288,21 @@ function AppContent() {
   useEffect(() => {
     const newsletterStatus = localStorage.getItem('iconic_newsletter_status');
     if (newsletterStatus !== 'dismissed' && newsletterStatus !== 'subscribed') {
-      const timer = setTimeout(() => setIsBannerOpen(true), 500);
+      const scheduleOpen = () => setTimeout(() => setIsBannerOpen(true), 3500);
+
+      const requestIdle = (window as any).requestIdleCallback as
+        | ((cb: () => void, opts?: { timeout?: number }) => number)
+        | undefined;
+      const cancelIdle = (window as any).cancelIdleCallback as ((id: number) => void) | undefined;
+
+      if (requestIdle) {
+        const idleId = requestIdle(() => scheduleOpen(), { timeout: 6000 });
+        return () => {
+          if (cancelIdle) cancelIdle(idleId);
+        };
+      }
+
+      const timer = scheduleOpen();
       return () => clearTimeout(timer);
     }
   }, []);
