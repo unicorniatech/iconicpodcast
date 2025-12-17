@@ -245,7 +245,14 @@ const mapEpisodeRowToPodcastEpisode = (row: EpisodeRow): PodcastEpisode => {
   const cleanTitle = stripCdata(row.title ?? null);
   const cleanDescription = stripHtml(stripCdata(row.description ?? null));
 
-  const staticEpisode = PODCAST_EPISODES.find((ep) => ep.id === row.id) || null;
+  // Try to match by UUID first, then by episode number from title (e.g. "#16:" -> "16")
+  let staticEpisode = PODCAST_EPISODES.find((ep) => ep.id === row.id) || null;
+  if (!staticEpisode) {
+    const match = cleanTitle.match(/#(\d+)/);
+    if (match) {
+      staticEpisode = PODCAST_EPISODES.find((ep) => ep.id === match[1]) || null;
+    }
+  }
 
   return {
     id: row.id,
