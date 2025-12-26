@@ -125,20 +125,20 @@ const NewsletterToast: React.FC<NewsletterToastProps> = ({ isOpen, onClose }) =>
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-end justify-center">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 overflow-auto">
       <button
         aria-label="Close"
         onClick={handleDismiss}
         className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"
       />
-      <div className="relative w-full max-w-2xl animate-fade-in-up">
-        <div className="bg-iconic-black text-white rounded-t-3xl shadow-2xl border-t border-iconic-pink/20 px-5 sm:px-8 pt-6 pb-7">
+      <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto animate-fade-in-up">
+        <div className="bg-iconic-black text-white rounded-2xl shadow-2xl border border-iconic-pink/20 px-4 sm:px-8 pt-12 pb-6">
           <button
             onClick={handleDismiss}
-            className="absolute right-4 top-4 text-white/70 hover:text-white p-2"
+            className="fixed top-2 right-2 sm:absolute sm:right-3 sm:top-3 z-[70] bg-iconic-black/90 text-white hover:text-iconic-pink p-3 rounded-full shadow-lg border border-white/20"
             aria-label="Close"
           >
-            <X size={20} />
+            <X size={24} />
           </button>
 
           {isSubscribed ? (
@@ -215,6 +215,13 @@ const NewsletterToast: React.FC<NewsletterToastProps> = ({ isOpen, onClose }) =>
                     Zároveň souhlasíš s našimi Podmínkami užití a Zásadami ochrany osobních údajů.
                   </div>
                 </form>
+
+                <button
+                  onClick={handleDismiss}
+                  className="mt-4 w-full text-white/60 hover:text-white text-sm underline"
+                >
+                  Ne, děkuji
+                </button>
               </div>
             </div>
           )}
@@ -1358,27 +1365,7 @@ function AppContent() {
     trackPageView(window.location.pathname);
   }, []);
 
-  useEffect(() => {
-    const newsletterStatus = localStorage.getItem('iconic_newsletter_status');
-    if (newsletterStatus !== 'dismissed' && newsletterStatus !== 'subscribed') {
-      const scheduleOpen = () => setTimeout(() => setIsBannerOpen(true), 3500);
-
-      const requestIdle = (window as any).requestIdleCallback as
-        | ((cb: () => void, opts?: { timeout?: number }) => number)
-        | undefined;
-      const cancelIdle = (window as any).cancelIdleCallback as ((id: number) => void) | undefined;
-
-      if (requestIdle) {
-        const idleId = requestIdle(() => scheduleOpen(), { timeout: 6000 });
-        return () => {
-          if (cancelIdle) cancelIdle(idleId);
-        };
-      }
-
-      const timer = scheduleOpen();
-      return () => clearTimeout(timer);
-    }
-  }, []);
+  // Removed timer-based popup - now only triggers on exit intent or page navigation
 
   useEffect(() => {
     const requestIdle = (window as any).requestIdleCallback as
@@ -1397,11 +1384,16 @@ function AppContent() {
     return () => clearTimeout(timer);
   }, []);
 
-  // Exit-intent logic: show the new lead magnet popup when cursor goes to the URL bar
+  // Exit-intent logic: show popup when user tries to leave
+  // Desktop: mouse leaves to URL bar
+  // Mobile: uses visibilitychange (tab switch, app switch, leaving page)
   useEffect(() => {
     const newsletterStatus = localStorage.getItem('iconic_newsletter_status');
     if (newsletterStatus === 'dismissed' || newsletterStatus === 'subscribed') return;
 
+    const isMobile = window.matchMedia('(max-width: 768px)').matches || 'ontouchstart' in window;
+
+    // Desktop: mouse exit intent
     const handleMouseLeave = (event: MouseEvent) => {
       if (event.clientY <= 0) {
         setIsBannerOpen(true);
@@ -1409,9 +1401,46 @@ function AppContent() {
       }
     };
 
-    window.addEventListener('mouseout', handleMouseLeave);
+    // Mobile: visibility change (switching tabs, leaving page, app switch)
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        // User is leaving - show popup when they come back
+        const showOnReturn = () => {
+          if (document.visibilityState === 'visible') {
+            const status = localStorage.getItem('iconic_newsletter_status');
+            if (status !== 'dismissed' && status !== 'subscribed') {
+              setIsBannerOpen(true);
+            }
+            document.removeEventListener('visibilitychange', showOnReturn);
+          }
+        };
+        document.addEventListener('visibilitychange', showOnReturn);
+      }
+    };
+
+    // Mobile: beforeunload (back button, closing tab)
+    const handleBeforeUnload = () => {
+      // Can't show popup here, but we can set a flag
+      sessionStorage.setItem('iconic_show_popup_on_return', 'true');
+    };
+
+    // Check if returning from a previous exit attempt
+    if (sessionStorage.getItem('iconic_show_popup_on_return') === 'true') {
+      sessionStorage.removeItem('iconic_show_popup_on_return');
+      setTimeout(() => setIsBannerOpen(true), 500);
+    }
+
+    if (isMobile) {
+      document.addEventListener('visibilitychange', handleVisibilityChange);
+      window.addEventListener('beforeunload', handleBeforeUnload);
+    } else {
+      window.addEventListener('mouseout', handleMouseLeave);
+    }
+
     return () => {
       window.removeEventListener('mouseout', handleMouseLeave);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, []);
 
